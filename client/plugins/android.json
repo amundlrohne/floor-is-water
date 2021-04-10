@@ -7,10 +7,10 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-whitelist": {
+    "cordova-plugin-webpack": {
       "PACKAGE_NAME": "com.cordova.react"
     },
-    "cordova-plugin-webpack": {
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.cordova.react"
     }
   },
