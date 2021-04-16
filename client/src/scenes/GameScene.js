@@ -2,7 +2,7 @@ import React from "react";
 import Link from "react-router-dom";
 import { Joystick } from "react-joystick-component";
 import Main from "../main.jsx";
-require("./gamescene.css");
+import "./gamescene.css";
 
 const GameScene = () => {
   const handleMove = (e) => {
@@ -28,38 +28,17 @@ const GameScene = () => {
   return (
     <div className="gameSceneContainer">
       <Main></Main>
-      <div
-        id="leftJoystick"
-        style={{ position: "absolute", left: "5%", bottom: "5%" }}
-      >
-        <Joystick move={handleMove} stop={handleMoveStop}></Joystick>
-      </div>
-      <div
-        id="rightJoystick"
-        style={{ position: "absolute", right: "15%", bottom: "5%" }}
-      >
-        <Joystick move={handleDirection} stop={handleRelease}></Joystick>
-      </div>
+      <div id="controls">
+        <div className="leftJoystick">
+          <Joystick move={handleMove} stop={handleMoveStop}></Joystick>
+        </div>
+        <div className="rightJoystick">
+          <Joystick move={handleDirection} stop={handleRelease}></Joystick>
+        </div>
 
-      <div id="jumpButton">
-        <button
-          style={{
-            border: "2px solid",
-            borderRadius: "50%",
-            height: "10vh",
-            width: "10vh",
-
-            position: "absolute",
-            right: "5%",
-            bottom: "15%",
-
-            outline: "none",
-            userSelect: "none",
-          }}
-          onClick={handleJump}
-        >
-          Jump
-        </button>
+        <div className="jumpButton">
+          <button onClick={handleJump}>Jump</button>
+        </div>
       </div>
     </div>
   );
