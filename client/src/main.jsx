@@ -3,6 +3,7 @@ import * as th from 'three';
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import './entities/entity'
 import { Entity } from './entities/entity';
+//import './entities/player';
 
 let camera, scene, renderer, cube;
 
