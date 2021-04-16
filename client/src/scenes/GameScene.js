@@ -20,6 +20,10 @@ const GameScene = () => {
     console.log("released");
   };
 
+  const handleJump = (e) => {
+    console.log("jumped");
+  };
+
   return (
     <div className="gameSceneContainer">
       <canvas
@@ -35,9 +39,30 @@ const GameScene = () => {
       </div>
       <div
         id="rightJoystick"
-        style={{ position: "absolute", right: "5%", bottom: "5%" }}
+        style={{ position: "absolute", right: "15%", bottom: "5%" }}
       >
         <Joystick move={handleDirection} stop={handleRelease}></Joystick>
+      </div>
+
+      <div id="jumpButton">
+        <button
+          style={{
+            border: "2px solid",
+            borderRadius: "50%",
+            height: "10vh",
+            width: "10vh",
+
+            position: "absolute",
+            right: "5%",
+            bottom: "15%",
+
+            outline: "none",
+            userSelect: "none",
+          }}
+          onClick={handleJump}
+        >
+          Jump
+        </button>
       </div>
       <p>GameScene</p>
     </div>
