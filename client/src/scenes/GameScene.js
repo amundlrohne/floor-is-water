@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "react-router-dom";
 import { Joystick } from "react-joystick-component";
+import Main from "../main.jsx";
 require("./gamescene.css");
 
 const GameScene = () => {
@@ -26,11 +27,7 @@ const GameScene = () => {
 
   return (
     <div className="gameSceneContainer">
-      <canvas
-        className="gameCanvas"
-        width={window.innerWidth}
-        height={window.innerHeight}
-      ></canvas>
+      <Main></Main>
       <div
         id="leftJoystick"
         style={{ position: "absolute", left: "5%", bottom: "5%" }}
@@ -64,7 +61,6 @@ const GameScene = () => {
           Jump
         </button>
       </div>
-      <p>GameScene</p>
     </div>
   );
 };
