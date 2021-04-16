@@ -1,9 +1,13 @@
 import React from "react";
+import Button from "../components/button";
+import Link from "react-router-dom";
 
-export const GameScene = () => {
+const GameScene = () => {
   return (
-    <div>
-      <p>Game Scene</p>
+    <div className="gameSceneContainer">
+      <canvas className="gameCanvas"></canvas>
+
+      <p>GameScene</p>
     </div>
   );
 };
