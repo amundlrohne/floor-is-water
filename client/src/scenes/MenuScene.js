@@ -6,7 +6,6 @@ export const MenuScene = () => {
   return (
     <div>
       <p>Menu Scene</p>
-      <Nav.Link as={Link} to="/lobby">Jargons that works!</Nav.Link>
     </div>
   );
 };
