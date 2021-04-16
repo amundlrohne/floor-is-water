@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as th from 'three';
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import './entities/entity'
 import { Entity } from './entities/entity';
+import Map from "./components/map";
+import MapEntity from "./entities/map";
 //import './entities/player';
 
 let camera, scene, renderer, cube;
@@ -72,16 +74,15 @@ const Main = () => {
 
     window.addEventListener('resize', onWindowResize, false);
 
-    const [first, setfirst] = useState(true);
-    if (first) {
+    useEffect(() => {
         init();
         animate();
-        setfirst(false);
-    }
 
-    // Entities
+        // Entities
+        const gameWorld = new MapEntity({scene: scene});
 
-    return <div/>;
+    }, [])
+    return (<div/>);
 }
 
 export default Main;
