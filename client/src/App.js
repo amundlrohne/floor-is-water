@@ -8,7 +8,7 @@ import {
   HashRouter,
 } from "react-router-dom";
 import GameScene from "./scenes/GameScene";
-import MenuScene from "./scenes/GameScene";
+import MenuScene from "./scenes/MenuScene";
 
 const App = () => {
   return (
