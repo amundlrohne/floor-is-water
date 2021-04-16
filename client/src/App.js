@@ -14,7 +14,7 @@ const App = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Switch>
-        <Route exact path="/" component={MenuScene}></Route>
+        {/* <Route exact path="/" component={MenuScene}></Route> */}
         <Route path="/game" component={GameScene}></Route>
       </Switch>
     </div>
