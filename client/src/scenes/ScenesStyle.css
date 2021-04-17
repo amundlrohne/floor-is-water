@@ -9,18 +9,22 @@ div[class="SettingsBar"]{
     flex-direction: row;
     justify-content: center;
     align-items: center;
-
 }
-div[class="MainWrapper"]{
+div[class="SettingsWrapper"]{
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px;
-    background-color: #2E4756;
+    background-color: var(--charcoal);
     border-radius: 4px;
     border: var(--silver);
     border-width: 3px;
     border-style: solid;
+}
+div[class="MenuWrapper"]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 body{
     color: var(--yellow);
@@ -38,7 +42,7 @@ body{
 }
 button{
     color: var(--yellow);
-    background-color: var(--teal);
+    background-color: var(--charcoal);
     border: var(--silver);
     border-style: solid;
     border-radius: 2px;
@@ -46,11 +50,22 @@ button{
 }
 a:link{
     color:var(--yellow);
+    border:var(--silver);
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
+
 }
 a:visited {
     color: var(--yellow);
 }
+ul{
+    padding-left: 0px;
+    text-align:center;
+}
+li{
+    list-style-type: none;
+}
 h1{
     text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #f2c84b, 0 0 30px #f2c84b, 0 0 40px #f2c84b, 0 0 55px #f2c84b, 0 0 75px #f2c84b, 2px -5px 2px rgba(206,89,55,0), 2px -5px 2px rgba(206,89,55,0);
-
 }

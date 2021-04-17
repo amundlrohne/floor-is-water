@@ -5,8 +5,6 @@ import robot from "../assets/audio/RobotParts.mp3";
 import "./ScenesStyle.css";
 //credit these guys where it is relevant https://www.youtube.com/watch?v=sSuHdn2dY9M
 
-
-
 export const SettingsScene = () => {
     const bgmusic = new Audio(robot)
 
@@ -25,9 +23,8 @@ export const SettingsScene = () => {
         }
     };
 
-    
   return (
-  <div class="MainWrapper"> 
+  <div class="SettingsWrapper"> 
       <h2>Settings</h2>
       <div class="SettingsBar">
           <button type="button" onClick={togglePlay}>Background music</button>
