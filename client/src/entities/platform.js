@@ -1,14 +1,26 @@
 import {Entity} from "./entity";
-import Platform from "../components/platform";
+import {PlatformColumn, PlatformFloating} from "../components/platform";
 
 export default class PlatformEntity extends Entity {
     constructor(params) {
         super()
         if (params) {
-            if (params.position) {
-                this.SetPosition(params.position)
+            this.params = params;
+            switch (params.type) {
+                case 'Column':
+                    this.AddComponent(new PlatformColumn(params));
+                    break;
+                case 'Floating':
+                    this.AddComponent(new PlatformFloating(params));
+                    break;
+                case 'Final':
+                    break;
             }
-            this.AddComponent(new Platform(params));
         }
+    }
+
+    SetPosition(p) {
+        super.SetPosition(p);
+        this.GetComponent('Platform'+this.params.type).UpdatePosition(p);
     }
 }
