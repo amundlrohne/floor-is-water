@@ -1,3 +1,44 @@
-.SettingsBar > *{
-    display:inline-block;
+div[class="SettingsBar"] >*{
+    display: inline-block;
+    margin: 5px;
+}
+div[class="SettingsBar"]{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}
+div[class="MainWrapper"]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: #2E4756;
+    border-radius: 4px;
+    border: silver;
+    border-width: 3px;
+    border-style: solid;
+}
+body{
+    color: #F2C84B;
+    background-color: #16262E;
+    font-family: 'Audiowide';
+}
+@font-face {
+    font-family: 'Audiowide';
+    src: url('../assets/font/Audiowide-Regular.ttf') format('truetype'),
+        url('../assets/font/Audiowide-Regular.woff2') format('woff2'),
+        url('../assets/font/Audiowide-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+button{
+    color: #F2C84B;
+    background-color: #3C7A90;
+    border: silver;
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
 }
