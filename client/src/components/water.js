@@ -32,7 +32,7 @@ export default class Water extends Component {
       }
 
       this.material = new three.MeshBasicMaterial({
-        color: 0xa6e0ff,
+        color: 0x4ac0ff,
         map: texture,
       });
 
