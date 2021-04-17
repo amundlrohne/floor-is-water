@@ -28,7 +28,8 @@
       "cordova-plugin-webpack": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "browser"
     ]
   },
   "dependencies": {
