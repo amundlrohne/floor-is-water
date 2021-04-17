@@ -8,7 +8,7 @@ import SettingsScene from "./SettingsScene";
 export const MenuScene = () => {
   return (
     <div>
-      <p>Menu Scene</p>
+      <p>THE FLOOR IS WATER</p>
       <ul>
           <li><Link to={`/lobby`}>Lobby</Link></li>
           <li><Link to={`/settings`}>Settings</Link></li>
