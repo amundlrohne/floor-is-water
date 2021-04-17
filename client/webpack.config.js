@@ -30,6 +30,14 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.fbx$/,
+        use: [
+          // [style-loader](/loaders/style-loader)
+          { loader: 'file-loader' },
+          // [css-loader](/loaders/css-loader)
+        ]
       }
 
     ]

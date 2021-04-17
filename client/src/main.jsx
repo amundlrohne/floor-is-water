@@ -1,20 +1,23 @@
-import React, { useState } from "react";
 import * as th from "three";
-import { Loader } from "three";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "./entities/entity";
+//import { FBXLoader } from "three-fbx-loader";
+import React, { useEffect, useState } from "react";
 import { Entity } from "./entities/entity";
-import { StaticModelComponent } from "./components/gltf-component";
-import { GLTFLoader } from "three-gltf-loader";
-import { FBXLoader } from "three-fbx-loader";
+import Map from "./components/map";
+import MapEntity from "./entities/map";
+import robot from "./assets/Robot.fbx";
+
 //import './entities/player';
 
-let camera, scene, renderer, cube;
+let camera, scene, renderer, cube, manager;
 
 const Main = () => {
   function init() {
     // Init scene
     scene = new th.Scene();
+    manager = new th.LoadingManager();
 
     // Init camera (PerspectiveCamera)
     camera = new th.PerspectiveCamera(
@@ -52,15 +55,29 @@ const Main = () => {
       const light = new th.AmbientLight(color, intensity);
       scene.add(light);
     }
-    const loader = new FBXLoader();
-    loader.setPath("../assets/");
-    loader.load("Robot.fbx", (fbx) => {
-      this._OnLoaded(fbx);
+    //var FBXLoader = require("three-fbx-loader");
+    var loader = new FBXLoader(manager);
+
+    //scene.add(robot);
+    //console.log(robot);
+    loader.load(robot, function (result) {
+      scene.add(result);
+      result.scale.setScalar(0.1);
+      result.traverse((c) => {
+        c.castShadow = true;
+      });
+/*       const m = new th.AnimationMixer(result);
+      m.clipActions(result.animations[10]).play();
+
+      console.log(result.animations); */
     });
+
+    //_LoadAnimatedModel();
 
     // Position camera
     camera.position.set(0, 10, 20);
   }
+ 
 
   // Draw the scene every time the screen is refreshed
   function animate() {
@@ -82,15 +99,13 @@ const Main = () => {
 
   window.addEventListener("resize", onWindowResize, false);
 
-  const [first, setfirst] = useState(true);
-  if (first) {
+  useEffect(() => {
     init();
     animate();
-    setfirst(false);
-  }
 
-  // Entities
-
+    // Entities
+    const gameWorld = new MapEntity({ scene: scene });
+  }, []);
   return <div />;
 };
 

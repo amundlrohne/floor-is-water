@@ -1,4 +1,4 @@
-class Component {
+export default class Component {
     constructor() {
       this.parent_ = null;
     }
@@ -11,7 +11,7 @@ class Component {
     }
 
     InitComponent() {}
-    
+
     InitEntity() {}
 
     GetComponent(n) {
