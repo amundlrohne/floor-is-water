@@ -30,3 +30,38 @@ div[class="jumpButton"] > button {
   color: var(--gunmetal);
   font-weight: bolder;
 }
+
+div[class="gameResults"] {
+  border: 3px solid var(--silver);
+  width: 20%;
+  height: 20%;
+  position: absolute;
+  left: 40%;
+  top: 40%;
+
+  border-radius: 4px;
+  background-color: var(--charcoal);
+
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-content: space-between;
+
+  font-size: 1.5em;
+  color: var(--yellow);
+
+  outline: none;
+  user-select: none;
+}
+
+div[class="gameResults"] > a > button {
+  width: 40%;
+  height: 100%;
+  margin: auto;
+
+  border: 2px solid var(--silver);
+  border-radius: 2px;
+  background-color: var(--teal);
+  color: var(--yellow);
+  text-decoration: none;
+}

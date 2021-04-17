@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Joystick } from "react-joystick-component";
 import Main from "../main.jsx";
 import "./gamescene.css";
@@ -49,6 +49,13 @@ const GameScene = () => {
         <div className="jumpButton">
           <button onClick={handleJump}>Jump</button>
         </div>
+      </div>
+
+      <div className="gameResults">
+        <p>Taper Idiot</p>
+        <Link to="/">
+          <button>Back to menu</button>
+        </Link>
       </div>
     </div>
   );
