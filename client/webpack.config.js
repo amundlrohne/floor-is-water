@@ -32,13 +32,13 @@ module.exports = {
         ]
       },
       {
-        test: /\.fbx$/,
+        test: /\.(png|jpe?g|gif|fbx)$/i,
         use: [
-          // [style-loader](/loaders/style-loader)
-          { loader: 'file-loader' },
-          // [css-loader](/loaders/css-loader)
-        ]
-      }
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
 
     ]
   }

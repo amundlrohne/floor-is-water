@@ -11,13 +11,12 @@ import robot from "./assets/Robot.fbx";
 
 //import './entities/player';
 
-let camera, scene, renderer, cube, manager;
+let camera, scene, renderer;
 
 const Main = () => {
   function init() {
     // Init scene
     scene = new th.Scene();
-    manager = new th.LoadingManager();
 
     // Init camera (PerspectiveCamera)
     camera = new th.PerspectiveCamera(
@@ -55,14 +54,11 @@ const Main = () => {
       const light = new th.AmbientLight(color, intensity);
       scene.add(light);
     }
-    //var FBXLoader = require("three-fbx-loader");
-    var loader = new FBXLoader(manager);
+    var loader = new FBXLoader();
 
-    //scene.add(robot);
-    //console.log(robot);
     loader.load(robot, function (result) {
       scene.add(result);
-      result.scale.setScalar(0.1);
+      result.scale.setScalar(0.01);
       result.traverse((c) => {
         c.castShadow = true;
       });

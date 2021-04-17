@@ -18,7 +18,12 @@ export default class Map extends Component {
 
     SetParent(p) {
         super.SetParent(p);
+        this.UpdatePosition();
+    }
+
+    UpdatePosition() {
         const position = this.Parent.Position;
-        this.mesh.position.set(position.x, position.y, position.z);    }
+        this.mesh.position.copy(position);
+    }
 
 }
