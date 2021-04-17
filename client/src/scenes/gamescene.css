@@ -1,0 +1,32 @@
+@import "../constants.css";
+
+div[class="leftJoystick"] {
+  position: absolute;
+  left: 5%;
+  bottom: 5%;
+}
+
+div[class="rightJoystick"] {
+  position: absolute;
+  right: 15%;
+  bottom: 5%;
+}
+
+div[class="jumpButton"] > button {
+  border: 4px solid;
+  border-radius: 50%;
+  height: 10vh;
+  width: 10vh;
+
+  position: absolute;
+  right: 5%;
+  bottom: 15%;
+
+  outline: none;
+  user-select: none;
+
+  border-color: var(--yellow);
+  background-color: var(--silver);
+  color: var(--gunmetal);
+  font-weight: bolder;
+}
