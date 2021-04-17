@@ -50,14 +50,14 @@ const Main = () => {
     {
       // Add ambient
       const color = 0xffffff;
-      const intensity = 0.5;
+      const intensity = 1;
       const light = new th.AmbientLight(color, intensity);
       scene.add(light);
     }
     var loader = new FBXLoader();
-    
 
-    
+
+
     loader.load(robot, function (result) {
       console.log(result)
       scene.add(result);
@@ -76,7 +76,7 @@ const Main = () => {
     // Position camera
     camera.position.set(0, 10, 20);
   }
- 
+
 
   // Draw the scene every time the screen is refreshed
   function animate() {
