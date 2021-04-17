@@ -1,5 +1,6 @@
 import * as three from 'three';
 import Component from './component';
+import water from '../Assets/water.jpg'
 export default class Map extends Component {
 
     constructor(params) {
@@ -8,7 +9,8 @@ export default class Map extends Component {
         if (params) {
             {//Add a plane
                 const planeGeo = new three.PlaneGeometry(100, 100);
-                const planeMat = new three.MeshPhongMaterial({color: '#8AC'});
+                const texture = new three.TextureLoader().load(water);
+                const planeMat = new three.MeshPhongMaterial({bumpMap: texture, color: '#8AC'});
                 this.mesh = new three.Mesh(planeGeo, planeMat);
                 this.mesh.rotation.x = Math.PI * -.5;
                 params.scene.add(this.mesh);
