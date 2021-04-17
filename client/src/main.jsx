@@ -1,88 +1,100 @@
-import React, {useEffect, useState} from 'react';
-import * as th from 'three';
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-import './entities/entity'
-import { Entity } from './entities/entity';
+import React, { useEffect, useState } from "react";
+import * as th from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import "./entities/entity";
+import { Entity } from "./entities/entity";
 import Map from "./components/map";
 import MapEntity from "./entities/map";
+
 //import './entities/player';
 
-let camera, scene, renderer, cube;
+let camera, scene, renderer, cube, clock;
+let baseWaterY = 0;
+
+let gameWorld;
 
 const Main = () => {
-    function init() {
-        // Init scene
-        scene = new th.Scene();
+  function init() {
+    // Init scene
+    scene = new th.Scene();
+    clock = new th.Clock();
 
-        // Init camera (PerspectiveCamera)
-        camera = new th.PerspectiveCamera(
-            100,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-        );
+    // Init camera (PerspectiveCamera)
+    camera = new th.PerspectiveCamera(
+      100,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
 
+    // Init renderer
+    renderer = new th.WebGLRenderer({ antialias: true });
+    const canvas = renderer.domElement;
+    const controls = new OrbitControls(camera, canvas);
+    controls.target.set(0, 5, 0);
+    controls.update();
 
-        // Init renderer
-        renderer = new th.WebGLRenderer({antialias: true});
-        const canvas = renderer.domElement;
-        const controls = new OrbitControls(camera, canvas);
-        controls.target.set(0, 5, 0);
-        controls.update();
+    // Set size (whole window)
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-        // Set size (whole window)
-        renderer.setSize(window.innerWidth, window.innerHeight);
+    // Render to canvas element
+    document.body.appendChild(canvas);
 
-        // Render to canvas element
-        document.body.appendChild(canvas);
-
-        {// Add sun
-            const color = 0xFFFFFF;
-            const intensity = 1;
-            const light = new th.DirectionalLight(color, intensity);
-            light.position.set(-1, 2, 4);
-            scene.add(light);
-        }
-        {// Add ambient
-            const color = 0xFFFFFF;
-            const intensity = 0.5;
-            const light = new th.AmbientLight(color, intensity);
-            scene.add(light);
-        }
-
-        // Position camera
-        camera.position.set(0, 10, 20);
+    {
+      // Add sun
+      const color = 0xffffff;
+      const intensity = 1;
+      const light = new th.DirectionalLight(color, intensity);
+      light.position.set(-1, 2, 4);
+      scene.add(light);
+    }
+    {
+      // Add ambient
+      const color = 0xffffff;
+      const intensity = 0.5;
+      const light = new th.AmbientLight(color, intensity);
+      scene.add(light);
     }
 
-    // Draw the scene every time the screen is refreshed
-    function animate() {
-        requestAnimationFrame(animate);
+    // Position camera
+    camera.position.set(0, 10, 20);
+  }
 
-        // Add animation here
+  // Draw the scene every time the screen is refreshed
+  function animate() {
+    requestAnimationFrame(animate);
 
-        renderer.render(scene, camera);
+    // Add animation here
+    render();
+  }
+
+  function render() {
+    if (gameWorld) {
+      baseWaterY += 0.01;
+      gameWorld.updateWater(clock, baseWaterY);
+      renderer.render(scene, camera);
     }
+  }
 
-    function onWindowResize() {
-        // Camera frustum aspect ratio
-        camera.aspect = window.innerWidth / window.innerHeight;
-        // After making changes to aspect
-        camera.updateProjectionMatrix();
-        // Reset size
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }
+  function onWindowResize() {
+    // Camera frustum aspect ratio
+    camera.aspect = window.innerWidth / window.innerHeight;
+    // After making changes to aspect
+    camera.updateProjectionMatrix();
+    // Reset size
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
 
-    window.addEventListener('resize', onWindowResize, false);
+  window.addEventListener("resize", onWindowResize, false);
 
-    useEffect(() => {
-        init();
-        animate();
+  useEffect(() => {
+    init();
+    animate();
 
-        // Entities
-        const gameWorld = new MapEntity({scene: scene});
-
-    }, [])
-    return (<div/>);
-}
+    // Entities
+    gameWorld = new MapEntity({ scene: scene });
+  }, []);
+  return <div />;
+};
 
 export default Main;

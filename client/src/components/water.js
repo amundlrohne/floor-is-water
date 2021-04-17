@@ -26,7 +26,7 @@ export default class Water extends Component {
       position.usage = three.DynamicDrawUsage;
 
       for (let i = 0; i < position.count; i++) {
-        const y = 35 * Math.sin(i / 2);
+        const y = 10 * Math.sin(i / 2);
         position.setY(i, y);
       }
 
@@ -36,6 +36,7 @@ export default class Water extends Component {
       });
 
       this.mesh = new three.Mesh(geometry, this.material);
+      this.mesh.geometry.needsUpdate = true;
       params.scene.add(this.mesh);
     }
   }
@@ -49,5 +50,19 @@ export default class Water extends Component {
       position.y + this.params.height,
       position.z
     );
+  }
+
+  update(clock, baseY) {
+    const delta = clock.getDelta();
+    const time = clock.getElapsedTime() * 10;
+    console.log(this.mesh);
+    const position = this.mesh.geometry.attributes.position;
+
+    for (let i = 0; i < position.count; i++) {
+      const y = 5 * Math.sin(i / 5 + (time + i) / 7) + baseY;
+      position.setY(i, y);
+    }
+
+    position.needsUpdate = true;
   }
 }

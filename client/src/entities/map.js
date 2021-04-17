@@ -17,7 +17,12 @@ export default class MapEntity extends Entity {
         height: 20,
         segments: 6,
       });
-      const water = new WaterEntity({ scene: params.scene, height: 5 });
+      this.water = new WaterEntity({ scene: params.scene, height: 5 });
     }
+  }
+
+  updateWater(clock, baseY) {
+    // console.log(clock);
+    this.water.update(clock, baseY);
   }
 }

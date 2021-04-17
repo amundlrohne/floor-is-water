@@ -11,4 +11,8 @@ export default class WaterEntity extends Entity {
       this.AddComponent(new Water(params));
     }
   }
+
+  update(clock, baseY) {
+    this._components.Water.update(clock, baseY);
+  }
 }
