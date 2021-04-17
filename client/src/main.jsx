@@ -55,8 +55,11 @@ const Main = () => {
       scene.add(light);
     }
     var loader = new FBXLoader();
+    
 
+    
     loader.load(robot, function (result) {
+      console.log(result)
       scene.add(result);
       result.scale.setScalar(0.01);
       result.traverse((c) => {

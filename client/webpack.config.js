@@ -29,13 +29,16 @@ module.exports = {
               modules: true
             }
           }
-        ]
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|fbx)$/i,
         use: [
           {
             loader: 'file-loader',
+            options: {
+              outputPath: "android_asset/www"
+            }
           },
         ],
       },
