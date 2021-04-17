@@ -1,5 +1,6 @@
 import * as three from "three";
 import Component from "./component";
+import waterImg from "../assets/water.png";
 export default class Water extends Component {
   constructor(params) {
     super();
@@ -8,14 +9,14 @@ export default class Water extends Component {
     if (params) {
       const worldWidth = 128,
         worldDepth = 128;
-      //   let texture = new three.TextureLoader().load("../assets/water.jpg");
+      let texture = new three.TextureLoader().load(waterImg);
 
-      //   texture.wrapS = texture.wrapT = three.RepeatWrapping;
-      //   texture.repeat.set(5, 5);
+      texture.wrapS = texture.wrapT = three.RepeatWrapping;
+      texture.repeat.set(10, 10);
 
       let geometry = new three.PlaneGeometry(
-        20000,
-        20000,
+        1000,
+        1000,
         worldWidth - 1,
         worldDepth - 1
       );
@@ -31,8 +32,8 @@ export default class Water extends Component {
       }
 
       this.material = new three.MeshBasicMaterial({
-        color: 0x0044ff,
-        // map: texture,
+        color: 0xa6e0ff,
+        map: texture,
       });
 
       this.mesh = new three.Mesh(geometry, this.material);
@@ -59,7 +60,7 @@ export default class Water extends Component {
     const position = this.mesh.geometry.attributes.position;
 
     for (let i = 0; i < position.count; i++) {
-      const y = 5 * Math.sin(i / 5 + (time + i) / 7) + baseY;
+      const y = (3 * Math.sin(i / 5 + (time + i) / 7)) / 5 + baseY;
       position.setY(i, y);
     }
 

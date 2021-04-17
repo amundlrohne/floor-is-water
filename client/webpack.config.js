@@ -1,37 +1,40 @@
-const path = require('path')
+const path = require("path");
 
 module.exports = {
-  mode: 'development',
-  entry: './src/index.js',
+  mode: "development",
+  entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, 'www'),
-    filename: 'index.bundle.js'
+    path: path.resolve(__dirname, "www"),
+    filename: "index.bundle.js",
   },
-  devtool: 'inline-source-map',
+  devtool: "inline-source-map",
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
+          loader: "babel-loader",
+        },
       },
       {
         test: /\.css$/,
         use: [
           // [style-loader](/loaders/style-loader)
-          { loader: 'style-loader' },
+          { loader: "style-loader" },
           // [css-loader](/loaders/css-loader)
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
-              modules: true
-            }
-          }
-        ]
-      }
-
-    ]
-  }
-}
+              modules: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [{ loader: "file-loader" }],
+      },
+    ],
+  },
+};
