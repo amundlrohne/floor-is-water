@@ -30,10 +30,20 @@ const GameScene = () => {
       <Main></Main>
       <div id="controls">
         <div className="leftJoystick">
-          <Joystick move={handleMove} stop={handleMoveStop}></Joystick>
+          <Joystick
+            move={handleMove}
+            stop={handleMoveStop}
+            stickColor={"#fcba03"}
+            baseColor={"#ad7f00"}
+          ></Joystick>
         </div>
         <div className="rightJoystick">
-          <Joystick move={handleDirection} stop={handleRelease}></Joystick>
+          <Joystick
+            move={handleDirection}
+            stop={handleRelease}
+            stickColor={"#fcba03"}
+            baseColor={"#ad7f00"}
+          ></Joystick>
         </div>
 
         <div className="jumpButton">
