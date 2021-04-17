@@ -29,7 +29,7 @@ module.exports = {
               modules: true
             }
           }
-        ]
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|fbx|ttf|woff|woff2|mp3)$/i,

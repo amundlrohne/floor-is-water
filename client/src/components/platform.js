@@ -1,7 +1,7 @@
 import * as three from 'three';
 import Component from './component';
-import woodImg from '../Assets/WoodenPlatform.jpg';
-import stoneImg from '../Assets/StonePlatform.jpg';
+import woodImg from '../assets/WoodenPlatform.jpg';
+import stoneImg from '../assets/StonePlatform.jpg';
 export class PlatformColumn extends Component {
 
     constructor(params) {
