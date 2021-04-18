@@ -3,16 +3,11 @@ import { Link } from "react-router-dom";
 import LobbyScene from "./LobbyScene";
 import SettingsScene from "./SettingsScene";
 import CreditsScene from "./CreditsScene";
-import "./ScenesStyle.css";
-
-
-
-
-
+import "..css/scene.css";
 
 export const MenuScene = () => {
   return (
-    <div class="MenuWrapper">
+    <div className="MenuWrapper">
       <h1>THE FLOOR IS WATER</h1>
       <ul>
           <li><Link to={`/lobby`}>Lobby</Link></li>

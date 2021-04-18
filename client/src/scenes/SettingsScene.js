@@ -32,7 +32,7 @@ export const SettingsScene = () => {
   return (
   <div class="SettingsWrapper"> 
       <h2>Settings</h2>
-      <div class="SettingsBar">
+      <div className="SettingsBar">
           <button type="button" onClick={togglePlay}>Background music</button>
           <p id="bgvalue"></p>
       </div>  

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const CreditsScene = () => {
 
   return (
-    <div class="CreditsWrapper">
+    <div className="CreditsWrapper">
       <h2>Credits</h2>
       <ul>
           <li>Backgroundphoto by <a href="https://unsplash.com/@lazycreekimages?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Michael Dziedzic</a> on Unsplash</li>

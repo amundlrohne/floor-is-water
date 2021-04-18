@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const LobbyScene = () => {
 
   return (
-    <div class="LobbyWrapper">
+    <div className="LobbyWrapper">
       <h2>Lobby</h2>
       <Link to={`/`}>Back</Link>      
     </div>
