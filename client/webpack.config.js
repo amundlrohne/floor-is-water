@@ -18,12 +18,6 @@ module.exports = {
         }
       },
       {
-        test: /\.mp3/,
-        use:{
-          loader:'file-loader'
-        }
-      },
-      {
         test: /\.css$/,
         use: [
           // [style-loader](/loaders/style-loader)
@@ -38,11 +32,15 @@ module.exports = {
         ]
       },
       {
-        test: /\.(ttf|woff|woff2)/,
-        use:{
-          loader:'file-loader'
-        }
-
+        test: /\.(png|jpe?g|gif|fbx|ttf|woff|woff2|mp3)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: "android_asset/www"
+            }
+          },
+        ],
       },
 
     ]
