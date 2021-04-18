@@ -22,7 +22,7 @@ div[class="SettingsWrapper"]{
     border: var(--silver);
     border-width: 3px;
     border-style: solid;
-    margin-top: 10%;
+    margin-top: 5%;
 }
 div[class="LobbyWrapper"]{
     display: flex;
@@ -53,6 +53,16 @@ div[class="MenuWrapper"] > ul > li{
 div[class="MenuWrapper"] > ul{
     padding-left: 0px;
     text-align:center;
+}
+div[class="CreditsWrapper"] > ul > li{
+    list-style-type: none;
+    padding-top: 10px;
+}
+div[class="CreditsWrapper"]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
 }
 body{
     color: var(--yellow);

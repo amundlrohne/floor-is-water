@@ -2,8 +2,6 @@ import React, { useDebugValue, useEffect } from "react";
 import { Link } from "react-router-dom";
 import MenuScene from "./MenuScene";
 import robot from "../assets/audio/RobotParts.mp3";
-import "./ScenesStyle.css";
-//credit these guys where it is relevant https://www.youtube.com/watch?v=sSuHdn2dY9M
 
 const bgmusic = new Audio(robot)
 

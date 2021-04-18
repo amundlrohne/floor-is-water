@@ -6,7 +6,7 @@ export const LobbyScene = () => {
   return (
     <div class="LobbyWrapper">
       <h2>Lobby</h2>
-      
+      <Link to={`/`}>Back</Link>      
     </div>
   );
 };

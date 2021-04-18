@@ -11,6 +11,8 @@ import GameScene from "./scenes/GameScene";
 import MenuScene from "./scenes/MenuScene";
 import LobbyScene from "./scenes/LobbyScene";
 import SettingsScene from "./scenes/SettingsScene";
+import CreditsScene from "./scenes/CreditsScene";
+
 
 
 
@@ -28,6 +30,7 @@ const App = () => {
         <Route path="/lobby" component={withRouter(LobbyScene)}></Route>
         <Route path="/settings" component={withRouter(SettingsScene)}></Route>
         <Route path="/game" component={withRouter(GameScene)}></Route>
+        <Route path="/credits" component={withRouter(CreditsScene)}></Route>
       </Switch>
     </div>
   );
