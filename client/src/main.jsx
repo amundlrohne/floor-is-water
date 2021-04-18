@@ -8,15 +8,17 @@ import { Entity } from "./entities/entity";
 import Map from "./components/map";
 import MapEntity from "./entities/map";
 import robot from "./assets/Robot.fbx";
+import {PhysicsHandler} from "./systems/physics";
 
 //import './entities/player';
 
-let camera, scene, renderer;
+let camera, scene, renderer, physicsHandler;
 
 const Main = () => {
   function init() {
     // Init scene
     scene = new th.Scene();
+    physicsHandler = new PhysicsHandler();
 
     // Init camera (PerspectiveCamera)
     camera = new th.PerspectiveCamera(
@@ -55,9 +57,9 @@ const Main = () => {
       scene.add(light);
     }
     var loader = new FBXLoader();
-    
 
-    
+
+
     loader.load(robot, function (result) {
       console.log(result)
       scene.add(result);
@@ -76,7 +78,7 @@ const Main = () => {
     // Position camera
     camera.position.set(0, 10, 20);
   }
- 
+
 
   // Draw the scene every time the screen is refreshed
   function animate() {
@@ -103,7 +105,7 @@ const Main = () => {
     animate();
 
     // Entities
-    const gameWorld = new MapEntity({ scene: scene });
+    new MapEntity({ scene: scene, physicsHandler: physicsHandler });
   }, []);
   return <div />;
 };

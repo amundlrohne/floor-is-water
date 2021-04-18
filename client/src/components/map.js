@@ -1,6 +1,7 @@
 import * as three from 'three';
 import Component from './component';
 import water from '../Assets/water.jpg'
+import {Vector3} from "three";
 export default class Map extends Component {
 
     constructor(params) {
@@ -14,6 +15,7 @@ export default class Map extends Component {
                 this.mesh = new three.Mesh(planeGeo, planeMat);
                 this.mesh.rotation.x = Math.PI * -.5;
                 params.scene.add(this.mesh);
+                params.physicsHandler.addHitbox({_id: 'plane1', mesh: this.mesh, mass: 0,  position: new Vector3(0, 0, 0), type: 'plane'})
             }
         }
     }

@@ -19,8 +19,4 @@ export default class PlatformEntity extends Entity {
         }
     }
 
-    SetPosition(p) {
-        super.SetPosition(p);
-        this.GetComponent('Platform'+this.params.type).UpdatePosition(p);
-    }
 }
