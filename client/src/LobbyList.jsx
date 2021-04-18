@@ -10,6 +10,8 @@ const LobbyList = () => {
     const [connected, setConnected] = useState(false);
     const [lobbys, setLobbys] = useState([]);
 
+    const [newLobbyName, setNewLobbyName] = useState("");
+
     useEffect(() => {
         socket.on("connect", () => {
             console.log(socket.id);
@@ -34,7 +36,11 @@ const LobbyList = () => {
 
     const createLobby = () => {
         if (connected) {
-            socket.emit("create-lobby", "Test Room");
+            if (newLobbyName != "") {
+                socket.emit("create-lobby", newLobbyName);
+            } else {
+                console.warn("Please enter lobby name");
+            }
         }
     };
 
@@ -50,6 +56,11 @@ const LobbyList = () => {
             <div>
                 <h1>Lobbies</h1>
                 <>
+                    <input
+                        type="text"
+                        value={newLobbyName}
+                        onChange={(e) => setNewLobbyName(e.target.value)}
+                    />
                     <button onClick={createLobby}>Ny lobby</button>
                     <button onClick={getLobbys}>Hent lobbies</button>
                     <div className="lobbies">
