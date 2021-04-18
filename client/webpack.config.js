@@ -18,8 +18,19 @@ module.exports = {
                 },
             },
             {
-                test: /\.css$/i,
+                test: /\.css$/,
                 use: ["style-loader", "css-loader"],
+            },
+            {
+                test: /\.(png|jpe?g|gif|fbx|ttf|woff|woff2|mp3)$/i,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            outputPath: "android_asset/www",
+                        },
+                    },
+                ],
             },
         ],
     },

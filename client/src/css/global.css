@@ -1,8 +1,7 @@
 body {
-    background-color: #fefefe;
-}
-
-.lobbies {
+    color: var(--yellow);
+    background-color: var(--gunmetal);
+    font-family: "Audiowide";
 }
 
 .lobbies > div {
