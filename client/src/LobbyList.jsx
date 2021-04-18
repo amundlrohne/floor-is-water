@@ -1,0 +1,76 @@
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+
+import { socket } from "./service/socket";
+import "./css/global.css";
+
+const LobbyList = () => {
+    const history = useHistory();
+
+    const [connected, setConnected] = useState(false);
+    const [lobbys, setLobbys] = useState([]);
+
+    useEffect(() => {
+        socket.on("connect", () => {
+            console.log(socket.id);
+        });
+
+        socket.on("serve-lobbies", (data) => {
+            setLobbys(data);
+        });
+
+        setConnected(socket.connected);
+    }, [socket]);
+
+    useEffect(() => {
+        getLobbys();
+    }, [connected]);
+
+    const getLobbys = () => {
+        if (connected) {
+            socket.emit("requested-lobbies");
+        }
+    };
+
+    const createLobby = () => {
+        if (connected) {
+            socket.emit("create-lobby", "Test Room");
+        }
+    };
+
+    const joinLobby = (lobbyID) => {
+        if (connected) {
+            socket.emit("join-lobby", lobbyID);
+            history.push("/lobby-detail/" + lobbyID);
+        }
+    };
+
+    if (connected) {
+        return (
+            <div>
+                <h1>Lobbies</h1>
+                <>
+                    <button onClick={createLobby}>Ny lobby</button>
+                    <button onClick={getLobbys}>Hent lobbies</button>
+                    <div className="lobbies">
+                        {lobbys.map((value, index) => {
+                            return (
+                                <div
+                                    onClick={() => joinLobby(value.id)}
+                                    key={index}
+                                >
+                                    <div>{value.name}</div>
+                                    <div>{value.clients.length}/4</div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </>
+            </div>
+        );
+    }
+
+    return <div>Loading...</div>;
+};
+
+export default LobbyList;

@@ -1,0 +1,17 @@
+body {
+    background-color: #fefefe;
+}
+
+.lobbies {
+}
+
+.lobbies > div {
+    border: 1px solid black;
+    margin-top: 0.5%;
+    width: 40%;
+}
+
+.lobbies > div:hover {
+    background-color: #a7a7a7;
+    cursor: pointer;
+}
