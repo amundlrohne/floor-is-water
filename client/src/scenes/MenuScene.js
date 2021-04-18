@@ -9,13 +9,15 @@ import "../css/global.css";
 
 export const MenuScene = () => {
   return (
-    <div className="menuWrapper">
-      <h1>THE FLOOR IS WATER</h1>
-      <ul>
-          <li><Link to={`/lobby`}>Lobby</Link></li>
-          <li><Link to={`/settings`}>Settings</Link></li>
-          <li><Link to={`/credits`}>Credits</Link></li>
-      </ul>
+    <div className="BgWrapper">
+      <div className="menuWrapper">
+        <h1>THE FLOOR IS WATER</h1>
+        <ul>
+            <li><Link to={`/lobby`}>Lobby</Link></li>
+            <li><Link to={`/settings`}>Settings</Link></li>
+            <li><Link to={`/credits`}>Credits</Link></li>
+        </ul>
+      </div>
     </div>
   );
 };

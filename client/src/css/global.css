@@ -2,6 +2,7 @@ body {
     color: var(--yellow);
     background-color: var(--gunmetal);
     font-family: "Audiowide";
+    margin: 0;
 }
 
 .lobbies > div {
