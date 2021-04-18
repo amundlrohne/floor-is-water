@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 import { socket } from "../service/socket";
 import "../css/global.css";
@@ -46,42 +46,54 @@ const LobbyList = () => {
 
     const joinLobby = (lobbyID) => {
         if (connected) {
-            socket.emit("join-lobby", lobbyID);
+            //socket.emit("join-lobby", lobbyID);
             history.push("/lobby-detail/" + lobbyID);
         }
     };
 
     if (connected) {
         return (
-            <div>
+            <div className="lobbiesWrapper">
                 <h1>Lobbies</h1>
-                <>
-                    <input
-                        type="text"
-                        value={newLobbyName}
-                        onChange={(e) => setNewLobbyName(e.target.value)}
-                    />
-                    <button onClick={createLobby}>Ny lobby</button>
-                    <button onClick={getLobbys}>Hent lobbies</button>
-                    <div className="lobbies">
-                        {lobbys.map((value, index) => {
-                            return (
-                                <div
-                                    onClick={() => joinLobby(value.id)}
-                                    key={index}
-                                >
-                                    <div>{value.name}</div>
-                                    <div>{value.clients.length}/4</div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </>
+                <input
+                    type="text"
+                    value={newLobbyName}
+                    placeholder="Lobby name..."
+                    onChange={(e) => setNewLobbyName(e.target.value)}
+                />
+                <button onClick={createLobby}>Ny lobby</button>
+                <button onClick={getLobbys}>Hent lobbies</button>
+
+                <div className="lobbyListHeader">
+                    <div>Name</div>
+                    <div>Size</div>
+                </div>
+                <div className="lobbies">
+                    {lobbys.map((value, index) => {
+                        return (
+                            <div
+                                onClick={() => joinLobby(value.id)}
+                                key={index}
+                            >
+                                <div>{value.name}</div>
+                                <div>{value.clients.length}/4</div>
+                            </div>
+                        );
+                    })}
+                </div>
+                <Link className="lobbyListBack" to={`/`}>
+                    Back
+                </Link>
             </div>
         );
     }
 
-    return <div>Loading...</div>;
+    return (
+        <>
+            <div>Loading...</div>
+            <Link to={`/`}>Back</Link>
+        </>
+    );
 };
 
 export default LobbyList;

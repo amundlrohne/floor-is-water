@@ -1,3 +1,5 @@
+import { Player } from "./player.js";
+
 class SocketWrapper {
     constructor(socket) {
         this.socket = socket;
@@ -45,26 +47,31 @@ class SocketWrapper {
 }
 
 export default class Lobby {
-    constructor(name, id, ownerID, io) {
+    constructor(name, id, io) {
         this.name = name;
         this.id = id;
-        this.ownerID = ownerID;
+        this.ownerID;
         this.addNamespace(io);
         this.clients = [];
+        this.active = true;
 
         console.log(`[LOBBY ${this.id}] Created lobby.`);
     }
 
-    addClient = (socket) => {
+    addClient = (username, socket) => {
+        if (this.clients.length == 0) {
+            this.ownerID = socket.id;
+        }
+
         if (this.clients.length < 4) {
             for (let c of this.clients) {
-                if (c == socket.id) {
+                if (c.id == socket.id) {
                     console.log(`[LOBBY ${this.id}] Client already in lobby.`);
                     return;
                 }
             }
 
-            this.clients.push(socket.id);
+            this.clients.push(new Player(username, socket.id));
             console.log(`[LOBBY ${this.id}] Client joined lobby.`);
         } else {
             console.log(
@@ -73,11 +80,32 @@ export default class Lobby {
         }
     };
 
+    removeClient = (socket) => {
+        console.log(`[LOBBY ${this.id}] Client disconnected`);
+        this.clients = this.clients.filter((c) => c.id != socket.id);
+
+        // Delete lobby if disconnection results in 0 players.
+        if (this.clients == 0) {
+            console.log(`[LOBBY ${this.id}] Terminated.`);
+            this.active = false;
+            return;
+        }
+
+        this.ownerID = this.clients[0].id;
+    };
+
     addNamespace = (io) => {
         const namespace = io.of("/" + this.id);
 
         namespace.on("connection", (socket) => {
-            namespace.emit("update-lobby", this);
+            socket.on("disconnect", () => {
+                this.removeClient(socket);
+            });
+
+            socket.on("join-lobby", (username) => {
+                this.addClient(username, socket);
+                namespace.emit("update-lobby", this); // Broadcast lobby update
+            });
         });
     };
 }

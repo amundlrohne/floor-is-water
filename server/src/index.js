@@ -27,26 +27,19 @@ io.on("connection", (socket) => {
     console.log(`[SERVER] Client connected ${socket.id}`);
 
     socket.on("create-lobby", (lobbyName) => {
-        const lobby = new Lobby(lobbyName, uuid(), socket.id, io); // Init new lobby
-        lobby.addClient(socket); // Add client to lobby
+        const lobby = new Lobby(lobbyName, uuid(), io); // Init new lobby
         lobbies.push(lobby); // Add lobby to list of all lobbies
         serveLobbies(socket); // Update lobby list to frontend
-        socket.emit("confirm-lobby", lobby); // Respond success
     });
 
     socket.on("requested-lobbies", () => {
         serveLobbies(socket); // Respond with lobbies
     });
-
-    socket.on("join-lobby", (lobbyID) => {
-        const lobby = lobbies.filter((lobby) => lobby.id == lobbyID); // Find correct lobby in list.
-        lobby[0].addClient(socket); // Add client to lobby
-        socket.emit("confirm-lobby", lobby[0]); // Respond success
-    });
 });
 
 const serveLobbies = (socket) => {
-    socket.emit("serve-lobbies", lobbies);
+    const activeLobbies = lobbies.filter((l) => l.active == true);
+    socket.emit("serve-lobbies", activeLobbies);
 };
 
 const lobbies = [];
