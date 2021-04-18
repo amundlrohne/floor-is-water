@@ -15,6 +15,8 @@ import SettingsScene from "./scenes/SettingsScene";
 
 
 const App = () => {
+  screen.orientation.lock('landscape');
+
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       {/* <p>
