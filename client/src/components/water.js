@@ -45,7 +45,6 @@ export default class Water extends Component {
   SetParent(p) {
     super.SetParent(p);
     const position = this.Parent.Position;
-    console.log(position);
     this.mesh.position.set(
       position.x,
       position.y + this.params.height,
@@ -56,7 +55,6 @@ export default class Water extends Component {
   update(clock, baseY) {
     const delta = clock.getDelta();
     const time = clock.getElapsedTime() * 10;
-    console.log(this.mesh);
     const position = this.mesh.geometry.attributes.position;
 
     for (let i = 0; i < position.count; i++) {

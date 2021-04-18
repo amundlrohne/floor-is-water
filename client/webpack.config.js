@@ -32,8 +32,15 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
-        use: [{ loader: "file-loader" }],
+        test: /\.(png|jpe?g|gif|fbx)$/i,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              outputPath: "android_asset/www",
+            },
+          },
+        ],
       },
     ],
   },

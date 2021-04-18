@@ -1,5 +1,6 @@
 import * as three from "three";
 import { Entity } from "./entity";
+import Powerup from "../components/active-power-up";
 
 export default class PowerupEntity extends Entity {
   constructor(params) {
