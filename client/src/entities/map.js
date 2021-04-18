@@ -20,19 +20,6 @@ export default class MapEntity extends Entity {
         height: 20,
         segments: 6,
       });
-      this.powerup = new PowerupEntity({
-        scene: params.scene,
-        type: "punch",
-        position: new Vector3(0, 30, 0),
-        model: gem4,
-      });
-      this.water = new WaterEntity({ scene: params.scene, height: 5 });
     }
-  }
-
-  updateMap(clock, baseY) {
-    // console.log(clock);
-    this.water.update(clock, baseY);
-    this.powerup.update(clock);
   }
 }

@@ -5,6 +5,7 @@ import "./entities/entity";
 import { Entity } from "./entities/entity";
 import Map from "./components/map";
 import MapEntity from "./entities/map";
+import EntityManager from "./systems/entity-manager";
 
 //import './entities/player';
 
@@ -12,6 +13,7 @@ let camera, scene, renderer, cube, clock;
 let baseWaterY = 0;
 
 let gameWorld;
+let entityManager;
 
 const Main = () => {
   function init() {
@@ -71,7 +73,7 @@ const Main = () => {
   function render() {
     if (gameWorld) {
       baseWaterY += 0.01;
-      gameWorld.updateMap(clock, baseWaterY);
+      entityManager.updateEntities(clock, baseWaterY);
       renderer.render(scene, camera);
     }
   }
@@ -93,6 +95,9 @@ const Main = () => {
 
     // Entities
     gameWorld = new MapEntity({ scene: scene });
+    entityManager = new EntityManager({ scene: scene });
+    entityManager.populatePowerups();
+    entityManager.populateWater();
   }, []);
   return <div />;
 };
