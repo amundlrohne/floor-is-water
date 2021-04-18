@@ -71,7 +71,7 @@ const Main = () => {
   function render() {
     if (gameWorld) {
       baseWaterY += 0.01;
-      gameWorld.updateWater(clock, baseWaterY);
+      gameWorld.updateMap(clock, baseWaterY);
       renderer.render(scene, camera);
     }
   }

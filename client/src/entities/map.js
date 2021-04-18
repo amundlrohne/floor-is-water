@@ -20,9 +20,9 @@ export default class MapEntity extends Entity {
         height: 20,
         segments: 6,
       });
-      const powerup = new PowerupEntity({
+      this.powerup = new PowerupEntity({
         scene: params.scene,
-        type: "speed",
+        type: "punch",
         position: new Vector3(0, 30, 0),
         model: gem4,
       });
@@ -30,8 +30,9 @@ export default class MapEntity extends Entity {
     }
   }
 
-  updateWater(clock, baseY) {
+  updateMap(clock, baseY) {
     // console.log(clock);
     this.water.update(clock, baseY);
+    this.powerup.update(clock);
   }
 }

@@ -12,4 +12,8 @@ export default class PowerupEntity extends Entity {
       this.AddComponent(new Powerup(params));
     }
   }
+
+  update(clock) {
+    this._components.Powerup.update(clock);
+  }
 }
