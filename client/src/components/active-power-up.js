@@ -14,6 +14,7 @@ export default class Powerup extends Component {
     this.InitComponent(params);
     this.params = params;
     this.mesh;
+    this.uuid = "";
     this.startY = params.position.y;
     if (params) {
       const loader = new FBXLoader();
@@ -44,6 +45,7 @@ export default class Powerup extends Component {
     map.encoding = three.sRGBEncoding;
 
     this.mesh = result.children[0];
+    this.uuid = this.mesh.uuid;
     this.mesh.material = new three.MeshPhongMaterial({
       map: map,
       // color: 0xff00ff,

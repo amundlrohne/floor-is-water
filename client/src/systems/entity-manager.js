@@ -43,6 +43,13 @@ export default class EntityManager extends EntitySystem {
     }
   }
 
+  populateWater() {
+    this.entities.push({
+      type: "water",
+      entity: new WaterEntity({ scene: this.params.scene, height: 5 }),
+    });
+  }
+
   spawnPowerup(type, position) {
     this.entities.push({
       type: "powerup",
@@ -54,10 +61,18 @@ export default class EntityManager extends EntitySystem {
     });
   }
 
-  populateWater() {
-    this.entities.push({
-      type: "water",
-      entity: new WaterEntity({ scene: this.params.scene, height: 5 }),
+  removePowerup(toRemove) {
+    this.entities = this.entities.filter((entity) => {
+      if (entity == toRemove) {
+        let removed = toRemove.entity._components.Powerup;
+
+        removed.mesh.geometry.dispose();
+        removed.mesh.material.dispose();
+        this.params.scene.remove(
+          this.params.scene.getObjectByProperty("uuid", removed.uuid)
+        );
+      }
+      return entity != toRemove;
     });
   }
 

@@ -96,6 +96,8 @@ const Main = () => {
     // Entities
     gameWorld = new MapEntity({ scene: scene });
     entityManager = new EntityManager({ scene: scene });
+
+    //temp
     entityManager.populatePowerups();
     entityManager.populateWater();
   }, []);
