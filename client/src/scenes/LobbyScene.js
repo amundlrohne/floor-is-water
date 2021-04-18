@@ -6,7 +6,8 @@ export const LobbyScene = () => {
   return (
     <div class="LobbyWrapper">
       <h2>Lobby</h2>
-      <Link to={`/`}>Back</Link>      
+      <Link to={`/game`}>game</Link>
+      <Link to={`/`}>Back</Link>
     </div>
   );
 };
