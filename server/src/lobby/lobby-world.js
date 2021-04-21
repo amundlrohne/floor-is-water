@@ -100,6 +100,7 @@ export default class Lobby {
         namespace.on("connection", (socket) => {
             socket.on("disconnect", () => {
                 this.removeClient(socket);
+                namespace.emit("update-lobby", this); // Broadcast lobby update
             });
 
             socket.on("join-lobby", (username) => {

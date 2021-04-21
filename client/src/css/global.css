@@ -2,6 +2,7 @@ body {
     color: var(--yellow);
     background-color: var(--gunmetal);
     font-family: "Audiowide";
+    margin: 0;
 }
 
 @font-face {
@@ -22,6 +23,12 @@ button {
     border-radius: 2px;
     border-width: 2px;
 }
+
+button:hover {
+    background-color: var(--silver);
+    cursor: pointer;
+}
+
 a:link {
     color: var(--yellow);
     border: var(--silver);
@@ -37,6 +44,16 @@ h1 {
 }
 
 input {
+    font-family: "Audiowide";
+    color: var(--yellow);
+    background-color: var(--charcoal);
+    border: var(--silver);
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
+}
+
+select {
     font-family: "Audiowide";
     color: var(--yellow);
     background-color: var(--charcoal);

@@ -61,25 +61,29 @@ const LobbyList = () => {
                     placeholder="Lobby name..."
                     onChange={(e) => setNewLobbyName(e.target.value)}
                 />
-                <button onClick={createLobby}>Ny lobby</button>
-                <button onClick={getLobbys}>Hent lobbies</button>
+                <button onClick={createLobby}>New Lobby</button>
+                <button onClick={getLobbys}>Reload</button>
 
                 <div className="lobbyListHeader">
                     <div>Name</div>
                     <div>Size</div>
                 </div>
                 <div className="lobbies">
-                    {lobbys.map((value, index) => {
-                        return (
-                            <div
-                                onClick={() => joinLobby(value.id)}
-                                key={index}
-                            >
-                                <div>{value.name}</div>
-                                <div>{value.clients.length}/4</div>
-                            </div>
-                        );
-                    })}
+                    {lobbys.length > 0 ? (
+                        lobbys.map((value, index) => {
+                            return (
+                                <div
+                                    onClick={() => joinLobby(value.id)}
+                                    key={index}
+                                >
+                                    <div>{value.name}</div>
+                                    <div>{value.clients.length}/4</div>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <p>Currently no active lobbies</p>
+                    )}
                 </div>
                 <Link className="lobbyListBack" to={`/`}>
                     Back

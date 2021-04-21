@@ -45,5 +45,5 @@ const serveLobbies = (socket) => {
 const lobbies = [];
 
 httpServer.listen(3000, () => {
-    console.log("listening on *:3000");
+    console.log("[SERVER] Socket.io server running on port 3000");
 });

@@ -91,6 +91,7 @@
     grid-column: span 3;
     display: grid;
     grid-template-columns: 60% auto auto;
+    background-color: var(--charcoal);
 }
 
 .lobbies > div:hover {
@@ -102,6 +103,7 @@
     display: grid;
     grid-template-columns: auto auto auto;
     width: 40%;
+    grid-gap: 1%;
 }
 
 .lobbiesWrapper > h1 {
@@ -120,12 +122,14 @@
     border-width: 2px;
     text-align: center;
     cursor: pointer;
+    margin-top: 1%;
 }
 
 .lobbyWrapper {
     display: grid;
     grid-template-columns: auto;
     width: 40%;
+    grid-gap: 1%;
 }
 
 .lobbyListBack {
@@ -133,5 +137,22 @@
     text-align: center;
 }
 
-.usernameModal {
+.players {
+    display: grid;
+    grid-template-columns: auto;
+    grid-gap: 1%;
+}
+
+.playerEntry {
+    display: grid;
+    grid-template-columns: 70% auto;
+    background-color: var(--charcoal);
+    padding: 2%;
+    margin-top: 1%;
+}
+
+.colorPicker {
+    margin-top: 1%;
+    display: grid;
+    grid-template-columns: auto auto;
 }

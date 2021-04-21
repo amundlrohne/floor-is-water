@@ -47,11 +47,25 @@ const LobbyDetail = () => {
         return (
             <div className="lobbyWrapper">
                 <h3>{lobby.name}</h3>
-                <ul>
+                <div className="colorPicker">
+                    <label for="colors">Choose a color:</label>
+                    <select name="colors" id="colors">
+                        <option value="orange">Orange</option>
+                        <option value="purple">Purple</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                    </select>
+                </div>
+
+                <div className="players">
                     {lobby.clients.map((value, index) => {
-                        return <li key={index}>{value.username}</li>;
+                        return (
+                            <div className="playerEntry" key={index}>
+                                <div>{value.username}</div>
+                            </div>
+                        );
                     })}
-                </ul>
+                </div>
                 <div
                     onClick={() => {
                         setDisconnect(true);
