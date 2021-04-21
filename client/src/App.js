@@ -5,13 +5,13 @@ import {
     Route,
     withRouter,
 } from "react-router-dom";
-import GameScene from "./scenes/GameScene";
 import MenuScene from "./scenes/MenuScene";
 import LobbyScene from "./scenes/LobbyScene";
 import SettingsScene from "./scenes/SettingsScene";
 import CreditsScene from "./scenes/CreditsScene";
 import LobbyList from "./scenes/LobbyList.jsx";
 import LobbyDetail from "./scenes/LobbyDetail.jsx";
+import GameScene from "./scenes/GameScene";
 
 const App = () => {
     screen.orientation.lock("landscape");

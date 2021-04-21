@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 
 export const LobbyScene = () => {
     return (
-        <div className="LobbyWrapper">
+        <div class="LobbyWrapper">
             <h2>Lobby</h2>
+            <Link to={`/game`}>game</Link>
             <Link to={`/`}>Back</Link>
         </div>
     );
