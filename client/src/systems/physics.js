@@ -44,8 +44,10 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
-                body.fixedRotation = params.fixedRotation
-                this.fixedRotations.add(params._id)
+                if (params.fixedRotation) {
+                    body.fixedRotation = params.fixedRotation
+                    this.fixedRotations.add(params._id)
+                }
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
