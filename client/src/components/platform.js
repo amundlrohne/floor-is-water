@@ -2,6 +2,7 @@ import * as three from 'three';
 import Component from './component';
 import woodImg from '../assets/WoodenPlatform.jpg';
 import stoneImg from '../assets/StonePlatform.jpg';
+import {Vector3} from "three";
 export class PlatformColumn extends Component {
 
     constructor(params) {
@@ -13,13 +14,11 @@ export class PlatformColumn extends Component {
             const platformMat = new three.MeshPhongMaterial({map: texture});
             this.mesh = new three.Mesh(platformGeo, platformMat);
             params.scene.add(this.mesh);
+            params.type = 'cylinder';
+            params.physicsHandler.addHitbox({_id: this._id, mesh: this.mesh, mass: 50, ...params})
         }
     }
 
-    UpdatePosition(p) {
-        console.log(p);
-        this.mesh.position.copy(p);
-    }
 }
 export class PlatformFloating extends Component {
 
@@ -32,11 +31,9 @@ export class PlatformFloating extends Component {
             const platformMat = new three.MeshPhongMaterial({map: texture});
             this.mesh = new three.Mesh(platformGeo, platformMat);
             params.scene.add(this.mesh);
+            params.type = 'cube';
+            params.physicsHandler.addHitbox({_id: this._id, mesh: this.mesh, mass: 50, ...params})
         }
     }
 
-    UpdatePosition(p) {
-        console.log(p);
-        this.mesh.position.copy(p);
-    }
 }

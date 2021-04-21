@@ -154,7 +154,7 @@ export const render_component = (() => {
         result.traverse((c) => {
           c.castShadow = true;
         });
-          const m = new th.AnimationMixer(result);
+         const m = new th.AnimationMixer(result);
         m.clipActions(result.animations[10]).play();
   
         console.log(result.animations); 

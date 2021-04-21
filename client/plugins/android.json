@@ -12,7 +12,14 @@
     },
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.cordova.react"
+    },
+    "cordova-plugin-screen-orientation": {
+      "PACKAGE_NAME": "com.cordova.react"
     }
   },
-  "dependent_plugins": {}
+  "dependent_plugins": {
+    "es6-promise-plugin": {
+      "PACKAGE_NAME": "com.cordova.react"
+    }
+  }
 }

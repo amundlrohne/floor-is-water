@@ -1,6 +1,9 @@
+import {v4 as uuid} from 'uuid';
+
 export default class Component {
     constructor() {
       this.parent_ = null;
+      this._id = uuid();
     }
 
     Destroy() {

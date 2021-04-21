@@ -1,0 +1,100 @@
+@import "../constants.css";
+
+div[class="SettingsBar"] >*{
+    display: inline-block;
+    margin: 5px;
+}
+div[class="SettingsBar"]{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+div[class="SettingsWrapper"]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--charcoal);
+    border-radius: 4px;
+    border: var(--silver);
+    border-width: 3px;
+    border-style: solid;
+    margin-top: 5%;
+}
+div[class="LobbyWrapper"]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--charcoal);
+    border-radius: 4px;
+    border: var(--silver);
+    border-width: 3px;
+    border-style: solid;
+    margin-top: 5%;
+}
+div[class="MenuWrapper"]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+div[class="MenuWrapper"] > ul > li > a{
+    font-size:x-large;
+}
+div[class="MenuWrapper"] > ul > li{
+    list-style-type: none;
+    padding-top: 10px;
+}
+
+div[class="MenuWrapper"] > ul{
+    padding-left: 0px;
+    text-align:center;
+}
+div[class="CreditsWrapper"] > ul > li{
+    list-style-type: none;
+    padding-top: 10px;
+}
+div[class="CreditsWrapper"]{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+body{
+    color: var(--yellow);
+    background-color: var(--gunmetal);
+    font-family: 'Audiowide';
+}
+@font-face {
+    font-family: 'Audiowide';
+    src: url('../assets/font/Audiowide-Regular.ttf') format('truetype'),
+        url('../assets/font/Audiowide-Regular.woff2') format('woff2'),
+        url('../assets/font/Audiowide-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+button{
+    font-family: 'Audiowide';
+    color: var(--yellow);
+    background-color: var(--charcoal);
+    border: var(--silver);
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
+}
+a:link{
+    color:var(--yellow);
+    border:var(--silver);
+
+}
+a:visited {
+    color: var(--yellow);
+}
+h1{
+    text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #f2c84b, 0 0 30px #f2c84b, 0 0 40px #f2c84b, 0 0 55px #f2c84b, 0 0 75px #f2c84b, 2px -5px 2px rgba(206,89,55,0), 2px -5px 2px rgba(206,89,55,0);
+}

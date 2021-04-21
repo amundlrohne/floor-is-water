@@ -129,6 +129,8 @@ export class BasicCharacterController extends Component {
             this.target = result;
             this.mixer = mixer;
             this.params_.scene.add(result);
+            console.log("ALLWORKS?")
+            
         });
         /* loader.LoadGLTF(undefined,
             robot,
