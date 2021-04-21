@@ -16,7 +16,7 @@ import { PlayerInput } from "../components/player-input";
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler, entitySystem, clock;
+let camera, scene, renderer, physicsHandler, entitySystem, clock, controls;
 
 const GameScene = () => {
   function init() {
@@ -40,7 +40,7 @@ const GameScene = () => {
     // Init renderer
     renderer = new th.WebGLRenderer({ antialias: true });
     const canvas = renderer.domElement;
-    const controls = new OrbitControls(camera, canvas);
+    controls = new OrbitControls(camera, canvas);
     controls.target.set(0, 5, 0);
     controls.update();
 
@@ -115,6 +115,7 @@ const GameScene = () => {
     new MapEntity({ scene: scene, physicsHandler: physicsHandler });
     console.log(entitySystem);
     const player = new PlayerEntity({
+      camera: controls,
         scene: scene,
         entitySystem: entitySystem,
         clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'cylinder', position: (new th.Vector3(0, 10, 0))

@@ -3,6 +3,7 @@ import {Vector3} from "three";
 import {Vec3} from "cannon-es";
 export class PhysicsHandler {
     constructor() {
+        this.trackers = {}
         this.objects = {}
         this.fixedRotations = new Set();
         this.world = new cannon.World({
@@ -42,15 +43,15 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
-                    material: new cannon.Material({friction:0.02,restitution:0}),
+                    fixedRotation: params.fixedRotation,
+                    material: new cannon.Material({friction: 0.01})
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
                 if (params.fixedRotation) {
-                    body.fixedRotation = params.fixedRotation
                     this.fixedRotations.add(params._id)
                 }
-                
+
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
 
@@ -59,7 +60,7 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass,
                     shape: new cannon.Plane(),
-
+                    material: new cannon.Material({friction: 0.01})
                 })
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
@@ -67,6 +68,19 @@ export class PhysicsHandler {
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
             }
+        }
+    }
+
+    addTracking(mesh, id) {
+        if (this.trackers[id]) {
+            this.trackers[id] = undefined
+        } else {
+            mesh.minDistance = 15;
+            mesh.maxDistance = 15;
+            mesh.minPolarAngle = 1;
+            mesh.maxPolarAngle = 1;
+
+            this.trackers[id] = mesh
         }
     }
 
@@ -112,8 +126,10 @@ export class PhysicsHandler {
             let body = this.objects[key].body;
             let mesh = this.objects[key].mesh;
             mesh.position.copy(body.position);
-            if (!this.fixedRotations.has(key)){
-                mesh.quaternion.copy(body.quaternion);
+            mesh.quaternion.copy(body.quaternion);
+            if (this.trackers[key]) {
+                this.trackers[key].target.copy(body.position)
+                this.trackers[key].update()
             }
         }
     }

@@ -19,25 +19,29 @@ export class PlayerInput extends Component {
         //MUST BE SWITCHED WITH TOUCH UI ELEMENTS
         //console.log(this.Parent.params.physicsHandler)
         document.addEventListener("keydown", (e) => {
-            if(e.key=="w"){
+            if(e.key=="s"){
                 if(this.Parent.params.physicsHandler.findObject('player').velocity.z > -20) {
                     this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(0 ,0,-30))
                 }
             }
-            if(e.key=="a"){
+            if(e.key=="d"){
                 if(this.Parent.params.physicsHandler.findObject('player').velocity.x > -20) {
                     this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(-30,0,0))
                 }
             }
-            if(e.key=="s"){
+            if(e.key=="w"){
                 if(this.Parent.params.physicsHandler.findObject('player').velocity.z < 20) {
                     this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(0,0,30))
                 }
             }
-            if(e.key=="d"){
+            if(e.key=="a"){
                 if(this.Parent.params.physicsHandler.findObject('player').velocity.x < 20) {
                     this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(30,0,0))
                 }
+            }
+            if(e.key=="k"){
+                console.log("pressed k")
+                this.Parent.params.physicsHandler.addTracking(this.Parent.params.camera, 'player');
             }
             if(e.code=="Space"){
                 if(this.Parent.params.physicsHandler.findObject('player').velocity.y < 50) {
