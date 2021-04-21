@@ -22,7 +22,7 @@ export class PhysicsHandler {
                     shape: new cannon.Sphere(radius),
                 })
                 body.position.copy(params.position) // m
-                body.quaternion.copy(params.mesh.quaternion) // make it face up
+                body.quaternion.copy(new cannon.Quaternion(0,0,0,0)) // make it face up
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
@@ -42,7 +42,8 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
-                    material: new cannon.Material({friction:0.02,restitution:0}),
+                    fixedRotation:params.fixedRotation,
+                    material: new cannon.Material({friction:0.0}),
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
@@ -89,6 +90,13 @@ export class PhysicsHandler {
     setPosition(id, position) {
         this.findObject(id).position.copy(position);
         this.stopVelocity(id);
+    }
+
+    extraStopVelocity(id){
+        let body = this.findObject(id);
+        body.velocity.x = 0;
+            body.velocity.y = 0;
+            body.velocity.z = 0;
     }
 
     stopVelocity(id) {

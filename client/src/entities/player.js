@@ -110,7 +110,7 @@ export class BasicCharacterController extends Component {
             _id: "player",
             mesh: this.target,
             type:this.params_.type,
-            mass: 10,
+            mass: 100,
             radius: this.params_.radius,
             segments: this.params_.segments,
             fixedRotation:true,
