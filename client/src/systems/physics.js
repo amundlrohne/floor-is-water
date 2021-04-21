@@ -4,6 +4,7 @@ import {Vec3} from "cannon-es";
 export class PhysicsHandler {
     constructor() {
         this.objects = {}
+        this.fixedRotations = new Set();
         this.world = new cannon.World({
             gravity: new cannon.Vec3(0, -98.2, 0), // m/s²
         });
@@ -43,6 +44,8 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
+                body.fixedRotation = params.fixedRotation
+                this.fixedRotations.add(params._id)
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
@@ -60,16 +63,30 @@ export class PhysicsHandler {
         }
     }
 
-    applyVelocity(id, velocity) {
+    findObject(id) {
         for (let key in this.objects) {
-            console.log("applying force");
-            let body = this.objects[key].body;
-            if (body.mass !== 0 && key === id) {
-                body.velocity.x += velocity.x;
-                body.velocity.y += velocity.y;
-                body.velocity.z += velocity.z;
+            if (key === id) {
+                return this.objects[key].body;
             }
         }
+    }
+
+    applyVelocity(id, velocity) {
+        let body = this.findObject(id);
+        if (body.mass !== 0) {
+            body.velocity.x += velocity.x;
+            body.velocity.y += velocity.y;
+            body.velocity.z += velocity.z;
+        }
+    }
+
+    setPosition(id, position) {
+        this.findObject(id).position.copy(position);
+        this.stopVelocity(id);
+    }
+
+    stopVelocity(id) {
+        this.findObject(id).velocity.copy(new Vector3(0, 0, 0));
     }
 
     animate() {
@@ -88,7 +105,9 @@ export class PhysicsHandler {
             let body = this.objects[key].body;
             let mesh = this.objects[key].mesh;
             mesh.position.copy(body.position);
-            mesh.quaternion.copy(body.quaternion);
+            if (!this.fixedRotations.has(key)){
+                mesh.quaternion.copy(body.quaternion);
+            }
         }
     }
 }
