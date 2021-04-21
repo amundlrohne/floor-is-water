@@ -4,10 +4,15 @@ import { Link } from "react-router-dom";
 export const LobbyScene = () => {
 
   return (
-    <div className="LobbyWrapper">
-      <h2>Lobby</h2>
-      <Link to={`/`}>Back</Link>      
+    <div className="BgWrapper">
+      <div className="BgGradient">
+        <div className="LobbyWrapper">
+          <h2>Lobby</h2>
+          <Link to={`/`}>Back</Link>      
+        </div>
+      </div>
     </div>
+
   );
 };
 
