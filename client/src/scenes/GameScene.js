@@ -7,19 +7,28 @@ import React, { useEffect, useState } from "react";
 import { Entity } from "../entities/entity";
 import Map from "../components/map";
 import MapEntity from "../entities/map";
-import robot from "../assets/Robot.fbx";
+import {PlayerEntity} from "../entities/player"
 import {PhysicsHandler} from "../systems/physics";
+import EntitySystem from "../systems/entity-system";
+import { LoadController } from "../components/load-controller";
+import { PlayerInput } from "../components/player-input";
+
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler;
+let camera, scene, renderer, physicsHandler, entitySystem, clock;
 
 const GameScene = () => {
   function init() {
     // Init scene
+    clock = new th.Clock();
     scene = new th.Scene();
     physicsHandler = new PhysicsHandler();
-
+    entitySystem = new EntitySystem();
+    // Init modelloader
+    const l = new Entity();
+        l.AddComponent(new LoadController());
+        entitySystem.Add(l, "loader");
     // Init camera (PerspectiveCamera)
     camera = new th.PerspectiveCamera(
       100,
@@ -56,22 +65,7 @@ const GameScene = () => {
       const light = new th.AmbientLight(color, intensity);
       scene.add(light);
     }
-    var loader = new FBXLoader();
 
-
-
-    loader.load(robot, function (result) {
-      console.log(result)
-      scene.add(result);
-      result.scale.setScalar(0.01);
-      result.traverse((c) => {
-        c.castShadow = true;
-      });
-/*       const m = new th.AnimationMixer(result);
-      m.clipActions(result.animations[10]).play();
-
-      console.log(result.animations); */
-    });
 
     //_LoadAnimatedModel();
 
@@ -84,6 +78,19 @@ const GameScene = () => {
   function animate() {
     requestAnimationFrame(animate);
 
+
+    if (entitySystem.Get("player") != undefined) {
+        if (
+            entitySystem.Get("player")._components.BasicCharacterController
+                .mixer != undefined
+        ) {
+            var delta = clock.getDelta();
+            entitySystem
+                .Get("player")
+                ._components.BasicCharacterController.mixer.update(delta); // update animation mixer
+            renderer.render(scene, camera);
+        }
+    }
     // Add animation here
 
     renderer.render(scene, camera);
@@ -106,6 +113,13 @@ const GameScene = () => {
 
     // Entities
     new MapEntity({ scene: scene, physicsHandler: physicsHandler });
+    console.log(entitySystem);
+    const player = new PlayerEntity({
+        scene: scene,
+        entitySystem: entitySystem,
+        clock: clock, physicsHandler: physicsHandler, scene: scene, radius: 2, height: 10, segments: 32, type: 'cylinder', position: (new th.Vector3(-20, 10, -10))
+    });
+    player.AddComponent(new PlayerInput());
   }, []);
   return <div />;
 };

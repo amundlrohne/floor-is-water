@@ -17,6 +17,7 @@ export class PlayerInput extends Component {
         //MUST BE SWITCHED WITH TOUCH UI ELEMENTS
         document.addEventListener("keydown", (e) => {
             console.log(this.parent_.Position);
+            
             this.parent_.SetPosition(new Vector3(0, this.parent_.Position.y+1, 0));
         });
     }

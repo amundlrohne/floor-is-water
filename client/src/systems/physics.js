@@ -13,6 +13,7 @@ export class PhysicsHandler {
     }
 
     addHitbox(params) {
+        console.log(params);
         switch(params.type) {
             case 'sphere': {
                 const radius = params.radius // m

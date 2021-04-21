@@ -9,7 +9,7 @@ import { player_state } from "../components/player-state.js";
 import robot from "../assets/Robot.gltf";
 import robotf from "../assets/Robot.fbx";
 import { CHARACTER_MODELS } from "../assets/models.mjs";
-import { AnimationMixer, Scene } from "three";
+import { AnimationMixer, Scene, Vector3 } from "three";
 import { useEffect } from "react";
 
 export class PlayerEntity extends Entity {
@@ -65,9 +65,6 @@ export class BasicCharacterController extends Component {
 
     Init() {
         this.activeState = "RobotArmature|Robot_Running";
-        this.decceleration_ = new th.Vector3(-0.0005, -0.0001, -5.0);
-        this.acceleration_ = new th.Vector3(1, 0.125, 100.0);
-        this.velocity_ = new th.Vector3(0, 0, 0);
         this.group_ = new th.Group();
         this.animations_ = [];
         this.mixer;
@@ -104,9 +101,28 @@ export class BasicCharacterController extends Component {
         this.stateMachine_.SetState("death");
     }
 
-    setMixer(msg) {
-        console.log("STEP 1");
-        this.parent_.setMixer(msg);
+    addPhysics(result) {
+        const playerGeo = new th.CylinderGeometry(
+            this.params_.radius,
+            this.params_.radius,
+            this.params_.height,
+            this.params_.segments
+        );
+        console.log(this.params_);
+        this.params_.physicsHandler.addHitbox({
+            _id: "player",
+            mesh: result,
+            type:this.params_.type,
+            mass: 10,
+            radius: this.params_.radius,
+            segments: this.params_.segments,
+            fixedRotation:true,
+            height:this.params_.height,
+            position: this.params_.position,
+        });
+        console.log("Physics added");
+        console.log(this.params_);
+
     }
 
     LoadModels() {
@@ -128,9 +144,10 @@ export class BasicCharacterController extends Component {
             animationAction.play();
             this.target = result;
             this.mixer = mixer;
+            this.addPhysics(result);
             this.params_.scene.add(result);
-            console.log("ALLWORKS?")
             
+            result.position.copy(new Vector3(0,100,5));
         });
         /* loader.LoadGLTF(undefined,
             robot,

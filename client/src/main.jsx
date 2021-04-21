@@ -109,11 +109,11 @@ const Main = () => {
     const clock = new th.Clock();
 
     useEffect(() => {
+        console.log("NOESOMHELST");
         init();
         animate();
-
         // Entities
-        const gameWorld = new MapEntity({ scene: scene });
+        //const gameWorld = new MapEntity({ scene: scene });
         const player = new PlayerEntity({
             scene: scene,
             entitySystem: entitySystem,
