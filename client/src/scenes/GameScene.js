@@ -82,7 +82,7 @@ const GameScene = () => {
     if (entitySystem.Get("player") != undefined) {
         if (
             entitySystem.Get("player")._components.BasicCharacterController
-                .mixer != undefined
+                .mixer !== undefined
         ) {
             var delta = clock.getDelta();
             entitySystem
@@ -117,7 +117,7 @@ const GameScene = () => {
     const player = new PlayerEntity({
         scene: scene,
         entitySystem: entitySystem,
-        clock: clock, physicsHandler: physicsHandler, scene: scene, radius: 2, height: 10, segments: 32, type: 'cylinder', position: (new th.Vector3(-20, 10, -10))
+        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'cylinder', position: (new th.Vector3(0, 10, 0))
     });
     player.AddComponent(new PlayerInput());
   }, []);

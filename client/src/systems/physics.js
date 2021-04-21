@@ -42,6 +42,7 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
+                    material: new cannon.Material({friction:0.02,restitution:0}),
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
@@ -49,8 +50,10 @@ export class PhysicsHandler {
                     body.fixedRotation = params.fixedRotation
                     this.fixedRotations.add(params._id)
                 }
+                
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
+
                 break;
             case 'plane': {
                 const body = new cannon.Body({

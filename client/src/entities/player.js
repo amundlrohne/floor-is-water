@@ -71,9 +71,7 @@ export class BasicCharacterController extends Component {
         this.target;
         this.fsm = new CharacterFSM();
         this.LoadModels();
-        document.addEventListener("keydown", (e) => {
-            this.ChangeState("RobotArmature|Robot_idle");
-        });
+
     }
 
     InitComponent() {
@@ -101,17 +99,16 @@ export class BasicCharacterController extends Component {
         this.stateMachine_.SetState("death");
     }
 
-    addPhysics(result) {
+    addPhysics() {
         const playerGeo = new th.CylinderGeometry(
             this.params_.radius,
             this.params_.radius,
             this.params_.height,
             this.params_.segments
         );
-        console.log(this.params_);
         this.params_.physicsHandler.addHitbox({
             _id: "player",
-            mesh: result,
+            mesh: this.target,
             type:this.params_.type,
             mass: 10,
             radius: this.params_.radius,
@@ -120,8 +117,6 @@ export class BasicCharacterController extends Component {
             height:this.params_.height,
             position: this.params_.position,
         });
-        console.log("Physics added");
-        console.log(this.params_);
 
     }
 
@@ -144,7 +139,7 @@ export class BasicCharacterController extends Component {
             animationAction.play();
             this.target = result;
             this.mixer = mixer;
-            this.addPhysics(result);
+            this.addPhysics();
             this.params_.scene.add(result);
             
             result.position.copy(new Vector3(0,100,5));
