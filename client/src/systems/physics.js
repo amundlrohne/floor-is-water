@@ -59,6 +59,7 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass,
                     shape: new cannon.Plane(),
+
                 })
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
