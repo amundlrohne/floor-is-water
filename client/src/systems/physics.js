@@ -75,8 +75,8 @@ export class PhysicsHandler {
         if (this.trackers[id]) {
             this.trackers[id] = undefined
         } else {
-            mesh.minDistance = 15;
-            mesh.maxDistance = 15;
+            mesh.minDistance = 20;
+            mesh.maxDistance = 20;
             mesh.minPolarAngle = 1;
             mesh.maxPolarAngle = 1;
 
