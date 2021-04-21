@@ -1,288 +1,265 @@
-import * as THREE from 'three';
+import * as th from "three";
+//import {AnimationMixer} from "three/examples/jsm/animation/"
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Entity } from "./entity.js";
+import Component from "../components/component";
+import { finite_state_machine } from "../components/finite-state-machine.js";
+import { player_state } from "../components/player-state.js";
+import robot from "../assets/Robot.gltf";
+import robotf from "../assets/Robot.fbx";
+import { CHARACTER_MODELS } from "../assets/models.mjs";
+import { AnimationMixer, Scene } from "three";
+import { useEffect } from "react";
 
-import {Entity} from './entity.js';
-import {Component} from '../components/component'
-import {finite_state_machine} from '../components/finite-state-machine.js';
-import {player_state} from '../components/player-state.js';
-
-import {defs} from '/shared/defs.mjs';
-
-
-export const player_entity = (() => {
-
-  class CharacterFSM extends finite_state_machine.FiniteStateMachine {
-    constructor(proxy) {
-      super();
-      this._proxy = proxy;
-      this.Init_();
-    }
-  
-    Init_() {
-      this._AddState('idle', player_state.IdleState);
-      this._AddState('jump', player_state.JumpState);
-      this._AddState('run', player_state.RunState);
-      this._AddState('attack', player_state.AttackState);
-      this._AddState('death', player_state.DeathState);
-    }
-  };
-  
-  class BasicCharacterControllerProxy {
-    constructor(animations) {
-      this.animations_ = animations;
-    }
-  
-    get animations() {
-      return this.animations_;
-    }
-  };
-
-  class BasicCharacterController extends Component {
+export class PlayerEntity extends Entity {
     constructor(params) {
-      super();
-      this.params_ = params;
+        super();
+        this.object3d;
+        this.params = params;
+        this.BCC = new BasicCharacterController(this.params);
+        this._Init();
     }
 
-    InitEntity() {
-      this.Init_();
+    _Init() {
+        this.AddComponent(this.BCC);
+        this.InitEntity();
+        this.params.entitySystem.Add(this, "player");
+    }
+    setMixer(as) {
+        this.params.setMixer(as);
+    }
+}
+
+export class CharacterFSM extends finite_state_machine.FiniteStateMachine {
+    constructor(proxy) {
+        super();
+        this._proxy = proxy;
+        this.Init_();
     }
 
     Init_() {
-      this.decceleration_ = new THREE.Vector3(-0.0005, -0.0001, -5.0);
-      this.acceleration_ = new THREE.Vector3(1, 0.125, 100.0);
-      this.velocity_ = new THREE.Vector3(0, 0, 0);
-      this.group_ = new THREE.Group();
+        this._AddState("idle", player_state.IdleState);
+        this._AddState("jump", player_state.JumpState);
+        this._AddState("run", player_state.RunState);
+        this._AddState("attack", player_state.AttackState);
+        this._AddState("death", player_state.DeathState);
+    }
+}
 
-      this.params_.scene.add(this.group_);
+export class BasicCharacterControllerProxy {
+    constructor(animations) {
+        this.animations_ = animations;
+    }
 
-      this.animations_ = {};
-  
-      this.LoadModels_();
+    get animations() {
+        return this.animations_;
+    }
+}
+
+export class BasicCharacterController extends Component {
+    constructor(params) {
+        super();
+        this.params_ = params;
+    }
+
+    Init() {
+        this.activeState = "RobotArmature|Robot_Running";
+        this.decceleration_ = new th.Vector3(-0.0005, -0.0001, -5.0);
+        this.acceleration_ = new th.Vector3(1, 0.125, 100.0);
+        this.velocity_ = new th.Vector3(0, 0, 0);
+        this.group_ = new th.Group();
+        this.animations_ = [];
+        this.mixer;
+        this.target;
+        this.fsm = new CharacterFSM();
+        this.LoadModels();
+        document.addEventListener("keydown", (e) => {
+            this.ChangeState("RobotArmature|Robot_idle");
+        });
     }
 
     InitComponent() {
-      this._RegisterHandler('health.death', (m) => { this.OnDeath_(m); });
-      this._RegisterHandler(
-          'update.position', (m) => { this.OnUpdatePosition_(m); });
-      this._RegisterHandler(
-          'update.rotation', (m) => { this.OnUpdateRotation_(m); });
-    }
-
-    OnUpdatePosition_(msg) {
-      this.group_.position.copy(msg.value);
-    }
-
-    OnUpdateRotation_(msg) {
-      this.group_.quaternion.copy(msg.value);
-    }
-
-    OnDeath_(msg) {
-      this.stateMachine_.SetState('death');
-    }
-
-    LoadModels_() {
-      const classType = this.params_.desc.character.class;
-      const modelData = defs.CHARACTER_MODELS[classType];
-
-      const loader = this.FindEntity('loader').GetComponent('LoadController');
-      loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb) => {
-        this.target_ = glb.scene;
-        this.target_.scale.setScalar(modelData.scale);
-        this.target_.visible = false;
-
-        this.group_.add(this.target_);
-  
-        this.bones_ = {};
-        this.target_.traverse(c => {
-          if (!c.skeleton) {
-            return;
-          }
-          for (let b of c.skeleton.bones) {
-            this.bones_[b.name] = b;
-          }
+        this.Init();
+        this._RegisterHandler("health.death", (m) => {
+            this.OnDeath(m);
         });
-
-        this.target_.traverse(c => {
-          c.castShadow = true;
-          c.receiveShadow = true;
-          if (c.material && c.material.map) {
-            c.material.map.encoding = THREE.sRGBEncoding;
-          }
+        this._RegisterHandler("update.position", (m) => {
+            this.OnUpdatePosition(m);
         });
+        this._RegisterHandler("update.rotation", (m) => {
+            this.OnUpdateRotation(m);
+        });
+    }
 
-        this._mixer = new THREE.AnimationMixer(this.target_);
+    OnUpdatePosition(msg) {
+        this.group_.position.copy(msg.value);
+    }
 
-        const _FindAnim = (animName) => {
-          for (let i = 0; i < glb.animations.length; i++) {
-            if (glb.animations[i].name.includes(animName)) {
-              const clip = glb.animations[i];
-              const action = this._mixer.clipAction(clip);
-              return {
-                clip: clip,
-                action: action
-              }
+    OnUpdateRotation(msg) {
+        this.group_.quaternion.copy(msg.value);
+    }
+
+    OnDeath(msg) {
+        this.stateMachine_.SetState("death");
+    }
+
+    setMixer(msg) {
+        console.log("STEP 1");
+        this.parent_.setMixer(msg);
+    }
+
+    LoadModels() {
+        const loader = this.params_.entitySystem
+            .Get("loader")
+            .GetComponent("LoadController");
+        loader.LoadFBX(undefined, robotf, (result) => {
+            console.log(result);
+            result.scale.multiplyScalar(0.01);
+            let mixer = new th.AnimationMixer(result);
+            let animationAction = mixer.clipAction(
+                result.animations.find(
+                    (element) => element.name == this.activeState
+                )
+            );
+            result.animations.forEach((e) => {
+                this.animations_.push(mixer.clipAction(e));
+            });
+            animationAction.play();
+            this.target = result;
+            this.mixer = mixer;
+            this.params_.scene.add(result);
+        });
+        /* loader.LoadGLTF(undefined,
+            robot,
+            (result) => {
+                let mixer = new th.AnimationMixer(result.scene);
+                let animationAction = mixer.clipAction(result.animations.find(element => element.name == this.activeState));
+                console.log(result);
+                console.log(result.animations.find(element => element.name == this.activeState));
+                animationAction.play();
+                this.mixer = mixer;
+                this.params_.scene.add(result.scene);
             }
-          }
-          return null;
-        };
-
-        this.animations_['idle'] = _FindAnim('Idle');
-        this.animations_['run'] = _FindAnim('Run');
-        this.animations_['death'] = _FindAnim('Death');
-        this.animations_['attack'] = _FindAnim('Attack');
-        this.animations_['jump'] = _FindAnim('Jump');
-
-        this.target_.visible = true;
-
-        this.stateMachine_ = new CharacterFSM(
-            new BasicCharacterControllerProxy(this.animations_));
-
-        this.stateMachine_.SetState('idle');
-
-        this.Broadcast({
-            topic: 'load.character',
-            model: this.target_,
-            bones: this.bones_,
-        });
-
-        this.FindEntity('ui').GetComponent('UIController').FadeoutLogin();
-      });
+        ); */
     }
 
-    _FindIntersections(pos, oldPos) {
-      const _IsAlive = (c) => {
-        const h = c.entity.GetComponent('HealthComponent');
-        if (!h) {
-          return true;
-        }
-        return h.Health > 0;
-      };
-
-      const grid = this.GetComponent('SpatialGridController');
-      const nearby = grid.FindNearbyEntities(5).filter(e => _IsAlive(e));
-      const collisions = [];
-
-      for (let i = 0; i < nearby.length; ++i) {
-        const e = nearby[i].entity;
-        const d = ((pos.x - e.Position.x) ** 2 + (pos.z - e.Position.z) ** 2) ** 0.5;
-
-        // HARDCODED
-        if (d <= 4) {
-          const d2 = ((oldPos.x - e.Position.x) ** 2 + (oldPos.z - e.Position.z) ** 2) ** 0.5;
-
-          // If they're already colliding, let them get untangled.
-          if (d2 <= 4) {
-            continue;
-          } else {
-            collisions.push(nearby[i].entity);
-          }
-        }
-      }
-      return collisions;
+    ChangeState(newState) {
+        console.log(newState);
+        console.log(this.animations_);
+        this.activeState = newState;
+        let animationAction = this.mixer.clipAction(this.animations_[5]._clip);
+        animationAction.play();
+        this.params_.scene.add(this.target);
+        //LoadModels();
     }
 
     Update(timeInSeconds) {
-      if (!this.stateMachine_) {
-        return;
-      }
+        if (!this.stateMachine_) {
+            return;
+        }
 
-      const input = this.GetComponent('BasicCharacterControllerInput');
-      this.stateMachine_.Update(timeInSeconds, input);
+        const input = this.GetComponent("BasicCharacterControllerInput");
+        this.stateMachine_.Update(timeInSeconds, input);
 
-      if (this._mixer) {
-        this._mixer.update(timeInSeconds);
-      }
+        if (this._mixer) {
+            this._mixer.update(timeInSeconds);
+        }
 
-      // HARDCODED
-      this.Broadcast({
-          topic: 'player.action',
-          action: this.stateMachine_._currentState.Name,
-      });
+        // HARDCODED
+        this.Broadcast({
+            topic: "player.action",
+            action: this.stateMachine_._currentState.Name,
+        });
 
-      const currentState = this.stateMachine_._currentState;
-      if (currentState.Name != 'walk' &&
-          currentState.Name != 'run' &&
-          currentState.Name != 'idle') {
-        return;
-      }
-    
-      const velocity = this.velocity_;
-      const frameDecceleration = new THREE.Vector3(
-          velocity.x * this.decceleration_.x,
-          velocity.y * this.decceleration_.y,
-          velocity.z * this.decceleration_.z
-      );
-      frameDecceleration.multiplyScalar(timeInSeconds);
-      frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-          Math.abs(frameDecceleration.z), Math.abs(velocity.z));
-  
-      velocity.add(frameDecceleration);
-  
-      const controlObject = this.group_;
-      const _Q = new THREE.Quaternion();
-      const _A = new THREE.Vector3();
-      const _R = controlObject.quaternion.clone();
-  
-      const acc = this.acceleration_.clone();
-      if (input._keys.shift) {
-        acc.multiplyScalar(2.0);
-      }
-  
-      if (input._keys.forward) {
-        velocity.z += acc.z * timeInSeconds;
-      }
-      if (input._keys.backward) {
-        velocity.z -= acc.z * timeInSeconds;
-      }
-      if (input._keys.left) {
-        _A.set(0, 1, 0);
-        _Q.setFromAxisAngle(_A, 4.0 * Math.PI * timeInSeconds * this.acceleration_.y);
-        _R.multiply(_Q);
-      }
-      if (input._keys.right) {
-        _A.set(0, 1, 0);
-        _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * timeInSeconds * this.acceleration_.y);
-        _R.multiply(_Q);
-      }
-  
-      controlObject.quaternion.copy(_R);
-  
-      const oldPosition = new THREE.Vector3();
-      oldPosition.copy(controlObject.position);
-  
-      const forward = new THREE.Vector3(0, 0, 1);
-      forward.applyQuaternion(controlObject.quaternion);
-      forward.normalize();
-  
-      const sideways = new THREE.Vector3(1, 0, 0);
-      sideways.applyQuaternion(controlObject.quaternion);
-      sideways.normalize();
-  
-      sideways.multiplyScalar(velocity.x * timeInSeconds);
-      forward.multiplyScalar(velocity.z * timeInSeconds);
-  
-      const pos = controlObject.position.clone();
-      pos.add(forward);
-      pos.add(sideways);
+        const currentState = this.stateMachine_._currentState;
+        if (
+            currentState.Name != "walk" &&
+            currentState.Name != "run" &&
+            currentState.Name != "idle"
+        ) {
+            return;
+        }
 
-      const collisions = this._FindIntersections(pos, oldPosition);
-      if (collisions.length > 0) {
-        return;
-      }
+        const velocity = this.velocity_;
+        const frameDecceleration = new th.Vector3(
+            velocity.x * this.decceleration_.x,
+            velocity.y * this.decceleration_.y,
+            velocity.z * this.decceleration_.z
+        );
+        frameDecceleration.multiplyScalar(timeInSeconds);
+        frameDecceleration.z =
+            Math.sign(frameDecceleration.z) *
+            Math.min(Math.abs(frameDecceleration.z), Math.abs(velocity.z));
 
-      const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
-      pos.y = terrain.GetHeight(pos)[0];
+        velocity.add(frameDecceleration);
 
-      controlObject.position.copy(pos);
-  
-      this.Parent.SetPosition(controlObject.position);
-      this.Parent.SetQuaternion(controlObject.quaternion);
+        const controlObject = this.group_;
+        const _Q = new th.Quaternion();
+        const _A = new th.Vector3();
+        const _R = controlObject.quaternion.clone();
+
+        const acc = this.acceleration_.clone();
+        if (input._keys.shift) {
+            acc.multiplyScalar(2.0);
+        }
+
+        if (input._keys.forward) {
+            velocity.z += acc.z * timeInSeconds;
+        }
+        if (input._keys.backward) {
+            velocity.z -= acc.z * timeInSeconds;
+        }
+        if (input._keys.left) {
+            _A.set(0, 1, 0);
+            _Q.setFromAxisAngle(
+                _A,
+                4.0 * Math.PI * timeInSeconds * this.acceleration_.y
+            );
+            _R.multiply(_Q);
+        }
+        if (input._keys.right) {
+            _A.set(0, 1, 0);
+            _Q.setFromAxisAngle(
+                _A,
+                4.0 * -Math.PI * timeInSeconds * this.acceleration_.y
+            );
+            _R.multiply(_Q);
+        }
+
+        controlObject.quaternion.copy(_R);
+
+        const oldPosition = new th.Vector3();
+        oldPosition.copy(controlObject.position);
+
+        const forward = new th.Vector3(0, 0, 1);
+        forward.applyQuaternion(controlObject.quaternion);
+        forward.normalize();
+
+        const sideways = new th.Vector3(1, 0, 0);
+        sideways.applyQuaternion(controlObject.quaternion);
+        sideways.normalize();
+
+        sideways.multiplyScalar(velocity.x * timeInSeconds);
+        forward.multiplyScalar(velocity.z * timeInSeconds);
+
+        const pos = controlObject.position.clone();
+        pos.add(forward);
+        pos.add(sideways);
+
+        const collisions = this._FindIntersections(pos, oldPosition);
+        if (collisions.length > 0) {
+            return;
+        }
+
+        const terrain = this.FindEntity("terrain").GetComponent(
+            "TerrainChunkManager"
+        );
+        pos.y = terrain.GetHeight(pos)[0];
+
+        controlObject.position.copy(pos);
+
+        this.Parent.SetPosition(controlObject.position);
+        this.Parent.SetQuaternion(controlObject.quaternion);
     }
-  };
-  
-  return {
-      CharacterFSM: CharacterFSM,
-      BasicCharacterControllerProxy: BasicCharacterControllerProxy,
-      BasicCharacterController: BasicCharacterController,
-  };
-
-})();
+}

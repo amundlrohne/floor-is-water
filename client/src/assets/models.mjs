@@ -1,6 +1,9 @@
-const _CHARACTER_MODELS = {
+
+
+
+export const CHARACTER_MODELS = {
     robot: {
-      base: 'Robot.fbx',
+      base: 'Robot.glb',
       path: './',
 /*       anchors: {
         rightHand: 'RightHandIndex1',
