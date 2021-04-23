@@ -14,7 +14,6 @@ export class PhysicsHandler {
         this.xAcceleration = 0;
         this.zAcceleration = 0;
         this.playerVelocity = [0,0];
-        this.animate();
     }
 
     addHitbox(params) {
@@ -141,8 +140,7 @@ export class PhysicsHandler {
         this.findObject(id).velocity.z=this.playerVelocity[1];
     }
 
-    animate() {
-        requestAnimationFrame(() => this.animate());
+    update() {
         // Physics
         const time = performance.now() / 1000 // seconds
         if (!this.lastCallTime) {
