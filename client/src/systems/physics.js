@@ -85,10 +85,14 @@ export class PhysicsHandler {
         if (this.trackers[id]) {
             this.trackers[id] = undefined
         } else {
-            mesh.minDistance = 20;
-            mesh.maxDistance = 20;
-            mesh.minPolarAngle = 1;
-            mesh.maxPolarAngle = 1;
+            mesh.minDistance = 50;
+            mesh.maxDistance = 50;
+            mesh.minPolarAngle = 0.7;
+            mesh.maxPolarAngle = 0.7;
+            mesh.minAzimuthAngle = 1;
+            mesh.maxAzimuthAngle = 1;
+            mesh.enableRotate = false;
+            mesh.enableZoom = false;
 
             this.trackers[id] = mesh
         }
