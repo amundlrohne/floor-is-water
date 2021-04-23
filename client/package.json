@@ -17,7 +17,7 @@
     "@babel/preset-env": "^7.13.15",
     "@babel/preset-react": "^7.13.13",
     "babel-loader": "^8.2.2",
-    "cordova-android": "^9.0.0",
+    "cordova-android": "^9.1.0",
     "cordova-browser": "^6.0.0",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "cordova-plugin-webpack": "^1.0.5",
@@ -34,8 +34,8 @@
       "cordova-plugin-screen-orientation": {}
     },
     "platforms": [
-      "android",
-      "browser"
+      "browser",
+      "android"
     ]
   },
   "dependencies": {

@@ -73,6 +73,7 @@ const GameScene = () => {
     }
 
 
+    //_LoadAnimatedModel();
 
     // Position camera
     camera.position.set(0, 10, 20);
@@ -99,7 +100,12 @@ const GameScene = () => {
       renderer.render(scene, camera);
   }
 
-  const handleMove = (e) => {
+  function handleMove(e) {
+    //entitySystem.Get("player")._components.PlayerInput.run[e.x/50,e.y/50];
+    physicsHandler.accelerate(
+        e.x/50,
+        -e.y/50
+    );
     console.log(e);
   };
 
@@ -130,6 +136,10 @@ const GameScene = () => {
 
     window.addEventListener("resize", onWindowResize, false);
 
+  function test(){
+      console.log(entitySystem)
+  }
+
   useEffect(() => {
     init();
     step();
@@ -145,14 +155,13 @@ const GameScene = () => {
         entitySystem: entitySystem,
         clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(0, 10, 0))
     });
-
     player.AddComponent(new PlayerInput());
   }, []);
   return <div>
   <div id="controls">
     <div className="leftJoystick">
       <Joystick
-        move={handleMove}
+        move={(e)=>{handleMove(e)}}
         stop={handleMoveStop}
         stickColor={"#fcba03"}
         baseColor={"#ad7f00"}
