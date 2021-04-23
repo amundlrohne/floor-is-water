@@ -171,6 +171,7 @@
     background-size: 100% 150%;
 }
 .BgGradient {
+    position: fixed;
     background: linear-gradient(
         to right,
         transparent,
