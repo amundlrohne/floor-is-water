@@ -78,26 +78,28 @@ const GameScene = () => {
     camera.position.set(0, 10, 20);
   }
 
-    
+
 
   // Draw the scene every time the screen is refreshed
-  function animate() {
-    requestAnimationFrame(animate);
+  function step() {
+    requestAnimationFrame(step);
     water();
+    let delta = clock.getDelta();
 
-    if (entitySystem.Get("player") !== undefined) {
-        if (
-            entitySystem.Get("player")._components.BasicCharacterController
-                .mixer !== undefined
-        ) {
-            var delta = clock.getDelta();
-            entitySystem
-                .Get("player")
-                ._components.BasicCharacterController.mixer.update(delta); // update animation mixer
-            renderer.render(scene, camera);
-        }
-    }
-    // Add animation here
+    entitySystem.Update(delta);
+
+    // if (entitySystem.Get("player") !== undefined) {
+    //     if (
+    //         entitySystem.Get("player")._components.BasicCharacterController
+    //             .mixer !== undefined
+    //     ) {
+    //         entitySystem
+    //             .Get("player")
+    //             ._components.BasicCharacterController.mixer.update(delta); // update animation mixer
+    //         renderer.render(scene, camera);
+    //     }
+    // }
+    physicsHandler.update();
 
         renderer.render(scene, camera);
     }
@@ -141,7 +143,7 @@ const GameScene = () => {
 
   useEffect(() => {
     init();
-    animate();
+    step();
     console.log("useeffect")
     waterManager.populatePowerups();
     waterManager.populateWater();
