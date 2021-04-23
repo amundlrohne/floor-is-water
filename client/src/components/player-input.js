@@ -6,6 +6,15 @@ import { Vector3 } from "three";
 export class PlayerInput extends Component {
     constructor(params) {
         super();
+        this.run = [0, 0];
+        this.keysPressed = {
+            w: false,
+            a: false,
+            s: false,
+            d: false,
+            Space: false,
+        };
+        this.jumpReady = true;
         this.Init();
 
     }
@@ -18,36 +27,92 @@ export class PlayerInput extends Component {
     addMovement() {
         //MUST BE SWITCHED WITH TOUCH UI ELEMENTS
         //console.log(this.Parent.params.physicsHandler)
-        document.addEventListener("keydown", (e) => {
-            if(e.key=="s"){
-                if(this.Parent.params.physicsHandler.findObject('player').velocity.z > -20) {
-                    this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(0 ,0,-30))
-                }
+
+        /* document.addEventListener("keydown", (event) => {
+            if (
+                event.key == "w" ||
+                event.key == "a" ||
+                event.key == "s" ||
+                event.key == "d" ||
+                event.key == "p"
+            )
+                this.keysPressed[event.key] = true;
+            if (event.code == "Space") {
+                this.keysPressed[event.code] = true;
             }
-            if(e.key=="d"){
-                if(this.Parent.params.physicsHandler.findObject('player').velocity.x > -20) {
-                    this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(-30,0,0))
-                }
+        }); */
+
+        document.addEventListener("keyup", (event) => {
+            if (event.code == "Space") {
+                this.keysPressed[event.code] = false;
+            } else {
+                this.keysPressed[event.key] = false;
             }
-            if(e.key=="w"){
-                if(this.Parent.params.physicsHandler.findObject('player').velocity.z < 20) {
-                    this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(0,0,30))
-                }
+
+            if (event.key == "w") {
+                this.run[1] = 0;
             }
-            if(e.key=="a"){
-                if(this.Parent.params.physicsHandler.findObject('player').velocity.x < 20) {
-                    this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(30,0,0))
-                }
+            if (event.key == "s") {
+                this.run[1] = 0;
             }
-            if(e.key=="k"){
-                console.log("pressed k")
-                this.Parent.params.physicsHandler.addTracking(this.Parent.params.camera, 'player');
+            if (event.key == "a") {
+                this.run[0] = 0;
             }
-            if(e.code=="Space"){
-                if(this.Parent.params.physicsHandler.findObject('player').velocity.y < 50) {
-                    this.Parent.params.physicsHandler.applyVelocity("player",new Vector3(0,30,0))
-                }
+            if (event.key == "d") {
+                this.run[0] = 0;
             }
+            this.Parent.params.physicsHandler.stopVelocity(
+                "player",
+                this.run[0],
+                this.run[1]
+            );
+            this.Parent.params.physicsHandler.accelerate(
+                this.run[0],
+                this.run[1]
+            );
+            this.keyDown(event);
+        });
+        document.addEventListener("keydown", (event) => {
+            if (
+                event.key == "w" ||
+                event.key == "a" ||
+                event.key == "s" ||
+                event.key == "d" ||
+                event.key == "p"
+            )
+                this.keysPressed[event.key] = true;
+            if (event.code == "Space") {
+                this.keysPressed[event.code] = true;
+            }
+            this.keyDown(event);
         });
     }
+    keyDown(e){
+
+        if (this.keysPressed["w"]) {
+            this.run[1] = -2;
+        }
+        if (this.keysPressed["s"]) {
+            this.run[1] = 2;
+        }
+        if (this.keysPressed["a"]) {
+            this.run[0] = -2;
+        }
+        if (this.keysPressed["d"]) {
+            this.run[0] = 2;
+        }
+        this.Parent.params.physicsHandler.accelerate(
+            this.run[0],
+            this.run[1]
+        );
+
+        if (this.keysPressed["Space"] == true) {
+            {
+                this.Parent.params.physicsHandler.playerJump(
+                    "player",
+                );
+                this.Parent.params.entitySystem.Get("player")._rotation.y=50;
+            }
+        }
+    };
 }

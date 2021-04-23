@@ -1,5 +1,5 @@
 import * as cannon from 'cannon-es';
-import {Vector3} from "three";
+import {RGBA_ASTC_10x10_Format, Vector3} from "three";
 import {Vec3} from "cannon-es";
 export class PhysicsHandler {
     constructor() {
@@ -10,6 +10,9 @@ export class PhysicsHandler {
             gravity: new cannon.Vec3(0, -98.2, 0), // m/s²
         });
         this.timeStep = 1 / 60 // seconds
+        this.xAcceleration = 0;
+        this.zAcceleration = 0;
+        this.playerVelocity = [0,0];
         this.animate();
     }
 
@@ -23,7 +26,9 @@ export class PhysicsHandler {
                     shape: new cannon.Sphere(radius),
                 })
                 body.position.copy(params.position) // m
-                body.quaternion.copy(params.mesh.quaternion) // make it face up
+                body.quaternion.copy(new cannon.Quaternion(0,0,0,0)) // make it face up
+                console.log()
+                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e};console.log(e)});
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
@@ -43,8 +48,8 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
-                    fixedRotation: params.fixedRotation,
-                    material: new cannon.Material({friction: 0.01})
+                    fixedRotation:params.fixedRotation,
+                    material: new cannon.Material({friction:0.0}),
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
@@ -60,7 +65,6 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass,
                     shape: new cannon.Plane(),
-                    material: new cannon.Material({friction: 0.01})
                 })
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
@@ -101,13 +105,31 @@ export class PhysicsHandler {
         }
     }
 
+    playerJump(){
+        console.log(this.findObject("player"))
+        if(this.findObject("player").jumpReady.ready==true){
+            this.applyVelocity("player",
+                new Vector3(0, 70, 0))
+        };
+        this.findObject("player").jumpReady.ready=false;
+    }
+
+    accelerate(x,z){
+        this.xAcceleration=x;
+        this.zAcceleration=z;
+    }
+
     setPosition(id, position) {
         this.findObject(id).position.copy(position);
         this.stopVelocity(id);
     }
 
-    stopVelocity(id) {
-        this.findObject(id).velocity.copy(new Vector3(0, 0, 0));
+
+    stopVelocity(id,x,z) {
+        if(x==0){this.playerVelocity[0]=0; this.xAcceleration=0}
+        if(z==0){this.playerVelocity[1]=0; this.zAcceleration=0}
+        this.findObject(id).velocity.x=this.playerVelocity[0];
+        this.findObject(id).velocity.z=this.playerVelocity[1];
     }
 
     animate() {
@@ -132,5 +154,19 @@ export class PhysicsHandler {
                 this.trackers[key].update()
             }
         }
+        if(Object.keys(this.objects).includes("player")){
+            if((this.playerVelocity[0]<35&&this.playerVelocity[0]>-35)&&this.xAcceleration!=0){
+                this.playerVelocity[0] += this.xAcceleration;
+                this.findObject("player").velocity.x = this.playerVelocity[0];
+            }
+            if((this.playerVelocity[1]<35&&this.playerVelocity[1]>-35)&&this.zAcceleration!=0){
+                this.playerVelocity[1] += this.zAcceleration;
+                this.findObject("player").velocity.z = this.playerVelocity[1];
+            }
+
+            if(Math.floor(this.playerVelocity[0])==0||Math.ceil(this.playerVelocity[0]==0)&&Math.floor(this.playerVelocity[1])==0||Math.ceil(this.playerVelocity[1]==0)){this.stopVelocity("player")}
+            //if(Math.floor(this.playerVelocity[1])==0||Math.ceil(this.playerVelocity[1]==0)){this.stopVelocity("player")}
+        }
+
     }
 }

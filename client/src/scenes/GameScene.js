@@ -118,7 +118,7 @@ const GameScene = () => {
       camera: controls,
         scene: scene,
         entitySystem: entitySystem,
-        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'cylinder', position: (new th.Vector3(0, 10, 0))
+        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(0, 10, 0))
     });
     player.AddComponent(new PlayerInput());
   }, []);

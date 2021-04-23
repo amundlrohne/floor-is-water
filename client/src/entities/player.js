@@ -108,17 +108,11 @@ export class BasicCharacterController extends Component {
     }
 
     addPhysics() {
-        const playerGeo = new th.CylinderGeometry(
-            this.params_.radius,
-            this.params_.radius,
-            this.params_.height,
-            this.params_.segments
-        );
         this.params_.physicsHandler.addHitbox({
             _id: "player",
             mesh: this.target,
             type:this.params_.type,
-            mass: 10,
+            mass: 1,
             radius: this.params_.radius,
             segments: this.params_.segments,
             fixedRotation:true,
