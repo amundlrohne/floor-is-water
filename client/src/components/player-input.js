@@ -84,6 +84,9 @@ export class PlayerInput extends Component {
             if (event.code == "Space") {
                 this.keysPressed[event.code] = true;
             }
+            if(event.key === 'k') {
+                this.Parent.params.physicsHandler.addTracking(this.Parent.params.camera, 'player')
+            }
             this.keyDown(event);
         });
     }

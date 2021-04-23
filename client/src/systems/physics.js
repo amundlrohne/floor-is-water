@@ -160,6 +160,12 @@ export class PhysicsHandler {
                 this.trackers[key].update()
             }
         }
+        for (let key in this.meshControlled) {
+            let body = this.meshControlled[key].body;
+            let mesh = this.meshControlled[key].mesh;
+            body.position.copy(mesh.position);
+            body.quaternion.copy(mesh.quaternion);
+        }
         if(Object.keys(this.objects).includes("player")){
             if((this.playerVelocity[0]<35&&this.playerVelocity[0]>-35)&&this.xAcceleration!==0){
                 this.playerVelocity[0] += this.xAcceleration;
