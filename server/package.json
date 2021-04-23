@@ -1,16 +1,19 @@
 {
-  "dependencies": {
-    "express": "^4.17.1",
-    "socket.io": "^4.0.1"
-  },
-  "optionalDependencies": {
-    "bufferutil": "^4.0.3",
-    "utf-8-validate": "^5.0.4"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
-  },
-  "scripts": {
-    "start": "nodemon ./src/index.js"
-  }
+    "type": "module",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "socket.io": "^4.0.1",
+        "uuid": "^8.3.2"
+    },
+    "optionalDependencies": {
+        "bufferutil": "^4.0.3",
+        "utf-8-validate": "^5.0.4"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7"
+    },
+    "scripts": {
+        "start": "nodemon ./src/index.js"
+    }
 }
