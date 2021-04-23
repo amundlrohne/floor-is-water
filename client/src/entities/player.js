@@ -6,7 +6,7 @@ import { Entity } from "./entity.js";
 import Component from "../components/component";
 import { finite_state_machine } from "../components/finite-state-machine.js";
 import { player_state } from "../components/player-state.js";
-import robotf from "../assets/Robot.fbx";
+import robotf from "../assets/rock1.fbx";
 import { CHARACTER_MODELS } from "../assets/models.mjs";
 import { AnimationMixer, Scene, Vector3 } from "three";
 import { useEffect } from "react";
@@ -126,20 +126,21 @@ export class BasicCharacterController extends Component {
             .Get("loader")
             .GetComponent("LoadController");
         loader.LoadFBX(undefined, robotf, (result) => {
+            console.clear();
             console.log(result);
             result.scale.multiplyScalar(0.01);
-            let mixer = new th.AnimationMixer(result);
-            let animationAction = mixer.clipAction(
-                result.animations.find(
-                    (element) => element.name == this.activeState
-                )
-            );
-            result.animations.forEach((e) => {
-                this.animations_.push(mixer.clipAction(e));
-            });
-            animationAction.play();
+            // let mixer = new th.AnimationMixer(result);
+            // let animationAction = mixer.clipAction(
+            //     result.animations.find(
+            //         (element) => element.name == this.activeState
+            //     )
+            // );
+            // result.animations.forEach((e) => {
+            //     this.animations_.push(mixer.clipAction(e));
+            // });
+            // animationAction.play();
             this.target = result;
-            this.mixer = mixer;
+            // this.mixer = mixer;
             this.addPhysics();
             this.params_.scene.add(result);
 
@@ -170,7 +171,9 @@ export class BasicCharacterController extends Component {
     }
 
     Update(timeDelta) {
-        this.mixer.update(timeDelta)
+        if(this.mixer){
+            this.mixer.update(timeDelta)
+        }
     }
 
 }

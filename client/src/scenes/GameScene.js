@@ -68,11 +68,11 @@ const GameScene = () => {
       const color = 0xffffff;
       const intensity = 0.5;
       const light = new th.AmbientLight(color, intensity);
+      light.castShadow = true;
       scene.add(light);
     }
 
 
-    //_LoadAnimatedModel();
 
     // Position camera
     camera.position.set(0, 10, 20);
@@ -88,17 +88,6 @@ const GameScene = () => {
 
     entitySystem.Update(delta);
 
-    // if (entitySystem.Get("player") !== undefined) {
-    //     if (
-    //         entitySystem.Get("player")._components.BasicCharacterController
-    //             .mixer !== undefined
-    //     ) {
-    //         entitySystem
-    //             .Get("player")
-    //             ._components.BasicCharacterController.mixer.update(delta); // update animation mixer
-    //         renderer.render(scene, camera);
-    //     }
-    // }
     physicsHandler.update();
 
         renderer.render(scene, camera);
