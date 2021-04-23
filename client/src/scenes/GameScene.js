@@ -14,6 +14,9 @@ import { LoadController } from "../components/load-controller";
 import { PlayerInput } from "../components/player-input";
 import WaterPowerupManager from "../systems/entity-manager";
 
+import { Joystick } from "react-joystick-component";
+import "./gamescene.css";
+
 //import './entities/player';
 
 let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY;
@@ -105,6 +108,26 @@ const GameScene = () => {
       renderer.render(scene, camera);
   }
 
+  const handleMove = (e) => {
+    console.log(e);
+  };
+
+  const handleMoveStop = (e) => {
+    console.log(e);
+  };
+
+  const handleDirection = (e) => {
+    console.log(e);
+  };
+
+  const handleRelease = (e) => {
+    console.log("released");
+  };
+
+  const handleJump = (e) => {
+    console.log("jumped");
+  };
+
   function onWindowResize() {
     // Camera frustum aspect ratio
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -119,6 +142,7 @@ const GameScene = () => {
   useEffect(() => {
     init();
     animate();
+    console.log("useeffect")
     waterManager.populatePowerups();
     waterManager.populateWater();
     // Entities
@@ -133,7 +157,30 @@ const GameScene = () => {
 
     player.AddComponent(new PlayerInput());
   }, []);
-  return <div />;
+  return <div>
+  <div id="controls">
+    <div className="leftJoystick">
+      <Joystick
+        move={handleMove}
+        stop={handleMoveStop}
+        stickColor={"#fcba03"}
+        baseColor={"#ad7f00"}
+      ></Joystick>
+    </div>
+    <div className="rightJoystick">
+      <Joystick
+        move={handleDirection}
+        stop={handleRelease}
+        stickColor={"#fcba03"}
+        baseColor={"#ad7f00"}
+      ></Joystick>
+    </div>
+
+    <div className="jumpButton">
+      <button onClick={handleJump}>Jump</button>
+    </div>
+  </div>
+</div>;
 };
 
 export default GameScene;
