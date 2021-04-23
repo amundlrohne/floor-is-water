@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
-import {entity} from './entity.js';
+import {Entity} from './entity.js';
+import {Component} from '../components/component'
 import {finite_state_machine} from '../components/finite-state-machine.js';
 import {player_state} from '../components/player-state.js';
 
@@ -35,7 +36,7 @@ export const player_entity = (() => {
     }
   };
 
-  class BasicCharacterController extends entity.Component {
+  class BasicCharacterController extends Component {
     constructor(params) {
       super();
       this.params_ = params;
@@ -125,7 +126,6 @@ export const player_entity = (() => {
         };
 
         this.animations_['idle'] = _FindAnim('Idle');
-        this.animations_['walk'] = _FindAnim('Walk');
         this.animations_['run'] = _FindAnim('Run');
         this.animations_['death'] = _FindAnim('Death');
         this.animations_['attack'] = _FindAnim('Attack');

@@ -1,0 +1,158 @@
+@import "./constants.css";
+
+.SettingsBar > * {
+    display: inline-block;
+    margin: 5px;
+}
+
+.SettingsBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.SettingsWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--charcoal);
+    border-radius: 4px;
+    border: var(--silver);
+    border-width: 3px;
+    border-style: solid;
+    margin-top: 5%;
+}
+
+.LobbyWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--charcoal);
+    border-radius: 4px;
+    border: var(--silver);
+    border-width: 3px;
+    border-style: solid;
+    margin-top: 5%;
+}
+
+.menuWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menuWrapper > ul > li > a {
+    font-size: x-large;
+}
+
+.menuWrapper > ul > li {
+    list-style-type: none;
+    padding-top: 10px;
+}
+
+.menuWrapper > ul {
+    padding-left: 0px;
+    text-align: center;
+    list-style: none;
+}
+
+.CreditsWrapper > ul > li {
+    list-style-type: none;
+    padding-top: 10px;
+}
+
+.CreditsWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+
+.lobbies > div {
+    background-color: var(--charcoal);
+    border: var(--silver);
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
+    margin-top: 0.5%;
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 60% auto auto;
+}
+
+.lobbyListHeader {
+    margin-top: 2%;
+    grid-column: span 3;
+    display: grid;
+    grid-template-columns: 60% auto auto;
+    background-color: var(--charcoal);
+}
+
+.lobbies > div:hover {
+    background-color: #a7a7a7;
+    cursor: pointer;
+}
+
+.lobbiesWrapper {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    width: 40%;
+    grid-gap: 1%;
+}
+
+.lobbiesWrapper > h1 {
+    grid-column: span 3;
+}
+
+.lobbies {
+    grid-column: span 3;
+}
+
+.disconnectButton {
+    background-color: var(--charcoal);
+    border: var(--silver);
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 1%;
+}
+
+.lobbyWrapper {
+    display: grid;
+    grid-template-columns: auto;
+    width: 40%;
+    grid-gap: 1%;
+}
+
+.lobbyListBack {
+    grid-column: span 3;
+    text-align: center;
+}
+
+.players {
+    display: grid;
+    grid-template-columns: auto;
+    grid-gap: 1%;
+}
+
+.playerEntry {
+    display: grid;
+    grid-template-columns: 70% auto;
+    background-color: var(--charcoal);
+    padding: 2%;
+    margin-top: 1%;
+}
+
+.colorPicker {
+    margin-top: 1%;
+    display: grid;
+    grid-template-columns: auto auto;
+}
