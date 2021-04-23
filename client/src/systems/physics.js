@@ -5,6 +5,7 @@ export class PhysicsHandler {
     constructor() {
         this.trackers = {}
         this.objects = {}
+        this.meshControlled = {}
         this.fixedRotations = new Set();
         this.world = new cannon.World({
             gravity: new cannon.Vec3(0, -98.2, 0), // m/s²
@@ -69,7 +70,12 @@ export class PhysicsHandler {
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
                 this.world.addBody(body)
-                this.objects[params._id] = {body: body, mesh: params.mesh};
+                if (params.meshControlled) {
+                    this.meshControlled[params._id] = {body: body, mesh: params.mesh}
+                }
+                else {
+                    this.objects[params._id] = {body: body, mesh: params.mesh};
+                }
                 break;
             }
         }
@@ -107,7 +113,7 @@ export class PhysicsHandler {
 
     playerJump(){
         console.log(this.findObject("player"))
-        if(this.findObject("player").jumpReady.ready==true){
+        if(this.findObject("player").jumpReady.ready===true){
             this.applyVelocity("player",
                 new Vector3(0, 70, 0))
         };
@@ -126,8 +132,8 @@ export class PhysicsHandler {
 
 
     stopVelocity(id,x,z) {
-        if(x==0){this.playerVelocity[0]=0; this.xAcceleration=0}
-        if(z==0){this.playerVelocity[1]=0; this.zAcceleration=0}
+        if(x===0){this.playerVelocity[0]=0; this.xAcceleration=0}
+        if(z===0){this.playerVelocity[1]=0; this.zAcceleration=0}
         this.findObject(id).velocity.x=this.playerVelocity[0];
         this.findObject(id).velocity.z=this.playerVelocity[1];
     }
@@ -155,16 +161,16 @@ export class PhysicsHandler {
             }
         }
         if(Object.keys(this.objects).includes("player")){
-            if((this.playerVelocity[0]<35&&this.playerVelocity[0]>-35)&&this.xAcceleration!=0){
+            if((this.playerVelocity[0]<35&&this.playerVelocity[0]>-35)&&this.xAcceleration!==0){
                 this.playerVelocity[0] += this.xAcceleration;
                 this.findObject("player").velocity.x = this.playerVelocity[0];
             }
-            if((this.playerVelocity[1]<35&&this.playerVelocity[1]>-35)&&this.zAcceleration!=0){
+            if((this.playerVelocity[1]<35&&this.playerVelocity[1]>-35)&&this.zAcceleration!==0){
                 this.playerVelocity[1] += this.zAcceleration;
                 this.findObject("player").velocity.z = this.playerVelocity[1];
             }
 
-            if(Math.floor(this.playerVelocity[0])==0||Math.ceil(this.playerVelocity[0]==0)&&Math.floor(this.playerVelocity[1])==0||Math.ceil(this.playerVelocity[1]==0)){this.stopVelocity("player")}
+            if(Math.floor(this.playerVelocity[0])===0||Math.ceil(this.playerVelocity[0]===0)&&Math.floor(this.playerVelocity[1])===0||Math.ceil(this.playerVelocity[1]===0)){this.stopVelocity("player")}
             //if(Math.floor(this.playerVelocity[1])==0||Math.ceil(this.playerVelocity[1]==0)){this.stopVelocity("player")}
         }
 

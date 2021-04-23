@@ -12,11 +12,12 @@ import {PhysicsHandler} from "../systems/physics";
 import EntitySystem from "../systems/entity-system";
 import { LoadController } from "../components/load-controller";
 import { PlayerInput } from "../components/player-input";
+import WaterPowerupManager from "../systems/entity-manager";
 
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler, entitySystem, clock, controls;
+let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY;
 
 const GameScene = () => {
   function init() {
@@ -25,6 +26,8 @@ const GameScene = () => {
     scene = new th.Scene();
     physicsHandler = new PhysicsHandler();
     entitySystem = new EntitySystem();
+    waterManager = new WaterPowerupManager({scene: scene, physicsHandler: physicsHandler});
+    baseWaterY = 0.1;
     // Init modelloader
     const l = new Entity();
         l.AddComponent(new LoadController());
@@ -77,9 +80,9 @@ const GameScene = () => {
   // Draw the scene every time the screen is refreshed
   function animate() {
     requestAnimationFrame(animate);
+    water();
 
-
-    if (entitySystem.Get("player") != undefined) {
+    if (entitySystem.Get("player") !== undefined) {
         if (
             entitySystem.Get("player")._components.BasicCharacterController
                 .mixer !== undefined
@@ -96,6 +99,12 @@ const GameScene = () => {
     renderer.render(scene, camera);
   }
 
+  function water() {
+      baseWaterY += 0.01;
+      waterManager.updateEntities(clock, baseWaterY);
+      renderer.render(scene, camera);
+  }
+
   function onWindowResize() {
     // Camera frustum aspect ratio
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -110,7 +119,8 @@ const GameScene = () => {
   useEffect(() => {
     init();
     animate();
-
+    waterManager.populatePowerups();
+    waterManager.populateWater();
     // Entities
     new MapEntity({ scene: scene, physicsHandler: physicsHandler });
     console.log(entitySystem);
@@ -120,6 +130,7 @@ const GameScene = () => {
         entitySystem: entitySystem,
         clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(0, 10, 0))
     });
+
     player.AddComponent(new PlayerInput());
   }, []);
   return <div />;

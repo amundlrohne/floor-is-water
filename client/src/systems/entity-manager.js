@@ -2,7 +2,7 @@ import * as three from "three";
 import { Vector3 } from "three";
 import PowerupEntity from "../entities/power-up";
 import WaterEntity from "../entities/water";
-import { EntitySystem } from "./entity-system";
+import EntitySystem from "./entity-system";
 
 export default class EntityManager extends EntitySystem {
   constructor(params) {
@@ -17,13 +17,13 @@ export default class EntityManager extends EntitySystem {
 
   getPowerups() {
     return this.entities.filter((entity) => {
-      return entity.type == "powerup";
+      return entity.type === "powerup";
     });
   }
 
   getWater() {
     return this.entities.filter((entity) => {
-      return entity.type == "water";
+      return entity.type === "water";
     });
   }
 
@@ -63,7 +63,7 @@ export default class EntityManager extends EntitySystem {
 
   removePowerup(toRemove) {
     this.entities = this.entities.filter((entity) => {
-      if (entity == toRemove) {
+      if (entity === toRemove) {
         let removed = toRemove.entity._components.Powerup;
 
         removed.mesh.geometry.dispose();
@@ -72,7 +72,7 @@ export default class EntityManager extends EntitySystem {
           this.params.scene.getObjectByProperty("uuid", removed.uuid)
         );
       }
-      return entity != toRemove;
+      return entity !== toRemove;
     });
   }
 
