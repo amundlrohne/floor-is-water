@@ -14,7 +14,6 @@ export default class Component {
     }
 
     InitComponent() {}
-
     InitEntity() {}
 
     GetComponent(n) {
