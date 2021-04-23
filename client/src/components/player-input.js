@@ -16,6 +16,7 @@ export class PlayerInput extends Component {
         };
         this.jumpReady = true;
         this.Init();
+
     }
 
     Init() {
@@ -66,11 +67,14 @@ export class PlayerInput extends Component {
             if (event.code == "Space") {
                 this.keysPressed[event.code] = true;
             }
+            if(event.key === 'k') {
+                this.Parent.params.physicsHandler.addTracking(this.Parent.params.camera, 'player')
+            }
             this.keyDown(event);
         });
     }
     keyDown(e){
-        
+
         if (this.keysPressed["w"]) {
             this.run[1] = -2;
         }

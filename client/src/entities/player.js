@@ -10,6 +10,7 @@ import robotf from "../assets/Robot.fbx";
 import { CHARACTER_MODELS } from "../assets/models.mjs";
 import { AnimationMixer, Scene, Vector3 } from "three";
 import { useEffect } from "react";
+import Punch from "../components/punch";
 
 export class PlayerEntity extends Entity {
     constructor(params) {
@@ -18,6 +19,13 @@ export class PlayerEntity extends Entity {
         this.params = params;
         this.BCC = new BasicCharacterController(this.params);
         this._Init();
+        // window.onkeydown(this.punch.bind(this))
+    }
+
+    punch(event) {
+        if (event.keyCode === 32) {
+            new Punch({radius: 5, speed: 50, mesh: this.BCC.target})
+        }
     }
 
     _Init() {
@@ -134,7 +142,7 @@ export class BasicCharacterController extends Component {
             this.mixer = mixer;
             this.addPhysics();
             this.params_.scene.add(result);
-            
+
             result.position.copy(new Vector3(0,100,5));
         });
         /* loader.LoadGLTF(undefined,
