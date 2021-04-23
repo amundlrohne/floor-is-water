@@ -6,7 +6,6 @@ import { Entity } from "./entity.js";
 import Component from "../components/component";
 import { finite_state_machine } from "../components/finite-state-machine.js";
 import { player_state } from "../components/player-state.js";
-import robot from "../assets/Robot.gltf";
 import robotf from "../assets/Robot.fbx";
 import { CHARACTER_MODELS } from "../assets/models.mjs";
 import { AnimationMixer, Scene, Vector3 } from "three";

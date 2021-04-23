@@ -13,7 +13,6 @@ import EntitySystem from "../systems/entity-system";
 import { LoadController } from "../components/load-controller";
 import { PlayerInput } from "../components/player-input";
 
-
 //import './entities/player';
 
 let camera, scene, renderer, physicsHandler, entitySystem, clock;
@@ -73,10 +72,13 @@ const GameScene = () => {
     camera.position.set(0, 10, 20);
   }
 
+        // Position camera
+        camera.position.set(0, 10, 20);
+    
 
-  // Draw the scene every time the screen is refreshed
-  function animate() {
-    requestAnimationFrame(animate);
+    // Draw the scene every time the screen is refreshed
+    function animate() {
+        requestAnimationFrame(animate);
 
 
     if (entitySystem.Get("player") != undefined) {
@@ -93,23 +95,23 @@ const GameScene = () => {
     }
     // Add animation here
 
-    renderer.render(scene, camera);
-  }
+        renderer.render(scene, camera);
+    }
 
-  function onWindowResize() {
-    // Camera frustum aspect ratio
-    camera.aspect = window.innerWidth / window.innerHeight;
-    // After making changes to aspect
-    camera.updateProjectionMatrix();
-    // Reset size
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  }
+    function onWindowResize() {
+        // Camera frustum aspect ratio
+        camera.aspect = window.innerWidth / window.innerHeight;
+        // After making changes to aspect
+        camera.updateProjectionMatrix();
+        // Reset size
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
 
-  window.addEventListener("resize", onWindowResize, false);
+    window.addEventListener("resize", onWindowResize, false);
 
-  useEffect(() => {
-    init();
-    animate();
+    useEffect(() => {
+        init();
+        animate();
 
     // Entities
     new MapEntity({ scene: scene, physicsHandler: physicsHandler });

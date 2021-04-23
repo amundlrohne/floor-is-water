@@ -19,27 +19,10 @@ export class PlayerInput extends Component {
     }
 
     Init() {
-        //this.physHandler = this.Parent.params.physicsHandler;
-        //unnnecccesasyr
         this.addMovement();
     }
     addMovement() {
-        //MUST BE SWITCHED WITH TOUCH UI ELEMENTS
-        //console.log(this.Parent.params.physicsHandler)
 
-        /* document.addEventListener("keydown", (event) => {
-            if (
-                event.key == "w" ||
-                event.key == "a" ||
-                event.key == "s" ||
-                event.key == "d" ||
-                event.key == "p"
-            )
-                this.keysPressed[event.key] = true;
-            if (event.code == "Space") {
-                this.keysPressed[event.code] = true;
-            }
-        }); */
 
         document.addEventListener("keyup", (event) => {
             if (event.code == "Space") {
