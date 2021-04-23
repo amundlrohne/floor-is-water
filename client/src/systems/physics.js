@@ -168,12 +168,31 @@ export class PhysicsHandler {
             body.quaternion.copy(mesh.quaternion);
         }
         if(Object.keys(this.objects).includes("player")){
-            if((this.playerVelocity[0]<35&&this.playerVelocity[0]>-35)&&this.xAcceleration!==0){
-                this.playerVelocity[0] += this.xAcceleration;
+            console.log(this.xAcceleration, this.zAcceleration)
+            if((this.playerVelocity[0]+this.xAcceleration<35&&this.playerVelocity[0]+this.xAcceleration>-35)&&this.xAcceleration!==0){
+                if (this.xAcceleration === 0) {
+                    if (this.playerVelocity[0] > 0) {
+                        this.playerVelocity[0] = this.playerVelocity[0] - 0.1 < 0 ? 0 : this.playerVelocity[0] - 0.1;
+                    }
+                    if (this.playerVelocity[0] < 0) {
+                        this.playerVelocity[0] = this.playerVelocity[0] + 0.1 > 0 ? 0 : this.playerVelocity[0] + 0.1;
+                    }
+                } else {
+                    this.playerVelocity[0] += this.xAcceleration;
+                }
                 this.findObject("player").velocity.x = this.playerVelocity[0];
             }
-            if((this.playerVelocity[1]<35&&this.playerVelocity[1]>-35)&&this.zAcceleration!==0){
-                this.playerVelocity[1] += this.zAcceleration;
+            if((this.playerVelocity[1]+this.zAcceleration<35&&this.playerVelocity[1]+this.zAcceleration>-35)&&this.zAcceleration!==0){
+                if (this.zAcceleration === 0) {
+                    if (this.playerVelocity[1] > 0) {
+                        this.playerVelocity[1] = this.playerVelocity[1] - 0.1 < 0 ? 0 : this.playerVelocity[1] - 0.1;
+                    }
+                    if (this.playerVelocity[1] < 0) {
+                        this.playerVelocity[1] = this.playerVelocity[1] + 0.1 > 0 ? 0 : this.playerVelocity[1] + 0.1;
+                    }
+                } else {
+                    this.playerVelocity[1] += this.zAcceleration;
+                }
                 this.findObject("player").velocity.z = this.playerVelocity[1];
             }
 
