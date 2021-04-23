@@ -28,11 +28,7 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(new cannon.Quaternion(0,0,0,0)) // make it face up
-                console.log()
-                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e};console.log("Entered")});
-
-               this.world.addEventListener('beginContact', (e)=>{body.jumpReady = {ready:true,contacts:e};console.log(e)});
-                this.world.addEventListener('endContact', (e)=>{body.jumpReady = {ready:true,contacts:e};console.log("Left")});
+                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e};console.log("BANG")});
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
