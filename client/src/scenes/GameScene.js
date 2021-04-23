@@ -12,10 +12,11 @@ import {PhysicsHandler} from "../systems/physics";
 import EntitySystem from "../systems/entity-system";
 import { LoadController } from "../components/load-controller";
 import { PlayerInput } from "../components/player-input";
+import WaterPowerupManager from "../systems/entity-manager";
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler, entitySystem, clock;
+let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY;
 
 const GameScene = () => {
   function init() {
@@ -24,6 +25,8 @@ const GameScene = () => {
     scene = new th.Scene();
     physicsHandler = new PhysicsHandler();
     entitySystem = new EntitySystem();
+    waterManager = new WaterPowerupManager({scene: scene, physicsHandler: physicsHandler});
+    baseWaterY = 0.1;
     // Init modelloader
     const l = new Entity();
         l.AddComponent(new LoadController());
@@ -39,7 +42,7 @@ const GameScene = () => {
     // Init renderer
     renderer = new th.WebGLRenderer({ antialias: true });
     const canvas = renderer.domElement;
-    const controls = new OrbitControls(camera, canvas);
+    controls = new OrbitControls(camera, canvas);
     controls.target.set(0, 5, 0);
     controls.update();
 
@@ -74,12 +77,12 @@ const GameScene = () => {
 
     
 
-    // Draw the scene every time the screen is refreshed
-    function animate() {
-        requestAnimationFrame(animate);
+  // Draw the scene every time the screen is refreshed
+  function animate() {
+    requestAnimationFrame(animate);
+    water();
 
-
-    if (entitySystem.Get("player") != undefined) {
+    if (entitySystem.Get("player") !== undefined) {
         if (
             entitySystem.Get("player")._components.BasicCharacterController
                 .mixer !== undefined
@@ -96,29 +99,38 @@ const GameScene = () => {
         renderer.render(scene, camera);
     }
 
-    function onWindowResize() {
-        // Camera frustum aspect ratio
-        camera.aspect = window.innerWidth / window.innerHeight;
-        // After making changes to aspect
-        camera.updateProjectionMatrix();
-        // Reset size
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }
+  function water() {
+      baseWaterY += 0.01;
+      waterManager.updateEntities(clock, baseWaterY);
+      renderer.render(scene, camera);
+  }
+
+  function onWindowResize() {
+    // Camera frustum aspect ratio
+    camera.aspect = window.innerWidth / window.innerHeight;
+    // After making changes to aspect
+    camera.updateProjectionMatrix();
+    // Reset size
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
 
     window.addEventListener("resize", onWindowResize, false);
 
-    useEffect(() => {
-        init();
-        animate();
-
+  useEffect(() => {
+    init();
+    animate();
+    waterManager.populatePowerups();
+    waterManager.populateWater();
     // Entities
     new MapEntity({ scene: scene, physicsHandler: physicsHandler });
     console.log(entitySystem);
     const player = new PlayerEntity({
+      camera: controls,
         scene: scene,
         entitySystem: entitySystem,
         clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(0, 10, 0))
     });
+
     player.AddComponent(new PlayerInput());
   }, []);
   return <div />;
