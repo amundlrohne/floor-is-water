@@ -53,7 +53,6 @@ const LobbyList = () => {
 
     if (connected) {
         return (
-            
             <div className="lobbiesWrapper">
                 <h1>Lobbies</h1>
                 <input
