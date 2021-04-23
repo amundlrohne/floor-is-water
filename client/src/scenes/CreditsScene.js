@@ -16,7 +16,6 @@ export const CreditsScene = () => {
               <li>Gems models in powerups by <a href="https://godgoldfear.itch.io/low-poly-gems-pack-2">Godgoldfear</a></li>
               <li>Font by <a href="https://www.1001freefonts.com/audiowide.font"> Brian J. Bonislawsky, aka: Astigmatic</a></li>
               <li>Game developed by the members of group 16</li>
-
           </ul>
       
           <Link to={`/`}>Back</Link>      
