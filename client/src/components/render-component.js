@@ -1,14 +1,14 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.module.js';
+import * as THREE from 'three';
 
-import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/GLTFLoader.js';
-import {OBJLoader} from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/OBJLoader.js';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader.js';
 
-import {entity} from './entity.js';
+import Component from './component';
 
 
 export const render_component = (() => {
 
-  class RenderComponent extends entity.Component {
+  class RenderComponent extends Component {
     constructor(params) {
       super();
       this.group_ = new THREE.Group();

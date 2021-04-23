@@ -1,4 +1,4 @@
-export class EntitySystem {
+export default class EntitySystem {
   constructor() {
     this._ids = 0;
     this._entitiesMap = {};

@@ -1,17 +1,23 @@
 import * as cannon from 'cannon-es';
-import {Vector3} from "three";
+import {RGBA_ASTC_10x10_Format, Vector3} from "three";
 import {Vec3} from "cannon-es";
 export class PhysicsHandler {
     constructor() {
+        this.trackers = {}
         this.objects = {}
+        this.meshControlled = {}
+        this.fixedRotations = new Set();
         this.world = new cannon.World({
             gravity: new cannon.Vec3(0, -98.2, 0), // m/s²
         });
         this.timeStep = 1 / 60 // seconds
-        this.animate();
+        this.xAcceleration = 0;
+        this.zAcceleration = 0;
+        this.playerVelocity = [0,0];
     }
 
     addHitbox(params) {
+        console.log(params);
         switch(params.type) {
             case 'sphere': {
                 const radius = params.radius // m
@@ -20,7 +26,8 @@ export class PhysicsHandler {
                     shape: new cannon.Sphere(radius),
                 })
                 body.position.copy(params.position) // m
-                body.quaternion.copy(params.mesh.quaternion) // make it face up
+                body.quaternion.copy(new cannon.Quaternion(0,0,0,0)) // make it face up
+                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e};console.log("BANG")});
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
@@ -40,11 +47,18 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
+                    fixedRotation:params.fixedRotation,
+                    material: new cannon.Material({friction:0.0}),
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
+                if (params.fixedRotation) {
+                    this.fixedRotations.add(params._id)
+                }
+
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
+
                 break;
             case 'plane': {
                 const body = new cannon.Body({
@@ -54,26 +68,79 @@ export class PhysicsHandler {
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
                 this.world.addBody(body)
-                this.objects[params._id] = {body: body, mesh: params.mesh};
+                if (params.meshControlled) {
+                    this.meshControlled[params._id] = {body: body, mesh: params.mesh}
+                }
+                else {
+                    this.objects[params._id] = {body: body, mesh: params.mesh};
+                }
                 break;
             }
         }
     }
 
-    applyVelocity(id, velocity) {
+    addTracking(mesh, id) {
+        if (this.trackers[id]) {
+            this.trackers[id] = undefined
+        } else {
+            mesh.minDistance = 50;
+            mesh.maxDistance = 50;
+            mesh.minPolarAngle = 0.7;
+            mesh.maxPolarAngle = 0.7;
+            mesh.minAzimuthAngle = 1;
+            mesh.maxAzimuthAngle = 1;
+            mesh.enableRotate = false;
+            mesh.enableZoom = false;
+
+            this.trackers[id] = mesh
+        }
+    }
+
+    findObject(id) {
         for (let key in this.objects) {
-            console.log("applying force");
-            let body = this.objects[key].body;
-            if (body.mass !== 0 && key === id) {
-                body.velocity.x += velocity.x;
-                body.velocity.y += velocity.y;
-                body.velocity.z += velocity.z;
+            if (key === id) {
+                return this.objects[key].body;
             }
         }
     }
 
-    animate() {
-        requestAnimationFrame(() => this.animate());
+    applyVelocity(id, velocity) {
+        let body = this.findObject(id);
+        if (body.mass !== 0) {
+            body.velocity.x += velocity.x;
+            body.velocity.y += velocity.y;
+            body.velocity.z += velocity.z;
+        }
+    }
+
+    playerJump(){
+        console.log(this.findObject("player"))
+        if(this.findObject("player").jumpReady.ready===true){
+            this.applyVelocity("player",
+                new Vector3(0, 70, 0))
+        };
+        this.findObject("player").jumpReady.ready=false;
+    }
+
+    accelerate(x,z){
+        this.xAcceleration=x;
+        this.zAcceleration=z;
+    }
+
+    setPosition(id, position) {
+        this.findObject(id).position.copy(position);
+        this.stopVelocity(id);
+    }
+
+
+    stopVelocity(id,x,z) {
+        if(x===0){this.playerVelocity[0]=0; this.xAcceleration=0}
+        if(z===0){this.playerVelocity[1]=0; this.zAcceleration=0}
+        this.findObject(id).velocity.x=this.playerVelocity[0];
+        this.findObject(id).velocity.z=this.playerVelocity[1];
+    }
+
+    update() {
         // Physics
         const time = performance.now() / 1000 // seconds
         if (!this.lastCallTime) {
@@ -89,6 +156,30 @@ export class PhysicsHandler {
             let mesh = this.objects[key].mesh;
             mesh.position.copy(body.position);
             mesh.quaternion.copy(body.quaternion);
+            if (this.trackers[key]) {
+                this.trackers[key].target.copy(body.position)
+                this.trackers[key].update()
+            }
         }
+        for (let key in this.meshControlled) {
+            let body = this.meshControlled[key].body;
+            let mesh = this.meshControlled[key].mesh;
+            body.position.copy(mesh.position);
+            body.quaternion.copy(mesh.quaternion);
+        }
+        if(Object.keys(this.objects).includes("player")){
+            if((this.playerVelocity[0]<35&&this.playerVelocity[0]>-35)&&this.xAcceleration!==0){
+                this.playerVelocity[0] += this.xAcceleration;
+                this.findObject("player").velocity.x = this.playerVelocity[0];
+            }
+            if((this.playerVelocity[1]<35&&this.playerVelocity[1]>-35)&&this.zAcceleration!==0){
+                this.playerVelocity[1] += this.zAcceleration;
+                this.findObject("player").velocity.z = this.playerVelocity[1];
+            }
+
+            if(Math.floor(this.playerVelocity[0])===0||Math.ceil(this.playerVelocity[0]===0)&&Math.floor(this.playerVelocity[1])===0||Math.ceil(this.playerVelocity[1]===0)){this.stopVelocity("player")}
+            //if(Math.floor(this.playerVelocity[1])==0||Math.ceil(this.playerVelocity[1]==0)){this.stopVelocity("player")}
+        }
+
     }
 }
