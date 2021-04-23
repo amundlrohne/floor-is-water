@@ -5,13 +5,60 @@ body {
     margin: 0;
 }
 
-.lobbies > div {
-    border: 1px solid black;
-    margin-top: 0.5%;
-    width: 40%;
+@font-face {
+    font-family: "Audiowide";
+    src: url("../assets/font/Audiowide-Regular.ttf") format("truetype"),
+        url("../assets/font/Audiowide-Regular.woff2") format("woff2"),
+        url("../assets/font/Audiowide-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+button {
+    font-family: "Audiowide";
+    color: var(--yellow);
+    background-color: var(--charcoal);
+    border: var(--silver);
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
 }
 
-.lobbies > div:hover {
-    background-color: #a7a7a7;
+button:hover {
+    background-color: var(--silver);
     cursor: pointer;
+}
+
+a:link {
+    color: var(--yellow);
+    border: var(--silver);
+}
+a:visited {
+    color: var(--yellow);
+}
+h1 {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #f2c84b,
+        0 0 30px #f2c84b, 0 0 40px #f2c84b, 0 0 55px #f2c84b, 0 0 75px #f2c84b,
+        2px -5px 2px rgba(206, 89, 55, 0), 2px -5px 2px rgba(206, 89, 55, 0);
+    text-align: center;
+}
+
+input {
+    font-family: "Audiowide";
+    color: var(--yellow);
+    background-color: var(--charcoal);
+    border: var(--silver);
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
+}
+
+select {
+    font-family: "Audiowide";
+    color: var(--yellow);
+    background-color: var(--charcoal);
+    border: var(--silver);
+    border-style: solid;
+    border-radius: 2px;
+    border-width: 2px;
 }
