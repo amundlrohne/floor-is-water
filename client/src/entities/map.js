@@ -1,7 +1,7 @@
-import {Entity} from "./entity";
+import { Entity } from "./entity";
 import Map from "../components/map";
 import PlatformEntity from "./platform";
-import {Vector3} from "three";
+import { Vector3 } from "three";
 
 export default class MapEntity extends Entity {
     constructor(params) {

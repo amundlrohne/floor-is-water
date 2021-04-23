@@ -7,9 +7,8 @@ export default class Map extends Component {
         super();
         this.InitComponent(params);
         if (params) {
-            {
-                //Add a plane
-                const planeGeo = new three.PlaneGeometry(100, 100);
+            {//Add a plane
+                const planeGeo = new three.PlaneGeometry(1000, 1000);
                 const texture = new three.TextureLoader().load(water);
                 const planeMat = new three.MeshPhongMaterial({
                     bumpMap: texture,
