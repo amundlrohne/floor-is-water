@@ -8,11 +8,11 @@ export const LobbyScene = () => {
       <div className="BgGradient">
         <div className="LobbyWrapper">
           <h2>Lobby</h2>
+          <Link to={`/game`}>game</Link>
           <Link to={`/`}>Back</Link>      
         </div>
       </div>
     </div>
-
   );
 };
 

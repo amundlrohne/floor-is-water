@@ -7,11 +7,11 @@ import {
   withRouter,
   HashRouter,
 } from "react-router-dom";
-import GameScene from "./scenes/GameScene";
 import MenuScene from "./scenes/MenuScene";
 import LobbyScene from "./scenes/LobbyScene";
 import SettingsScene from "./scenes/SettingsScene";
 import CreditsScene from "./scenes/CreditsScene";
+import GameScene from "./scenes/GameScene";
 
 
 
