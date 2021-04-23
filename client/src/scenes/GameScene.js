@@ -72,8 +72,6 @@ const GameScene = () => {
     camera.position.set(0, 10, 20);
   }
 
-        // Position camera
-        camera.position.set(0, 10, 20);
     
 
     // Draw the scene every time the screen is refreshed
