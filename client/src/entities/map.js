@@ -15,13 +15,13 @@ export default class MapEntity extends Entity {
             // Add columns
             const columnRadius = 10;
             const columnPoly = 6;
-            new PlatformEntity({physicsHandler: params.physicsHandler, scene: params.scene, radius: columnRadius, height: 20, segments: columnPoly, type: 'Column', position: (new Vector3(20, 100, 0))})
-            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 50, segments: columnPoly, type: 'Column', position: (new Vector3(0, 250, -30))})
-            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 40, segments: columnPoly, type: 'Column', position: (new Vector3(-20, 200, 30))})
-            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 30, segments: columnPoly, type: 'Column', position: (new Vector3(-20, 150, -10))})
-            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 30, segments: columnPoly, type: 'Column', position: (new Vector3(-20, 200, -10))})
+            new PlatformEntity({physicsHandler: params.physicsHandler, scene: params.scene, radius: columnRadius, height: 20, segments: columnPoly, type: 'Column', position: (new Vector3(20, 10, 0)),entitySystem:params.entitySystem})
+            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 50, segments: columnPoly, type: 'Column', position: (new Vector3(0, 25, -30)),entitySystem:params.entitySystem})
+            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 40, segments: columnPoly, type: 'Column', position: (new Vector3(-20, 20, 30)),entitySystem:params.entitySystem})
+            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 30, segments: columnPoly, type: 'Column', position: (new Vector3(-20, 15, -10)),entitySystem:params.entitySystem})
+            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 30, segments: columnPoly, type: 'Column', position: (new Vector3(-20,15, -10)),entitySystem:params.entitySystem})
             // Add floaters
-            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, height: 1, width: 15, depth: 15, type: 'Floating', position: (new Vector3(0, 150, 20))})
+            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, height: 3, width: 15, depth: 15, type: 'Floating', position: (new Vector3(0, 10, 20))})
         }
     }
 }

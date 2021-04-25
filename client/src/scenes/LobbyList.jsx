@@ -53,49 +53,61 @@ const LobbyList = () => {
 
     if (connected) {
         return (
-            <div className="lobbiesWrapper">
-                <h1>Lobbies</h1>
-                <input
-                    type="text"
-                    value={newLobbyName}
-                    placeholder="Lobby name..."
-                    onChange={(e) => setNewLobbyName(e.target.value)}
-                />
-                <button onClick={createLobby}>New Lobby</button>
-                <button onClick={getLobbys}>Reload</button>
+            <div className="BgWrapper">
+            <div className="BgGradient">
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div className="lobbiesWrapper">
+                        <h1>Lobbies</h1>
+                        <input
+                            type="text"
+                            value={newLobbyName}
+                            placeholder="Lobby name..."
+                            onChange={(e) => setNewLobbyName(e.target.value)}
+                        />
+                        <button onClick={createLobby}>New Lobby</button>
+                        <button onClick={getLobbys}>Reload</button>
 
-                <div className="lobbyListHeader">
-                    <div>Name</div>
-                    <div>Size</div>
+                        <div className="lobbyListHeader">
+                            <div>Name</div>
+                            <div>Size</div>
+                        </div>
+                        <div className="lobbies">
+                            {lobbys.length > 0 ? (
+                                lobbys.map((value, index) => {
+                                    return (
+                                        <div
+                                            onClick={() => joinLobby(value.id)}
+                                            key={index}
+                                        >
+                                            <div>{value.name}</div>
+                                            <div>{value.clients.length}/4</div>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <p>Currently no active lobbies</p>
+                            )}
+                        </div>
+                        <Link className="lobbyListBack" to={`/`}>
+                            Back
+                        </Link>
+                    </div>
                 </div>
-                <div className="lobbies">
-                    {lobbys.length > 0 ? (
-                        lobbys.map((value, index) => {
-                            return (
-                                <div
-                                    onClick={() => joinLobby(value.id)}
-                                    key={index}
-                                >
-                                    <div>{value.name}</div>
-                                    <div>{value.clients.length}/4</div>
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <p>Currently no active lobbies</p>
-                    )}
-                </div>
-                <Link className="lobbyListBack" to={`/`}>
-                    Back
-                </Link>
+            </div>
             </div>
         );
     }
 
     return (
         <>
-            <div>Loading...</div>
-            <Link to={`/`}>Back</Link>
+            <div className="BgWrapper">
+                <div className="BgGradient">
+                    <div className="LoadingWrapper">
+                        <div>Loading...</div>
+                        <Link to={`/`}>Back</Link>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };
