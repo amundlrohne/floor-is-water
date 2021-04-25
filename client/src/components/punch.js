@@ -1,5 +1,5 @@
 import * as three from "three";
-import stoneImg from "../assets/StonePlatform.jpg";
+import stoneImg from "../assets/stonePlatform.jpg";
 import Component from "./component";
 import {Vector3} from "three";
 
