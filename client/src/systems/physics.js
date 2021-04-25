@@ -39,6 +39,7 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
+                body.addEventListener('collide', (e)=>{if(e.body.type==1){setTimeout(()=>{this.objects[params._id].body.mass = 2000000},3000); setTimeout(()=>{this.objects[params._id].body.mass = 500000},5000)}})
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;

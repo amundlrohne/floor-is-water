@@ -7,10 +7,8 @@ import Component from "../components/component";
 import { finite_state_machine } from "../components/finite-state-machine.js";
 import { player_state } from "../components/player-state.js";
 import robotf from "../assets/Robot.fbx";
-import { CHARACTER_MODELS } from "../assets/models.mjs";
-import { AnimationMixer, Scene, Vector3 } from "three";
-import { useEffect } from "react";
 import Punch from "../components/punch";
+import rockTexture from "../assets/stonePlatform.jpg";
 import {PlayerInput} from "../components/player-input";
 
 export class PlayerEntity extends Entity {
@@ -78,6 +76,7 @@ export class BasicCharacterController extends Component {
         this.group_ = new th.Group();
         this.animations_ = [];
         this.mixer;
+        this.fbxGeo;
         this.target;
         this.fsm = new CharacterFSM();
         this.LoadModels();
@@ -125,11 +124,13 @@ export class BasicCharacterController extends Component {
             .Get("loader")
             .GetComponent("LoadController");
         loader.LoadFBX(undefined, robotf, (result) => {
+            console.log(result);
             result.scale.multiplyScalar(0.01);
+            result.position.y=-1000000;
             let mixer = new th.AnimationMixer(result);
             let animationAction = mixer.clipAction(
                 result.animations.find(
-                    (element) => element.name === this.activeState
+                    (element) => element.name == this.activeState
                 )
             );
             result.animations.forEach((e) => {
@@ -141,7 +142,6 @@ export class BasicCharacterController extends Component {
             this.addPhysics();
             this.params_.scene.add(result);
 
-            result.position.copy(new Vector3(0,100,5));
         });
     }
 

@@ -29,7 +29,7 @@ const GameScene = () => {
     physicsHandler = new PhysicsHandler();
     entitySystem = new EntitySystem();
     waterManager = new WaterPowerupManager({scene: scene, physicsHandler: physicsHandler});
-    baseWaterY = 0.1;
+    baseWaterY = 0;
     // Init modelloader
     const l = new Entity();
         l.AddComponent(new LoadController());
@@ -95,13 +95,14 @@ const GameScene = () => {
     }
 
   function water() {
-      baseWaterY += 1;
+      if(baseWaterY<35){
+      baseWaterY += 0.005;
       waterManager.updateEntities(clock, baseWaterY);
-      renderer.render(scene, camera);
+      if(physicsHandler.findObject("plane1")){
+      physicsHandler.findObject("plane1").position.y = baseWaterY+4.35;}}
   }
 
   function handleMove(e) {
-    //entitySystem.Get("player")._components.PlayerInput.run[e.x/50,e.y/50];
     player.playerInput.handleMove(e);
   };
 
@@ -140,8 +141,8 @@ const GameScene = () => {
     waterManager.populatePowerups();
     waterManager.populateWater();
     // Entities
-    new MapEntity({ scene: scene, physicsHandler: physicsHandler });
     console.log(entitySystem);
+    new MapEntity({ scene: scene, physicsHandler: physicsHandler, entitySystem:entitySystem });
     player = new PlayerEntity({
       camera: controls,
         scene: scene,
