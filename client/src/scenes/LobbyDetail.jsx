@@ -16,6 +16,14 @@ const LobbyDetail = () => {
   const handleLobbyUpdate = useCallback((lobby) => {
     console.log(lobby);
     setLobby(lobby);
+
+    if (
+      !lobby.clients.some((el) => {
+        return el.username === localStorage.getItem("username");
+      })
+    ) {
+      setDisconnect(true);
+    }
   }, []);
 
   const handleRemove = (user, index) => {
