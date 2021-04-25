@@ -1,8 +1,6 @@
 import * as th from "three";
-import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../entities/entity";
-//import { FBXLoader } from "three-fbx-loader";
 import React, { useEffect, useState } from "react";
 import { Entity } from "../entities/entity";
 import Map from "../components/map";
@@ -13,13 +11,14 @@ import EntitySystem from "../systems/entity-system";
 import { LoadController } from "../components/load-controller";
 import { PlayerInput } from "../components/player-input";
 import WaterPowerupManager from "../systems/entity-manager";
+import robotGLB from "../assets/RobotExpressive.glb";
 
 import { Joystick } from "react-joystick-component";
 import "./gamescene.css";
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY, player;
+let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY, player, mixer;
 
 const GameScene = () => {
   function init() {
@@ -80,18 +79,25 @@ const GameScene = () => {
   }
 
 
-
   // Draw the scene every time the screen is refreshed
   function step() {
-    requestAnimationFrame(step);
+      let delta = clock.getDelta();
+      if(mixer){
+          mixer.update(delta);
+      }
+      if(entitySystem.Get("player")){
+          if(entitySystem.Get("player")._components.BasicCharacterController.mixer){
+          entitySystem.Get("player")._components.BasicCharacterController.Update(delta);
+      }}
+      requestAnimationFrame(step);
     water();
-    let delta = clock.getDelta();
+    
+    renderer.render(scene, camera);
 
     entitySystem.Update(delta);
 
     physicsHandler.update();
 
-        renderer.render(scene, camera);
     }
 
   function water() {
@@ -147,6 +153,7 @@ const GameScene = () => {
         entitySystem: entitySystem,
         clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(20, 20, 0))
     });
+
   }, []);
   return <div>
   <div id="controls">

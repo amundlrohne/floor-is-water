@@ -87,5 +87,6 @@ export class PlayerInput extends Component {
         let x = e.x ? (e.x/50)*35 : 0;
         let y = e.y ? (e.y/50)*35 : 0;
         this.Parent.params.physicsHandler.accelerate(x, y);
+        this.Parent.params.entitySystem.Get("player").BCC.ChangeState("Running");
     }
 }

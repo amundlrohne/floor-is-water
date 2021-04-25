@@ -7,9 +7,11 @@ import Component from "../components/component";
 import { finite_state_machine } from "../components/finite-state-machine.js";
 import { player_state } from "../components/player-state.js";
 import robotf from "../assets/Robot.fbx";
+import robotGLB from "../assets/RobotExpressive.glb";
 import Punch from "../components/punch";
 import rockTexture from "../assets/stonePlatform.jpg";
 import {PlayerInput} from "../components/player-input";
+import { LoadController } from "../components/load-controller.js";
 
 export class PlayerEntity extends Entity {
     constructor(params) {
@@ -69,11 +71,10 @@ export class BasicCharacterController extends Component {
     }
 
     Init() {
-        this.activeState = "RobotArmature|Robot_Running";
+        this.activeState = "Idle";
         this.group_ = new th.Group();
-        this.animations_ = [];
+        this.animations = [];
         this.mixer;
-        this.fbxGeo;
         this.target;
         this.fsm = new CharacterFSM();
         this.LoadModels();
@@ -113,41 +114,33 @@ export class BasicCharacterController extends Component {
             fixedRotation:true,
             position: this.params_.position,
         });
-
+        this.params_.physicsHandler.addTracking(this.Parent.params.camera, 'player');
     }
 
     LoadModels() {
         const loader = this.params_.entitySystem
             .Get("loader")
             .GetComponent("LoadController");
-        loader.LoadFBX(undefined, robotf, (result) => {
-            console.log(result);
-            result.scale.multiplyScalar(0.01);
-            result.position.y=-1000000;
-            let mixer = new th.AnimationMixer(result);
-            let animationAction = mixer.clipAction(
-                result.animations.find(
-                    (element) => element.name == this.activeState
-                )
-            );
-            result.animations.forEach((e) => {
-                this.animations_.push(mixer.clipAction(e));
-            });
-            animationAction.play();
-            this.target = result;
-            this.mixer = mixer;
+        loader.LoadGLTF(undefined,robotGLB,(result)=>{
+            console.log(result.animations.find(e=>e.name=="Idle"), result.animations[0]);
+            this.animations = result.animations;
+            this.target = result.scene;
+            this.mixer = new th.AnimationMixer(this.target);
+	        this.mixer.clipAction(result.animations.find(e=>e.name=="Idle")).play();
+            this.params_.scene.add(this.target);
             this.addPhysics();
-            this.params_.scene.add(result);
-
-        });
+        })
+        document.addEventListener("keydown",(e)=>{if(e.key=="p"){this.ChangeState("Running")}})
     }
 
     ChangeState(newState) {
-        this.activeState = newState;
-        let animationAction = this.mixer.clipAction(this.animations_[5]._clip);
-        animationAction.play();
-        this.params_.scene.add(this.target);
-    }
+        if(this.activeState!=newState){
+        this.state=newState;
+        this.mixer.clipAction(this.animations.find(e=>e.name==newState)).reset()
+        .setEffectiveTimeScale( 1 )
+        .setEffectiveWeight( 1 )
+        .fadeIn( 0.5 ).play();
+    }}
 
     Update(timeDelta) {
         if(this.mixer){
