@@ -106,6 +106,10 @@ const GameScene = () => {
     player.playerInput.handleMove(e);
   };
 
+  function punch() {
+    player.playerInput.punch();
+  }
+
   const handleMoveStop = (e) => {
   };
 
@@ -158,17 +162,11 @@ const GameScene = () => {
         baseColor={"#ad7f00"}
       ></Joystick>
     </div>
-    <div className="rightJoystick">
-      <Joystick
-        move={handleDirection}
-        stop={handleRelease}
-        stickColor={"#fcba03"}
-        baseColor={"#ad7f00"}
-      ></Joystick>
-    </div>
 
     <div className="jumpButton">
       <button onClick={handleJump}>Jump</button>
+    </div><div className="punchButton">
+      <button onClick={punch}>Punch</button>
     </div>
   </div>
 </div>;

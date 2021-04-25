@@ -14,7 +14,7 @@ export default class Punch extends Component {
             this.mesh = new three.Mesh(punchGeo, platformMat);
             params.scene.add(this.mesh);
             params.type = 'sphere';
-            params.physicsHandler.addHitbox({_id: this._id, mesh: this.mesh, mass: 50, ...params, position: new Vector3(params.mesh.position.x, params.mesh.position.y+1, params.mesh.position.z)})
+            params.physicsHandler.addHitbox({_id: 'playerpunch', mesh: this.mesh, mass: 50, ...params, position: new Vector3(params.mesh.position.x, params.mesh.position.y+1, params.mesh.position.z)})
         }
     }
 }
