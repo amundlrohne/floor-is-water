@@ -107,17 +107,8 @@ const GameScene = () => {
   };
 
   function punch() {
-    player.playerInput.punch();
+    player.punch();
   }
-
-  const handleMoveStop = (e) => {
-  };
-
-  const handleDirection = (e) => {
-  };
-
-  const handleRelease = (e) => {
-  };
 
   const handleJump = (e) => {
     player.playerInput.jump();
@@ -151,6 +142,7 @@ const GameScene = () => {
         entitySystem: entitySystem,
         clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(20, 20, 0))
     });
+    entitySystem.Add(player);
   }, []);
   return <div>
   <div id="controls">
