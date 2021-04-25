@@ -24,7 +24,7 @@ export default class Punch extends Component {
             let vector = new Vector2(5*Math.sin(parentAngle), 5*Math.cos(parentAngle), );
             console.log(vector);
             // let vector = new Vector2(6, 6).rotateAround(new Vector2(0, 0), -parentAngle);
-            let newPosition = new Vector3(parentPosition.x + vector.x, 0, parentPosition.z + vector.y);
+            let newPosition = new Vector3(parentPosition.x + vector.x, parentPosition.y, parentPosition.z + vector.y);
             this.ball = params.physicsHandler.addHitbox({...params, fixedRotation: true, width:3, height: 3, depth: 0.5, type: 'punch', _id: 'playerpunch', mesh: this.mesh, mass: 50, position: newPosition})
             this.ball.velocity.copy(new Vector3(vector.x*50, 200, vector.y*50));
         }
