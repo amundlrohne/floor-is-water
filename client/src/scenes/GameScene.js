@@ -106,14 +106,28 @@ const GameScene = () => {
     player.playerInput.handleMove(e);
   };
 
-  const handleMoveStop = (e) => {
-  };
+let punchCountdown, stopCountdown, timer;
 
-  const handleDirection = (e) => {
-  };
+  function punch() {
+    timer = 0
+    
+    punchCountdown = setInterval(() => {
+      updateCountdown()}, 100)
+    stopCountdown = setTimeout(endCountdown, 3000);
+     document.getElementById("countdown").style.visibility = "visible"
 
-  const handleRelease = (e) => {
-  };
+    player.punch();
+  }
+
+  const updateCountdown = () => {
+    timer += 0.1;
+    document.getElementById("countdown").innerHTML = (3 - timer.toFixed(1)).toFixed(1)
+  }
+
+  const endCountdown = () => {
+    clearInterval(punchCountdown);
+    document.getElementById("countdown").style.visibility = "hidden"
+  }
 
   const handleJump = (e) => {
     player.playerInput.jump();
@@ -147,6 +161,7 @@ const GameScene = () => {
         entitySystem: entitySystem,
         clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(20, 20, 0))
     });
+    entitySystem.Add(player);
   }, []);
   return <div>
   <div id="controls">
@@ -158,17 +173,14 @@ const GameScene = () => {
         baseColor={"#ad7f00"}
       ></Joystick>
     </div>
-    <div className="rightJoystick">
-      <Joystick
-        move={handleDirection}
-        stop={handleRelease}
-        stickColor={"#fcba03"}
-        baseColor={"#ad7f00"}
-      ></Joystick>
-    </div>
 
     <div className="jumpButton">
       <button onClick={handleJump}>Jump</button>
+    </div>
+    <div className="punchButton">
+      <div className="countDownOverlay" id="countdown">{timer}</div>
+        <button onClick={punch}>Punch</button>
+      
     </div>
   </div>
 </div>;
