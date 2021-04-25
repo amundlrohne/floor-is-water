@@ -173,3 +173,10 @@
     height: 100%;
     z-index: -1;
 }
+.LoadingWrapper {
+    display: block;
+    justify-content: center;
+    width: fit-content;
+    margin: auto;
+    margin-top: 10vh;
+}
