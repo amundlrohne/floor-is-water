@@ -6,7 +6,6 @@ import {
     withRouter,
 } from "react-router-dom";
 import MenuScene from "./scenes/MenuScene";
-import LobbyScene from "./scenes/LobbyScene";
 import SettingsScene from "./scenes/SettingsScene";
 import CreditsScene from "./scenes/CreditsScene";
 import LobbyList from "./scenes/LobbyList.jsx";
@@ -17,14 +16,9 @@ const App = () => {
     screen.orientation.lock("landscape");
 
     return (
-        <div style={{ display: "flex", justifyContent: "center" }}>
-            {/* <p>
-        <Link to="/game">To game scene</Link>
-      </p> */}
-
+        <div>
             <Switch>
                 <Route exact path="/" component={withRouter(MenuScene)}></Route>
-                <Route path="/lobby" component={withRouter(LobbyScene)}></Route>
                 <Route
                     path="/settings"
                     component={withRouter(SettingsScene)}

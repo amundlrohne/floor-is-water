@@ -88,7 +88,7 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
-                body.addEventListener('collide', (e)=>{console.log( e.body);if(e.body.shapes[0] instanceof cannon.Cylinder){e.body.position.copy(new cannon.Vec3(0,70,0)); e.body.mass=0; e.body.velocity.copy(new cannon.Vec3(0,0,0))}});
+                body.addEventListener('collide', (e)=>{console.log( e.body);if(e.body.shapes[0] instanceof cannon.Cylinder){e.body.position.copy(new cannon.Vec3(0,70,0)); e.body.mass=0; e.body.velocity.copy(new cannon.Vec3(0,0,0));}});
                 this.world.addBody(body)
                 if (params.meshControlled) {
                     this.meshControlled[params._id] = {body: body, mesh: params.mesh}
