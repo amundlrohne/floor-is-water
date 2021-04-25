@@ -1,8 +1,10 @@
 import * as cannon from 'cannon-es';
 import {RGBA_ASTC_10x10_Format, Vector3} from "three";
 import {Vec3} from "cannon-es";
+import * as three from 'three';
 export class PhysicsHandler {
     constructor() {
+        this.clock = new three.Clock();
         this.trackers = {}
         this.objects = {}
         this.meshControlled = {}
@@ -14,6 +16,7 @@ export class PhysicsHandler {
         this.xAcceleration = 0;
         this.zAcceleration = 0;
         this.playerVelocity = [0,0];
+        this.lastJump = this.clock.getElapsedTime();
     }
 
     addHitbox(params) {
@@ -26,7 +29,6 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(new cannon.Quaternion(0,0,0,0)) // make it face up
-                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e}});
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
@@ -48,6 +50,7 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
+                    material: new cannon.Material({friction: 0.01}),
                     fixedRotation: params.fixedRotation,
                 })
                 body.position.copy(params.position) // m
@@ -69,7 +72,9 @@ export class PhysicsHandler {
                     material: new cannon.Material({friction: 0})
                 })
                 body.position.copy(params.position) // m
-                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e}});
+                body.hasCollided = {ready:true};
+                body.hasJump = true;
+                body.addEventListener('collide', this.readyJump.bind(this));
 
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
                 if (params.fixedRotation) {
@@ -98,6 +103,10 @@ export class PhysicsHandler {
                 break;
             }
         }
+    }
+
+    readyJump(e) {
+        this.findObject('player').hasCollided = {ready:true}
     }
 
     addTracking(mesh, id) {
@@ -135,11 +144,13 @@ export class PhysicsHandler {
     }
 
     playerJump(){
-        if(this.findObject("player").jumpReady.ready===true){
+        if(this.findObject("player").hasJump===true){
+            this.lastJump = this.clock.getElapsedTime();
             this.applyVelocity("player",
                 new Vector3(0, 50, 0))
         }
-        this.findObject("player").jumpReady.ready=false;
+        this.findObject("player").hasCollided.ready=false;
+        this.findObject("player").hasJump=false;
     }
 
     accelerate(x,z){
@@ -188,7 +199,15 @@ export class PhysicsHandler {
             body.quaternion.copy(mesh.quaternion);
         }
         if(Object.keys(this.objects).includes("player")){
+
             let player = this.findObject('player');
+
+            if (player.hasCollided.ready) {
+                if (this.clock.getElapsedTime() - this.lastJump > 0.5) {
+                    player.hasJump = true;
+                }
+            }
+
             let distanceX = Math.abs(player.velocity.x - this.xAcceleration);
             let distanceZ = Math.abs(player.velocity.z - this.zAcceleration);
             if (this.xAcceleration === 0) {
