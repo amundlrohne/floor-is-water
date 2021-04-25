@@ -1,8 +1,10 @@
 import * as cannon from 'cannon-es';
-import {Mesh, RGBA_ASTC_10x10_Format, SkinnedMesh, Vector3} from "three";
-import {Vec3} from "cannon-es";
+import {Mesh, RGBA_ASTC_10x10_Format,Vector2, SkinnedMesh, Vector3} from "three";
+import {Quaternion, Vec3} from "cannon-es";
+import * as three from 'three';
 export class PhysicsHandler {
     constructor() {
+        this.clock = new three.Clock();
         this.trackers = {}
         this.objects = {}
         this.meshControlled = {}
@@ -14,6 +16,7 @@ export class PhysicsHandler {
         this.xAcceleration = 0;
         this.zAcceleration = 0;
         this.playerVelocity = [0,0];
+        this.lastJump = this.clock.getElapsedTime();
     }
 
     addHitbox(params) {
@@ -23,26 +26,41 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Sphere(radius),
+                    fixedRotation: params.fixedRotation,
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(new cannon.Quaternion(0,0,0,0)) // make it face up
                 body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e}});
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
-                break;
+                return body;
             }
             case 'cube': {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Box(new cannon.Vec3(params.width/2, params.height/2, params.depth/2)),
-                    material: new cannon.Material({friction: 0.01})
+                    material: new cannon.Material({friction: 0.01}),
+                    fixedRotation: params.fixedRotation,
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
                 body.addEventListener('collide', (e)=>{if(e.body.type==1){setTimeout(()=>{this.objects[params._id].body.mass = 2000000},3000); setTimeout(()=>{this.objects[params._id].body.mass = 500000},5000)}})
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
-                break;
+                return body;
+            }
+            case 'punch': {
+                const body = new cannon.Body({
+                    mass: params.mass, // kg
+                    shape: new cannon.Box(new cannon.Vec3(params.width/2, params.height/2, params.depth/2)),
+                    material: new cannon.Material({friction: 1}),
+                    fixedRotation: params.fixedRotation,
+                })
+                body.position.copy(params.position) // m
+                body.quaternion.copy(params.mesh.quaternion) // make it face up
+                this.world.addBody(body);
+                this.objects[params._id] = {body: body, mesh: params.mesh};
+                return body;
             }
             case 'cylinder': {
                 const body = new cannon.Body({
@@ -59,7 +77,7 @@ export class PhysicsHandler {
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
 
-                break;
+                return body;
             }
             case 'player': {
                 const body = new cannon.Body({
@@ -69,7 +87,10 @@ export class PhysicsHandler {
                     material: new cannon.Material({friction: 0})
                 })
                 body.position.copy(params.position) // m
-                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e}});
+                body.hasCollided = {ready:true};
+                body.hasJump = true;
+                body.angle = 0;
+                body.addEventListener('collide', this.readyJump.bind(this));
 
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
                 if (params.fixedRotation) {
@@ -78,15 +99,15 @@ export class PhysicsHandler {
 
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
-                break;
+                return body;
             }
             case 'plane': {
                 const body = new cannon.Body({
                     mass: params.mass,
                     shape: new cannon.Plane(),
-                    material: new cannon.Material({friction: 0.01})
+                    material: new cannon.Material({friction: 0.01}),
+                    fixedRotation: params.fixedRotation,
                 })
-                console.log(params.entitySystem);
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
                 body.addEventListener('collide', (e)=>{this.drown(e,params)});
@@ -97,14 +118,14 @@ export class PhysicsHandler {
                 else {
                     this.objects[params._id] = {body: body, mesh: params.mesh};
                 }
-                break;
+                return body;
             }
         }
     }
 
     drown(e){
         if(e.body.shapes[0] instanceof cannon.Cylinder && e.body.mass !=0){
-            e.body.mass = 0; 
+            e.body.mass = 0;
             e.body.position.copy(0,10000,0)
             e.body.velocity.setZero();
             const camera=this.trackers["player"];
@@ -112,6 +133,9 @@ export class PhysicsHandler {
             this.trackers["player"]=undefined;
             this.addTracking(camera, "plane1");
             };
+    }
+    readyJump(e) {
+        this.findObject('player').hasCollided = {ready:true}
     }
 
     addTracking(mesh, id) {
@@ -149,11 +173,13 @@ export class PhysicsHandler {
     }
 
     playerJump(){
-        if(this.findObject("player").jumpReady.ready===true){
+        if(this.findObject("player").hasJump===true){
+            this.lastJump = this.clock.getElapsedTime();
             this.applyVelocity("player",
                 new Vector3(0, 50, 0))
         }
-        this.findObject("player").jumpReady.ready=false;
+        this.findObject("player").hasCollided.ready=false;
+        this.findObject("player").hasJump=false;
     }
 
     accelerate(x,z){
@@ -188,11 +214,13 @@ export class PhysicsHandler {
         for (let key in this.objects) {
             let body = this.objects[key].body;
             let mesh = this.objects[key].mesh;
-            mesh.position.copy(body.position);
-            mesh.quaternion.copy(body.quaternion);
-            if (this.trackers[key]) {
-                this.trackers[key].target.copy(body.position)
-                this.trackers[key].update()
+            if (mesh) {
+                mesh.position.copy(body.position);
+                mesh.quaternion.copy(body.quaternion);
+                if (this.trackers[key]) {
+                    this.trackers[key].target.copy(body.position)
+                    this.trackers[key].update()
+                }
             }
         }
         for (let key in this.meshControlled) {
@@ -203,6 +231,17 @@ export class PhysicsHandler {
         }
         if(Object.keys(this.objects).includes("player")){
             let player = this.findObject('player');
+            if (this.zAcceleration !== 0 || this.xAcceleration !== 0) {
+                player.angle = Math.atan2(this.xAcceleration, this.zAcceleration);
+            }
+            player.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), player.angle);
+
+            if (player.hasCollided.ready) {
+                if (this.clock.getElapsedTime() - this.lastJump > 0.5) {
+                    player.hasJump = true;
+                }
+            }
+
             let distanceX = Math.abs(player.velocity.x - this.xAcceleration);
             let distanceZ = Math.abs(player.velocity.z - this.zAcceleration);
             if (this.xAcceleration === 0) {
