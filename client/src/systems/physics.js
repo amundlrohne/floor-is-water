@@ -1,5 +1,5 @@
 import * as cannon from 'cannon-es';
-import {RGBA_ASTC_10x10_Format, Vector3} from "three";
+import {Mesh, RGBA_ASTC_10x10_Format, SkinnedMesh, Vector3} from "three";
 import {Vec3} from "cannon-es";
 export class PhysicsHandler {
     constructor() {
@@ -48,6 +48,7 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
+                    material: new cannon.Material({friction: 0.01}),
                     fixedRotation: params.fixedRotation,
                 })
                 body.position.copy(params.position) // m
@@ -55,7 +56,6 @@ export class PhysicsHandler {
                 if (params.fixedRotation) {
                     this.fixedRotations.add(params._id)
                 }
-
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
 
@@ -86,9 +86,10 @@ export class PhysicsHandler {
                     shape: new cannon.Plane(),
                     material: new cannon.Material({friction: 0.01})
                 })
+                console.log(params.entitySystem);
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
-                body.addEventListener('collide', (e)=>{console.log( e.body);if(e.body.shapes[0] instanceof cannon.Cylinder){e.body.position.copy(new cannon.Vec3(0,70,0)); e.body.mass=0; e.body.velocity.copy(new cannon.Vec3(0,0,0));}});
+                body.addEventListener('collide', (e)=>{this.drown(e,params)});
                 this.world.addBody(body)
                 if (params.meshControlled) {
                     this.meshControlled[params._id] = {body: body, mesh: params.mesh}
@@ -99,6 +100,18 @@ export class PhysicsHandler {
                 break;
             }
         }
+    }
+
+    drown(e){
+        if(e.body.shapes[0] instanceof cannon.Cylinder && e.body.mass !=0){
+            e.body.mass = 0; 
+            e.body.position.copy(0,10000,0)
+            e.body.velocity.setZero();
+            const camera=this.trackers["player"];
+            console.log(this.trackers)
+            this.trackers["player"]=undefined;
+            this.addTracking(camera, "plane1");
+            };
     }
 
     addTracking(mesh, id) {

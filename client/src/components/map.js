@@ -23,6 +23,7 @@ export default class Map extends Component {
                     mass: 0,
                     position: new Vector3(0, 0, 0),
                     type: "plane",
+                    entitySystem: params.entitySystem
                 });
             }
         }
