@@ -11,6 +11,7 @@ import { CHARACTER_MODELS } from "../assets/models.mjs";
 import { AnimationMixer, Scene, Vector3 } from "three";
 import { useEffect } from "react";
 import Punch from "../components/punch";
+import {PlayerInput} from "../components/player-input";
 
 export class PlayerEntity extends Entity {
     constructor(params) {
@@ -18,6 +19,7 @@ export class PlayerEntity extends Entity {
         this.object3d;
         this.params = params;
         this.BCC = new BasicCharacterController(this.params);
+        this.playerInput = new PlayerInput(this.params);
         this._Init();
         // window.onkeydown(this.punch.bind(this))
     }
@@ -30,6 +32,7 @@ export class PlayerEntity extends Entity {
 
     _Init() {
         this.AddComponent(this.BCC);
+        this.AddComponent(this.playerInput);
         this.InitEntity();
         this.params.entitySystem.Add(this, "player");
     }
@@ -110,12 +113,8 @@ export class BasicCharacterController extends Component {
         this.params_.physicsHandler.addHitbox({
             _id: "player",
             mesh: this.target,
-            type:this.params_.type,
-            mass: 1,
-            radius: this.params_.radius,
-            segments: this.params_.segments,
+            type: 'player',
             fixedRotation:true,
-            height:this.params_.height,
             position: this.params_.position,
         });
 
@@ -126,12 +125,11 @@ export class BasicCharacterController extends Component {
             .Get("loader")
             .GetComponent("LoadController");
         loader.LoadFBX(undefined, robotf, (result) => {
-            console.log(result);
             result.scale.multiplyScalar(0.01);
             let mixer = new th.AnimationMixer(result);
             let animationAction = mixer.clipAction(
                 result.animations.find(
-                    (element) => element.name == this.activeState
+                    (element) => element.name === this.activeState
                 )
             );
             result.animations.forEach((e) => {
@@ -145,32 +143,19 @@ export class BasicCharacterController extends Component {
 
             result.position.copy(new Vector3(0,100,5));
         });
-        /* loader.LoadGLTF(undefined,
-            robot,
-            (result) => {
-                let mixer = new th.AnimationMixer(result.scene);
-                let animationAction = mixer.clipAction(result.animations.find(element => element.name == this.activeState));
-                console.log(result);
-                console.log(result.animations.find(element => element.name == this.activeState));
-                animationAction.play();
-                this.mixer = mixer;
-                this.params_.scene.add(result.scene);
-            }
-        ); */
     }
 
     ChangeState(newState) {
-        console.log(newState);
-        console.log(this.animations_);
         this.activeState = newState;
         let animationAction = this.mixer.clipAction(this.animations_[5]._clip);
         animationAction.play();
         this.params_.scene.add(this.target);
-        //LoadModels();
     }
 
     Update(timeDelta) {
-        this.mixer.update(timeDelta)
+        if(this.mixer){
+            this.mixer.update(timeDelta)
+        }
     }
 
 }
