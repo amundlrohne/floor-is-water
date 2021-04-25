@@ -1,4 +1,4 @@
-import { Player } from "./player.js";
+import { Player, STARTING_TRANSFORMS } from "./player.js";
 
 class SocketWrapper {
     constructor(socket) {
@@ -58,17 +58,17 @@ export default class Lobby {
         console.log(`[LOBBY ${this.id}] Created lobby.`);
     }
 
+    // Add client to lobby
     addClient = (username, socket) => {
         if (this.clients.length == 0) {
             this.ownerID = socket.id;
         }
 
         if (this.clients.length < 4) {
-            for (let c of this.clients) {
-                if (c.id == socket.id) {
-                    console.log(`[LOBBY ${this.id}] Client already in lobby.`);
-                    return;
-                }
+            const c = this.findClient(socket);
+            if (c != null) {
+                console.log(`[LOBBY ${this.id}] Client already in lobby.`);
+                return;
             }
 
             this.clients.push(new Player(username, socket.id));
@@ -80,6 +80,7 @@ export default class Lobby {
         }
     };
 
+    // Remove client from lobby
     removeClient = (socket) => {
         console.log(`[LOBBY ${this.id}] Client disconnected`);
         this.clients = this.clients.filter((c) => c.id != socket.id);
@@ -94,6 +95,46 @@ export default class Lobby {
         this.ownerID = this.clients[0].id;
     };
 
+    // Update client transform
+    updateClient = (transform, socket) => {
+        const c = this.findClient(socket);
+
+        if (c == null) {
+            return;
+        }
+
+        c.transform = transform;
+    };
+
+    // Find client by socket id
+    findClient = (socket) => {
+        for (let c of this.clients) {
+            if (c.id == socket.id) {
+                return c;
+            }
+        }
+
+        console.log(`[LOBBY ${this.id}] ${$socket.id} does not exist`);
+        return null;
+    };
+
+    gameLoop = (namespace) => {
+        namespace.emit("update-lobby", this);
+
+        setTimeout(() => {
+            this.gameLoop();
+        }, 100);
+    };
+
+    /*
+        Make event for GAMESTART (Spawn players and enemies on this eventa)
+        Place entities on map accordingly 
+        Start gameloop
+        update clients 
+        listen for player update 
+        RIP out old messaging system, replace with specified listeners. 
+    */
+
     addNamespace = (io) => {
         const namespace = io.of("/" + this.id);
 
@@ -106,6 +147,17 @@ export default class Lobby {
             socket.on("join-lobby", (username) => {
                 this.addClient(username, socket);
                 namespace.emit("update-lobby", this); // Broadcast lobby update
+            });
+
+            socket.on("update-client", (transform) => {
+                this.updateClient(transform, socket);
+            });
+
+            socket.on("request-start-lobby", () => {
+                // Add verification for socket.id = owner
+                this.clients.map((c, index) => c.setStartingTransform(index));
+                namespace.emit("start-lobby", this);
+                this.gameLoop(namespace);
             });
         });
     };

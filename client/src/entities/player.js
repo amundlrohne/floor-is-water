@@ -8,8 +8,7 @@ import { finite_state_machine } from "../components/finite-state-machine.js";
 import { player_state } from "../components/player-state.js";
 import robotf from "../assets/Robot.fbx";
 import Punch from "../components/punch";
-import rockTexture from "../assets/stonePlatform.jpg";
-import {PlayerInput} from "../components/player-input";
+import { PlayerInput } from "../components/player-input";
 
 export class PlayerEntity extends Entity {
     constructor(params) {
@@ -24,7 +23,7 @@ export class PlayerEntity extends Entity {
 
     punch(event) {
         if (event.keyCode === 32) {
-            new Punch({radius: 5, speed: 50, mesh: this.BCC.target})
+            new Punch({ radius: 5, speed: 50, mesh: this.BCC.target });
         }
     }
 
@@ -32,7 +31,7 @@ export class PlayerEntity extends Entity {
         this.AddComponent(this.BCC);
         this.AddComponent(this.playerInput);
         this.InitEntity();
-        this.params.entitySystem.Add(this, "player");
+        //this.params.entitySystem.Add(this, "player");
     }
     setMixer(as) {
         this.params.setMixer(as);
@@ -68,6 +67,7 @@ export class BasicCharacterControllerProxy {
 export class BasicCharacterController extends Component {
     constructor(params) {
         super();
+        this.state = "IDLE";
         this.params_ = params;
     }
 
@@ -80,7 +80,6 @@ export class BasicCharacterController extends Component {
         this.target;
         this.fsm = new CharacterFSM();
         this.LoadModels();
-
     }
 
     InitComponent() {
@@ -112,21 +111,18 @@ export class BasicCharacterController extends Component {
         this.params_.physicsHandler.addHitbox({
             _id: "player",
             mesh: this.target,
-            type: 'player',
-            fixedRotation:true,
+            type: "player",
+            fixedRotation: true,
             position: this.params_.position,
         });
-
     }
 
     LoadModels() {
-        const loader = this.params_.entitySystem
-            .Get("loader")
-            .GetComponent("LoadController");
+        const loader = this.Parent.Get("loader").GetComponent("LoadController");
         loader.LoadFBX(undefined, robotf, (result) => {
             console.log(result);
             result.scale.multiplyScalar(0.01);
-            result.position.y=-1000000;
+            result.position.y = -1000000;
             let mixer = new th.AnimationMixer(result);
             let animationAction = mixer.clipAction(
                 result.animations.find(
@@ -141,7 +137,6 @@ export class BasicCharacterController extends Component {
             this.mixer = mixer;
             this.addPhysics();
             this.params_.scene.add(result);
-
         });
     }
 
@@ -153,9 +148,8 @@ export class BasicCharacterController extends Component {
     }
 
     Update(timeDelta) {
-        if(this.mixer){
-            this.mixer.update(timeDelta)
+        if (this.mixer) {
+            this.mixer.update(timeDelta);
         }
     }
-
 }
