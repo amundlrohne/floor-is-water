@@ -113,12 +113,8 @@ export class BasicCharacterController extends Component {
         this.params_.physicsHandler.addHitbox({
             _id: "player",
             mesh: this.target,
-            type:this.params_.type,
-            mass: 1,
-            radius: this.params_.radius,
-            segments: this.params_.segments,
+            type: 'player',
             fixedRotation:true,
-            height:this.params_.height,
             position: this.params_.position,
         });
 

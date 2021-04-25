@@ -95,7 +95,7 @@ const GameScene = () => {
     }
 
   function water() {
-      baseWaterY += 0.01;
+      baseWaterY += 1;
       waterManager.updateEntities(clock, baseWaterY);
       renderer.render(scene, camera);
   }
@@ -103,23 +103,19 @@ const GameScene = () => {
   function handleMove(e) {
     //entitySystem.Get("player")._components.PlayerInput.run[e.x/50,e.y/50];
     player.playerInput.handleMove(e);
-    console.log(e);
   };
 
   const handleMoveStop = (e) => {
-    console.log(e);
   };
 
   const handleDirection = (e) => {
-    console.log(e);
   };
 
   const handleRelease = (e) => {
-    console.log("released");
   };
 
   const handleJump = (e) => {
-    console.log("jumped");
+    player.playerInput.jump();
   };
 
   function onWindowResize() {
@@ -150,7 +146,7 @@ const GameScene = () => {
       camera: controls,
         scene: scene,
         entitySystem: entitySystem,
-        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(0, 10, 0))
+        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(50, 10, 50))
     });
   }, []);
   return <div>
