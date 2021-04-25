@@ -95,12 +95,12 @@ const GameScene = () => {
     }
 
   function water() {
-      if(baseWaterY<35){
+      if(baseWaterY<38){
       baseWaterY += 0.005;
-      waterManager.updateEntities(clock, baseWaterY);
       if(physicsHandler.findObject("plane1")){
-      physicsHandler.findObject("plane1").position.y = baseWaterY+4.35;}}
-  }
+          physicsHandler.findObject("plane1").position.y = baseWaterY+4.35;}}
+          waterManager.updateEntities(clock, baseWaterY);
+        }
 
   function handleMove(e) {
     player.playerInput.handleMove(e);
@@ -137,17 +137,15 @@ const GameScene = () => {
   useEffect(() => {
     init();
     step();
-    console.log("useeffect")
     waterManager.populatePowerups();
     waterManager.populateWater();
     // Entities
-    console.log(entitySystem);
     new MapEntity({ scene: scene, physicsHandler: physicsHandler, entitySystem:entitySystem });
     player = new PlayerEntity({
       camera: controls,
         scene: scene,
         entitySystem: entitySystem,
-        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(50, 10, 50))
+        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(20, 20, 0))
     });
   }, []);
   return <div>

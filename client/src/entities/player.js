@@ -34,9 +34,6 @@ export class PlayerEntity extends Entity {
         this.InitEntity();
         this.params.entitySystem.Add(this, "player");
     }
-    setMixer(as) {
-        this.params.setMixer(as);
-    }
 }
 
 export class CharacterFSM extends finite_state_machine.FiniteStateMachine {
@@ -116,7 +113,7 @@ export class BasicCharacterController extends Component {
             fixedRotation:true,
             position: this.params_.position,
         });
-
+        this.params_.physicsHandler.addTracking(this.Parent.params.camera, 'player');
     }
 
     LoadModels() {
@@ -141,7 +138,6 @@ export class BasicCharacterController extends Component {
             this.mixer = mixer;
             this.addPhysics();
             this.params_.scene.add(result);
-
         });
     }
 
