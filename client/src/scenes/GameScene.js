@@ -137,8 +137,8 @@ const GameScene = () => {
     waterManager.populatePowerups();
     waterManager.populateWater();
     // Entities
-    new MapEntity({ scene: scene, physicsHandler: physicsHandler });
     console.log(entitySystem);
+    new MapEntity({ scene: scene, physicsHandler: physicsHandler, entitySystem:entitySystem });
     const player = new PlayerEntity({
       camera: controls,
         scene: scene,

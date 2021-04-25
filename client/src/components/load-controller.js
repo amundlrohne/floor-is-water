@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as th from "three";
 
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -15,7 +15,7 @@ export class LoadController extends Component {
 
     LoadTexture(path, name) {
         if (!(name in this.textures_)) {
-            const loader = new THREE.TextureLoader();
+            const loader = new th.TextureLoader();
             loader.setPath(path);
 
             this.textures_[name] = {
@@ -47,6 +47,11 @@ export class LoadController extends Component {
         const loader = new FBXLoader();
 
         loader.setPath(path);
-        loader.load(name, onLoad);
+        loader.load(name, onLoad,(xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        },
+        (error) => {
+            console.log(error);
+        });
     }
 }

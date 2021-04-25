@@ -17,7 +17,6 @@ export class PhysicsHandler {
     }
 
     addHitbox(params) {
-        console.log(params);
         switch(params.type) {
             case 'sphere': {
                 const radius = params.radius // m
@@ -27,7 +26,7 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(new cannon.Quaternion(0,0,0,0)) // make it face up
-                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e};console.log("BANG")});
+                body.addEventListener('collide', (e)=>{console.log(e);body.jumpReady = {ready:true,contacts:e};});
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
@@ -39,6 +38,7 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
+                body.addEventListener('collide', (e)=>{console.log(e)})
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
@@ -46,7 +46,7 @@ export class PhysicsHandler {
             case 'cylinder':
                 const body = new cannon.Body({
                     mass: params.mass, // kg
-                    shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
+                    shape: new cannon.Cylinder(params.radius,params.radius, params.height, params.segments),
                     fixedRotation:params.fixedRotation,
                     material: new cannon.Material({friction:0.0}),
                 })
@@ -114,7 +114,6 @@ export class PhysicsHandler {
     }
 
     playerJump(){
-        console.log(this.findObject("player"))
         if(this.findObject("player").jumpReady.ready===true){
             this.applyVelocity("player",
                 new Vector3(0, 70, 0))

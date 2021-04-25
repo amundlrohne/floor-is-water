@@ -81,6 +81,7 @@ export default class EntityManager extends EntitySystem {
       switch (this.entities[i].type) {
         case "water":
           this.entities[i].entity.update(clock, baseY);
+          //console.log(this.params);
           break;
         case "powerup":
           this.entities[i].entity.update(clock);
