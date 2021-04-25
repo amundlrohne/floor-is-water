@@ -19,7 +19,7 @@ import "./gamescene.css";
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY;
+let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY, player;
 
 const GameScene = () => {
   function init() {
@@ -68,6 +68,7 @@ const GameScene = () => {
       const color = 0xffffff;
       const intensity = 0.5;
       const light = new th.AmbientLight(color, intensity);
+      light.castShadow = true;
       scene.add(light);
     }
 
@@ -78,54 +79,43 @@ const GameScene = () => {
     camera.position.set(0, 10, 20);
   }
 
-    
+
 
   // Draw the scene every time the screen is refreshed
-  function animate() {
-    requestAnimationFrame(animate);
+  function step() {
+    requestAnimationFrame(step);
     water();
+    let delta = clock.getDelta();
 
-    if (entitySystem.Get("player") !== undefined) {
-        if (
-            entitySystem.Get("player")._components.BasicCharacterController
-                .mixer !== undefined
-        ) {
-            var delta = clock.getDelta();
-            entitySystem
-                .Get("player")
-                ._components.BasicCharacterController.mixer.update(delta); // update animation mixer
-            renderer.render(scene, camera);
-        }
-    }
-    // Add animation here
+    entitySystem.Update(delta);
+
+    physicsHandler.update();
 
         renderer.render(scene, camera);
     }
 
   function water() {
-      baseWaterY += 0.01;
+      baseWaterY += 1;
       waterManager.updateEntities(clock, baseWaterY);
       renderer.render(scene, camera);
   }
 
-  const handleMove = (e) => {
-    console.log(e);
+  function handleMove(e) {
+    //entitySystem.Get("player")._components.PlayerInput.run[e.x/50,e.y/50];
+    player.playerInput.handleMove(e);
   };
 
   const handleMoveStop = (e) => {
-    console.log(e);
   };
 
   const handleDirection = (e) => {
-    console.log(e);
   };
 
   const handleRelease = (e) => {
-    console.log("released");
   };
 
   const handleJump = (e) => {
-    console.log("jumped");
+    player.playerInput.jump();
   };
 
   function onWindowResize() {
@@ -139,30 +129,32 @@ const GameScene = () => {
 
     window.addEventListener("resize", onWindowResize, false);
 
+  function test(){
+      console.log(entitySystem)
+  }
+
   useEffect(() => {
     init();
-    animate();
+    step();
     console.log("useeffect")
     waterManager.populatePowerups();
     waterManager.populateWater();
     // Entities
     new MapEntity({ scene: scene, physicsHandler: physicsHandler });
     console.log(entitySystem);
-    const player = new PlayerEntity({
+    player = new PlayerEntity({
       camera: controls,
         scene: scene,
         entitySystem: entitySystem,
-        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(0, 10, 0))
+        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(50, 10, 50))
     });
-
-    player.AddComponent(new PlayerInput());
   }, []);
   return <div>
   <div id="controls">
     <div className="leftJoystick">
       <Joystick
-        move={handleMove}
-        stop={handleMoveStop}
+        move={(e)=>{handleMove(e)}}
+        stop={(e)=>{handleMove(e)}}
         stickColor={"#fcba03"}
         baseColor={"#ad7f00"}
       ></Joystick>

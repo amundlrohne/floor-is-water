@@ -11,6 +11,7 @@ import { CHARACTER_MODELS } from "../assets/models.mjs";
 import { AnimationMixer, Scene, Vector3 } from "three";
 import { useEffect } from "react";
 import Punch from "../components/punch";
+import {PlayerInput} from "../components/player-input";
 
 export class PlayerEntity extends Entity {
     constructor(params) {
@@ -18,6 +19,7 @@ export class PlayerEntity extends Entity {
         this.object3d;
         this.params = params;
         this.BCC = new BasicCharacterController(this.params);
+        this.playerInput = new PlayerInput(this.params);
         this._Init();
         // window.onkeydown(this.punch.bind(this))
     }
@@ -30,6 +32,7 @@ export class PlayerEntity extends Entity {
 
     _Init() {
         this.AddComponent(this.BCC);
+        this.AddComponent(this.playerInput);
         this.InitEntity();
         this.params.entitySystem.Add(this, "player");
     }
@@ -110,12 +113,8 @@ export class BasicCharacterController extends Component {
         this.params_.physicsHandler.addHitbox({
             _id: "player",
             mesh: this.target,
-            type:this.params_.type,
-            mass: 1,
-            radius: this.params_.radius,
-            segments: this.params_.segments,
+            type: 'player',
             fixedRotation:true,
-            height:this.params_.height,
             position: this.params_.position,
         });
 
@@ -126,12 +125,11 @@ export class BasicCharacterController extends Component {
             .Get("loader")
             .GetComponent("LoadController");
         loader.LoadFBX(undefined, robotf, (result) => {
-            console.log(result);
             result.scale.multiplyScalar(0.01);
             let mixer = new th.AnimationMixer(result);
             let animationAction = mixer.clipAction(
                 result.animations.find(
-                    (element) => element.name == this.activeState
+                    (element) => element.name === this.activeState
                 )
             );
             result.animations.forEach((e) => {
@@ -145,136 +143,19 @@ export class BasicCharacterController extends Component {
 
             result.position.copy(new Vector3(0,100,5));
         });
-        /* loader.LoadGLTF(undefined,
-            robot,
-            (result) => {
-                let mixer = new th.AnimationMixer(result.scene);
-                let animationAction = mixer.clipAction(result.animations.find(element => element.name == this.activeState));
-                console.log(result);
-                console.log(result.animations.find(element => element.name == this.activeState));
-                animationAction.play();
-                this.mixer = mixer;
-                this.params_.scene.add(result.scene);
-            }
-        ); */
     }
 
     ChangeState(newState) {
-        console.log(newState);
-        console.log(this.animations_);
         this.activeState = newState;
         let animationAction = this.mixer.clipAction(this.animations_[5]._clip);
         animationAction.play();
         this.params_.scene.add(this.target);
-        //LoadModels();
     }
 
-    Update(timeInSeconds) {
-        if (!this.stateMachine_) {
-            return;
+    Update(timeDelta) {
+        if(this.mixer){
+            this.mixer.update(timeDelta)
         }
-
-        const input = this.GetComponent("BasicCharacterControllerInput");
-        this.stateMachine_.Update(timeInSeconds, input);
-
-        if (this._mixer) {
-            this._mixer.update(timeInSeconds);
-        }
-
-        // HARDCODED
-        this.Broadcast({
-            topic: "player.action",
-            action: this.stateMachine_._currentState.Name,
-        });
-
-        const currentState = this.stateMachine_._currentState;
-        if (
-            currentState.Name != "walk" &&
-            currentState.Name != "run" &&
-            currentState.Name != "idle"
-        ) {
-            return;
-        }
-
-        const velocity = this.velocity_;
-        const frameDecceleration = new th.Vector3(
-            velocity.x * this.decceleration_.x,
-            velocity.y * this.decceleration_.y,
-            velocity.z * this.decceleration_.z
-        );
-        frameDecceleration.multiplyScalar(timeInSeconds);
-        frameDecceleration.z =
-            Math.sign(frameDecceleration.z) *
-            Math.min(Math.abs(frameDecceleration.z), Math.abs(velocity.z));
-
-        velocity.add(frameDecceleration);
-
-        const controlObject = this.group_;
-        const _Q = new th.Quaternion();
-        const _A = new th.Vector3();
-        const _R = controlObject.quaternion.clone();
-
-        const acc = this.acceleration_.clone();
-        if (input._keys.shift) {
-            acc.multiplyScalar(2.0);
-        }
-
-        if (input._keys.forward) {
-            velocity.z += acc.z * timeInSeconds;
-        }
-        if (input._keys.backward) {
-            velocity.z -= acc.z * timeInSeconds;
-        }
-        if (input._keys.left) {
-            _A.set(0, 1, 0);
-            _Q.setFromAxisAngle(
-                _A,
-                4.0 * Math.PI * timeInSeconds * this.acceleration_.y
-            );
-            _R.multiply(_Q);
-        }
-        if (input._keys.right) {
-            _A.set(0, 1, 0);
-            _Q.setFromAxisAngle(
-                _A,
-                4.0 * -Math.PI * timeInSeconds * this.acceleration_.y
-            );
-            _R.multiply(_Q);
-        }
-
-        controlObject.quaternion.copy(_R);
-
-        const oldPosition = new th.Vector3();
-        oldPosition.copy(controlObject.position);
-
-        const forward = new th.Vector3(0, 0, 1);
-        forward.applyQuaternion(controlObject.quaternion);
-        forward.normalize();
-
-        const sideways = new th.Vector3(1, 0, 0);
-        sideways.applyQuaternion(controlObject.quaternion);
-        sideways.normalize();
-
-        sideways.multiplyScalar(velocity.x * timeInSeconds);
-        forward.multiplyScalar(velocity.z * timeInSeconds);
-
-        const pos = controlObject.position.clone();
-        pos.add(forward);
-        pos.add(sideways);
-
-        const collisions = this._FindIntersections(pos, oldPosition);
-        if (collisions.length > 0) {
-            return;
-        }
-
-        const terrain = this.FindEntity("terrain").GetComponent(
-            "TerrainChunkManager"
-        );
-        pos.y = terrain.GetHeight(pos)[0];
-
-        controlObject.position.copy(pos);
-
-        this.Parent.SetPosition(controlObject.position);
-        this.Parent.SetQuaternion(controlObject.quaternion);
     }
+
 }
