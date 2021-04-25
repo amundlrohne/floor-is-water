@@ -83,6 +83,11 @@ div[class="punchButton"] > div {
   bottom: 5%;
 
   z-index: 10;
-  background-color: rgba(110, 110, 110, 0.5);
+  background-color: rgba(110, 110, 110, 0.7);
   visibility: hidden;
+  
+  text-align: center;
+  line-height: 10vh;
+
+  font-size: larger;
 }

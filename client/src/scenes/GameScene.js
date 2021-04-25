@@ -108,24 +108,25 @@ const GameScene = () => {
 
 let punchCountdown, stopCountdown, timer;
 
-
   function punch() {
     timer = 0
     
     punchCountdown = setInterval(() => {
       updateCountdown()}, 100)
-    stopCountdown = setTimeout(endCountdown, 3000)
-      document.getElementById("countdown").style.visibility = "visible"
+    stopCountdown = setTimeout(endCountdown, 3000);
+     document.getElementById("countdown").style.visibility = "visible"
 
     player.punch();
   }
 
   const updateCountdown = () => {
-    timer += 0.1
+    timer += 0.1;
+    document.getElementById("countdown").innerHTML = (3 - timer.toFixed(1)).toFixed(1)
   }
 
   const endCountdown = () => {
     clearInterval(punchCountdown);
+    document.getElementById("countdown").style.visibility = "hidden"
   }
 
   const handleJump = (e) => {
