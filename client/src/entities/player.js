@@ -7,11 +7,9 @@ import Component from "../components/component";
 import { finite_state_machine } from "../components/finite-state-machine.js";
 import { player_state } from "../components/player-state.js";
 import robotf from "../assets/Robot.fbx";
-import { CHARACTER_MODELS } from "../assets/models.mjs";
-import { AnimationMixer, Scene, Vector3 } from "three";
-import { useEffect } from "react";
 import Punch from "../components/punch";
 import rockTexture from "../assets/stonePlatform.jpg";
+import {PlayerInput} from "../components/player-input";
 
 export class PlayerEntity extends Entity {
     constructor(params) {
@@ -19,6 +17,7 @@ export class PlayerEntity extends Entity {
         this.object3d;
         this.params = params;
         this.BCC = new BasicCharacterController(this.params);
+        this.playerInput = new PlayerInput(this.params);
         this._Init();
         // window.onkeydown(this.punch.bind(this))
     }
@@ -31,6 +30,7 @@ export class PlayerEntity extends Entity {
 
     _Init() {
         this.AddComponent(this.BCC);
+        this.AddComponent(this.playerInput);
         this.InitEntity();
         this.params.entitySystem.Add(this, "player");
     }
@@ -112,12 +112,8 @@ export class BasicCharacterController extends Component {
         this.params_.physicsHandler.addHitbox({
             _id: "player",
             mesh: this.target,
-            type:this.params_.type,
-            mass: 1,
-            radius: this.params_.radius,
-            segments: this.params_.segments,
+            type: 'player',
             fixedRotation:true,
-            height:this.params_.height,
             position: this.params_.position,
         });
 
@@ -142,34 +138,18 @@ export class BasicCharacterController extends Component {
             });
             animationAction.play();
             this.target = result;
-
             this.mixer = mixer;
             this.addPhysics();
             this.params_.scene.add(result);
 
         });
-        /* loader.LoadGLTF(undefined,
-            robot,
-            (result) => {
-                let mixer = new th.AnimationMixer(result.scene);
-                let animationAction = mixer.clipAction(result.animations.find(element => element.name == this.activeState));
-                console.log(result);
-                console.log(result.animations.find(element => element.name == this.activeState));
-                animationAction.play();
-                this.mixer = mixer;
-                this.params_.scene.add(result.scene);
-            }
-        ); */
     }
 
     ChangeState(newState) {
-        console.log(newState);
-        console.log(this.animations_);
         this.activeState = newState;
         let animationAction = this.mixer.clipAction(this.animations_[5]._clip);
         animationAction.play();
         this.params_.scene.add(this.target);
-        //LoadModels();
     }
 
     Update(timeDelta) {

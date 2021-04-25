@@ -19,7 +19,7 @@ import "./gamescene.css";
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY;
+let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY, player;
 
 const GameScene = () => {
   function init() {
@@ -29,7 +29,7 @@ const GameScene = () => {
     physicsHandler = new PhysicsHandler();
     entitySystem = new EntitySystem();
     waterManager = new WaterPowerupManager({scene: scene, physicsHandler: physicsHandler});
-    baseWaterY = 0.1;
+    baseWaterY = 0;
     // Init modelloader
     const l = new Entity();
         l.AddComponent(new LoadController());
@@ -73,6 +73,7 @@ const GameScene = () => {
     }
 
 
+    //_LoadAnimatedModel();
 
     // Position camera
     camera.position.set(0, 10, 20);
@@ -94,29 +95,28 @@ const GameScene = () => {
     }
 
   function water() {
-      baseWaterY += 0.01;
+      if(baseWaterY<35){
+      baseWaterY += 0.005;
       waterManager.updateEntities(clock, baseWaterY);
-      renderer.render(scene, camera);
+      if(physicsHandler.findObject("plane1")){
+      physicsHandler.findObject("plane1").position.y = baseWaterY+4.35;}}
   }
 
-  const handleMove = (e) => {
-    console.log(e);
+  function handleMove(e) {
+    player.playerInput.handleMove(e);
   };
 
   const handleMoveStop = (e) => {
-    console.log(e);
   };
 
   const handleDirection = (e) => {
-    console.log(e);
   };
 
   const handleRelease = (e) => {
-    console.log("released");
   };
 
   const handleJump = (e) => {
-    console.log("jumped");
+    player.playerInput.jump();
   };
 
   function onWindowResize() {
@@ -130,6 +130,10 @@ const GameScene = () => {
 
     window.addEventListener("resize", onWindowResize, false);
 
+  function test(){
+      console.log(entitySystem)
+  }
+
   useEffect(() => {
     init();
     step();
@@ -139,21 +143,19 @@ const GameScene = () => {
     // Entities
     console.log(entitySystem);
     new MapEntity({ scene: scene, physicsHandler: physicsHandler, entitySystem:entitySystem });
-    const player = new PlayerEntity({
+    player = new PlayerEntity({
       camera: controls,
         scene: scene,
         entitySystem: entitySystem,
-        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(0, 10, 0))
+        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(50, 10, 50))
     });
-
-    player.AddComponent(new PlayerInput());
   }, []);
   return <div>
   <div id="controls">
     <div className="leftJoystick">
       <Joystick
-        move={handleMove}
-        stop={handleMoveStop}
+        move={(e)=>{handleMove(e)}}
+        stop={(e)=>{handleMove(e)}}
         stickColor={"#fcba03"}
         baseColor={"#ad7f00"}
       ></Joystick>

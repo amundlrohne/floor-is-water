@@ -21,7 +21,7 @@ export default class MapEntity extends Entity {
             new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 30, segments: columnPoly, type: 'Column', position: (new Vector3(-20, 15, -10)),entitySystem:params.entitySystem})
             new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, radius: columnRadius, height: 30, segments: columnPoly, type: 'Column', position: (new Vector3(-20,15, -10)),entitySystem:params.entitySystem})
             // Add floaters
-            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, height: 3, width: 15, depth: 15, type: 'Floating', position: (new Vector3(0, 150, 20))})
+            new PlatformEntity({physicsHandler: params.physicsHandler,scene: params.scene, height: 3, width: 15, depth: 15, type: 'Floating', position: (new Vector3(0, 10, 20))})
         }
     }
 }

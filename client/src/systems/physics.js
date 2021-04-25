@@ -26,7 +26,7 @@ export class PhysicsHandler {
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(new cannon.Quaternion(0,0,0,0)) // make it face up
-                body.addEventListener('collide', (e)=>{console.log(e);body.jumpReady = {ready:true,contacts:e};});
+                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e}});
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
@@ -35,20 +35,20 @@ export class PhysicsHandler {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
                     shape: new cannon.Box(new cannon.Vec3(params.width/2, params.height/2, params.depth/2)),
+                    material: new cannon.Material({friction: 0.01})
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
-                body.addEventListener('collide', (e)=>{console.log(e)})
+                body.addEventListener('collide', (e)=>{if(e.body.type==1){setTimeout(()=>{this.objects[params._id].body.mass = 2000000},3000); setTimeout(()=>{this.objects[params._id].body.mass = 500000},5000)}})
                 this.world.addBody(body);
                 this.objects[params._id] = {body: body, mesh: params.mesh};
                 break;
             }
-            case 'cylinder':
+            case 'cylinder': {
                 const body = new cannon.Body({
                     mass: params.mass, // kg
-                    shape: new cannon.Cylinder(params.radius,params.radius, params.height, params.segments),
-                    fixedRotation:params.fixedRotation,
-                    material: new cannon.Material({friction:0.0}),
+                    shape: new cannon.Cylinder(params.radius, params.radius, params.height, params.segments),
+                    fixedRotation: params.fixedRotation,
                 })
                 body.position.copy(params.position) // m
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
@@ -60,10 +60,31 @@ export class PhysicsHandler {
                 this.objects[params._id] = {body: body, mesh: params.mesh};
 
                 break;
+            }
+            case 'player': {
+                const body = new cannon.Body({
+                    mass: 50, // kg
+                    shape: new cannon.Cylinder(1, 1, 3, 32),
+                    fixedRotation: params.fixedRotation,
+                    material: new cannon.Material({friction: 0})
+                })
+                body.position.copy(params.position) // m
+                body.addEventListener('collide', (e)=>{body.jumpReady = {ready:true,contacts:e}});
+
+                body.quaternion.copy(params.mesh.quaternion) // make it face up
+                if (params.fixedRotation) {
+                    this.fixedRotations.add(params._id)
+                }
+
+                this.world.addBody(body);
+                this.objects[params._id] = {body: body, mesh: params.mesh};
+                break;
+            }
             case 'plane': {
                 const body = new cannon.Body({
                     mass: params.mass,
                     shape: new cannon.Plane(),
+                    material: new cannon.Material({friction: 0.01})
                 })
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion) // make it face up
@@ -87,8 +108,8 @@ export class PhysicsHandler {
             mesh.maxDistance = 50;
             mesh.minPolarAngle = 0.7;
             mesh.maxPolarAngle = 0.7;
-            mesh.minAzimuthAngle = 1;
-            mesh.maxAzimuthAngle = 1;
+            mesh.minAzimuthAngle = 0;
+            mesh.maxAzimuthAngle = 0;
             mesh.enableRotate = false;
             mesh.enableZoom = false;
 
@@ -116,14 +137,14 @@ export class PhysicsHandler {
     playerJump(){
         if(this.findObject("player").jumpReady.ready===true){
             this.applyVelocity("player",
-                new Vector3(0, 70, 0))
-        };
+                new Vector3(0, 50, 0))
+        }
         this.findObject("player").jumpReady.ready=false;
     }
 
     accelerate(x,z){
         this.xAcceleration=x;
-        this.zAcceleration=z;
+        this.zAcceleration=-z;
     }
 
     setPosition(id, position) {
@@ -167,17 +188,49 @@ export class PhysicsHandler {
             body.quaternion.copy(mesh.quaternion);
         }
         if(Object.keys(this.objects).includes("player")){
-            if((this.playerVelocity[0]<35&&this.playerVelocity[0]>-35)&&this.xAcceleration!==0){
-                this.playerVelocity[0] += this.xAcceleration;
-                this.findObject("player").velocity.x = this.playerVelocity[0];
+            let player = this.findObject('player');
+            let distanceX = Math.abs(player.velocity.x - this.xAcceleration);
+            let distanceZ = Math.abs(player.velocity.z - this.zAcceleration);
+            if (this.xAcceleration === 0) {
+                if (player.velocity.x > 0) {
+                    if (player.velocity.x - 0.1*distanceX >= this.xAcceleration) {
+                        player.velocity.x -= 0.1*distanceX;
+                    }
+                }else {
+                    if (player.velocity.x + 0.1*distanceX <= this.xAcceleration) {
+                        player.velocity.x += 0.1*distanceX;
+                    }
+                }
             }
-            if((this.playerVelocity[1]<35&&this.playerVelocity[1]>-35)&&this.zAcceleration!==0){
-                this.playerVelocity[1] += this.zAcceleration;
-                this.findObject("player").velocity.z = this.playerVelocity[1];
+            else if (this.xAcceleration > 0) {
+                if (player.velocity.x + 0.1*distanceX <= this.xAcceleration) {
+                    player.velocity.x += 0.1*distanceX;
+                }
+            } else {
+                if (player.velocity.x - 0.1*distanceX >= this.xAcceleration) {
+                    player.velocity.x -= 0.1*distanceX;
+                }
             }
-
-            if(Math.floor(this.playerVelocity[0])===0||Math.ceil(this.playerVelocity[0]===0)&&Math.floor(this.playerVelocity[1])===0||Math.ceil(this.playerVelocity[1]===0)){this.stopVelocity("player")}
-            //if(Math.floor(this.playerVelocity[1])==0||Math.ceil(this.playerVelocity[1]==0)){this.stopVelocity("player")}
+            if (this.zAcceleration === 0) {
+                if (player.velocity.z > 0) {
+                    if (player.velocity.z - 0.1*distanceZ >= this.zAcceleration) {
+                        player.velocity.z -= 0.1*distanceZ;
+                    }
+                }else {
+                    if (player.velocity.z + 0.1*distanceZ <= this.zAcceleration) {
+                        player.velocity.z += 0.1*distanceZ;
+                    }
+                }
+            }
+            else if (this.zAcceleration > 0) {
+                if (player.velocity.z + 0.1*distanceZ <= this.zAcceleration) {
+                    player.velocity.z += 0.1*distanceZ;
+                }
+            } else {
+                if (player.velocity.z - 0.1*distanceZ >= this.zAcceleration) {
+                    player.velocity.z -= 0.1*distanceZ;
+                }
+            }
         }
 
     }
