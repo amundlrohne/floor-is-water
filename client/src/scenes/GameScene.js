@@ -106,8 +106,26 @@ const GameScene = () => {
     player.playerInput.handleMove(e);
   };
 
+let punchCountdown, stopCountdown, timer;
+
+
   function punch() {
+    timer = 0
+    
+    punchCountdown = setInterval(() => {
+      updateCountdown()}, 100)
+    stopCountdown = setTimeout(endCountdown, 3000)
+      document.getElementById("countdown").style.visibility = "visible"
+
     player.punch();
+  }
+
+  const updateCountdown = () => {
+    timer += 0.1
+  }
+
+  const endCountdown = () => {
+    clearInterval(punchCountdown);
   }
 
   const handleJump = (e) => {
@@ -157,8 +175,11 @@ const GameScene = () => {
 
     <div className="jumpButton">
       <button onClick={handleJump}>Jump</button>
-    </div><div className="punchButton">
-      <button onClick={punch}>Punch</button>
+    </div>
+    <div className="punchButton">
+      <div className="countDownOverlay" id="countdown">{timer}</div>
+        <button onClick={punch}>Punch</button>
+      
     </div>
   </div>
 </div>;
