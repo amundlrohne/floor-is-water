@@ -53,6 +53,9 @@ const LobbyList = () => {
 
     if (connected) {
         return (
+            <div className="BgWrapper">
+            <div className="BgGradient">
+            <div style={{ display: "flex", justifyContent: "center" }}>
             <div className="lobbiesWrapper">
                 <h1>Lobbies</h1>
                 <input
@@ -88,6 +91,9 @@ const LobbyList = () => {
                 <Link className="lobbyListBack" to={`/`}>
                     Back
                 </Link>
+            </div>
+            </div>
+            </div>
             </div>
         );
     }

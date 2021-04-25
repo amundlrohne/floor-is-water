@@ -79,6 +79,7 @@
     grid-template-columns: auto auto auto;
     width: 40%;
     grid-gap: 1%;
+    justify-self: center;
 }
 
 .lobbiesWrapper > h1 {
