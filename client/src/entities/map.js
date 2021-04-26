@@ -21,10 +21,10 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 20,
+        height: 10,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(100, 0, 100),
+        position: new Vector3(100, 5, 100),
         entitySystem: params.entitySystem,
       });
 
@@ -32,10 +32,54 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 75,
+        height: 40,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(0, 0, 0),
+        position: new Vector3(0, 20, 0),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 15,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(75, 8, 75),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(40, 11, 75),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(75, 11, 40),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(0, 11, 60),
         entitySystem: params.entitySystem,
       });
 
@@ -46,7 +90,7 @@ export default class MapEntity extends Entity {
         height: 30,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(70, 0, 70),
+        position: new Vector3(0, 15, 30),
         entitySystem: params.entitySystem,
       });
 
@@ -54,10 +98,10 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 45,
+        height: 22,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(32, 0, 75),
+        position: new Vector3(60, 11, 0),
         entitySystem: params.entitySystem,
       });
 
@@ -65,54 +109,10 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 45,
+        height: 30,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(75, 0, 32),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 45,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(0, 0, 60),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 60,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(0, 0, 30),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 45,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(60, 0, 0),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 60,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(30, 0, 0),
+        position: new Vector3(30, 15, 0),
         entitySystem: params.entitySystem,
       });
 
@@ -121,10 +121,54 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 20,
+        height: 10,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(-100, 0, 100),
+        position: new Vector3(-100, 5, 100),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 15,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(-75, 8, 75),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(-40, 11, 75),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(-75, 11, 40),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(-60, 11, 0),
         entitySystem: params.entitySystem,
       });
 
@@ -135,51 +179,7 @@ export default class MapEntity extends Entity {
         height: 30,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(-70, 0, 70),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 45,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(-32, 0, 75),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 45,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(-75, 0, 32),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 45,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(-60, 0, 0),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 60,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(-30, 0, 0),
+        position: new Vector3(-30, 15, 0),
         entitySystem: params.entitySystem,
       });
 
@@ -188,10 +188,54 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 20,
+        height: 10,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(-100, 0, -100),
+        position: new Vector3(-100, 5, -100),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 15,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(-75, 8, -75),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(-40, 11, -75),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(-75, 11, -40),
+        entitySystem: params.entitySystem,
+      });
+
+      new PlatformEntity({
+        physicsHandler: params.physicsHandler,
+        scene: params.scene,
+        radius: columnRadius,
+        height: 22,
+        segments: columnPoly,
+        type: "Column",
+        position: new Vector3(0, 11, -60),
         entitySystem: params.entitySystem,
       });
 
@@ -202,51 +246,7 @@ export default class MapEntity extends Entity {
         height: 30,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(-70, 0, -70),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 45,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(-32, 0, -75),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 45,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(-75, 0, -32),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 45,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(0, 0, -60),
-        entitySystem: params.entitySystem,
-      });
-
-      new PlatformEntity({
-        physicsHandler: params.physicsHandler,
-        scene: params.scene,
-        radius: columnRadius,
-        height: 60,
-        segments: columnPoly,
-        type: "Column",
-        position: new Vector3(0, 0, -30),
+        position: new Vector3(0, 15, -30),
         entitySystem: params.entitySystem,
       });
 
@@ -256,10 +256,10 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 20,
+        height: 10,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(100, 0, -100),
+        position: new Vector3(100, 5, -100),
         entitySystem: params.entitySystem,
       });
 
@@ -267,10 +267,10 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 30,
+        height: 15,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(70, 0, -70),
+        position: new Vector3(75, 8, -75),
         entitySystem: params.entitySystem,
       });
 
@@ -278,10 +278,10 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 45,
+        height: 22,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(32, 0, -75),
+        position: new Vector3(40, 11, -75),
         entitySystem: params.entitySystem,
       });
 
@@ -289,10 +289,10 @@ export default class MapEntity extends Entity {
         physicsHandler: params.physicsHandler,
         scene: params.scene,
         radius: columnRadius,
-        height: 45,
+        height: 22,
         segments: columnPoly,
         type: "Column",
-        position: new Vector3(75, 0, -32),
+        position: new Vector3(75, 11, -40),
         entitySystem: params.entitySystem,
       });
 
