@@ -7,8 +7,8 @@ import React, { useEffect, useState } from "react";
 import { Entity } from "../entities/entity";
 import Map from "../components/map";
 import MapEntity from "../entities/map";
-import {PlayerEntity} from "../entities/player"
-import {PhysicsHandler} from "../systems/physics";
+import { PlayerEntity } from "../entities/player";
+import { PhysicsHandler } from "../systems/physics";
 import EntitySystem from "../systems/entity-system";
 import { LoadController } from "../components/load-controller";
 import { PlayerInput } from "../components/player-input";
@@ -19,7 +19,16 @@ import "./gamescene.css";
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY, player;
+let camera,
+  scene,
+  renderer,
+  physicsHandler,
+  entitySystem,
+  clock,
+  controls,
+  waterManager,
+  baseWaterY,
+  player;
 
 const GameScene = () => {
   function init() {
@@ -28,12 +37,15 @@ const GameScene = () => {
     scene = new th.Scene();
     physicsHandler = new PhysicsHandler();
     entitySystem = new EntitySystem();
-    waterManager = new WaterPowerupManager({scene: scene, physicsHandler: physicsHandler});
+    waterManager = new WaterPowerupManager({
+      scene: scene,
+      physicsHandler: physicsHandler,
+    });
     baseWaterY = 0;
     // Init modelloader
     const l = new Entity();
-        l.AddComponent(new LoadController());
-        entitySystem.Add(l, "loader");
+    l.AddComponent(new LoadController());
+    entitySystem.Add(l, "loader");
     // Init camera (PerspectiveCamera)
     camera = new th.PerspectiveCamera(
       100,
@@ -72,14 +84,11 @@ const GameScene = () => {
       scene.add(light);
     }
 
-
     //_LoadAnimatedModel();
 
     // Position camera
     camera.position.set(0, 10, 20);
   }
-
-
 
   // Draw the scene every time the screen is refreshed
   function step() {
@@ -91,43 +100,48 @@ const GameScene = () => {
 
     physicsHandler.update();
 
-        renderer.render(scene, camera);
-    }
+    renderer.render(scene, camera);
+  }
 
   function water() {
-      if(baseWaterY<38){
+    if (baseWaterY < 38) {
       baseWaterY += 0.005;
-      if(physicsHandler.findObject("plane1")){
-          physicsHandler.findObject("plane1").position.y = baseWaterY+4.35;}}
-          waterManager.updateEntities(clock, baseWaterY);
-        }
+      if (physicsHandler.findObject("plane1")) {
+        physicsHandler.findObject("plane1").position.y = baseWaterY + 4.35;
+      }
+    }
+    waterManager.updateEntities(clock, baseWaterY);
+  }
 
   function handleMove(e) {
     player.playerInput.handleMove(e);
-  };
+  }
 
-let punchCountdown, stopCountdown, timer;
+  let punchCountdown, stopCountdown, timer;
 
   function punch() {
-    timer = 0
-    
+    timer = 0;
+
     punchCountdown = setInterval(() => {
-      updateCountdown()}, 100)
+      updateCountdown();
+    }, 100);
     stopCountdown = setTimeout(endCountdown, 3000);
-     document.getElementById("countdown").style.visibility = "visible"
+    document.getElementById("countdown").style.visibility = "visible";
 
     player.punch();
   }
 
   const updateCountdown = () => {
     timer += 0.1;
-    document.getElementById("countdown").innerHTML = (3 - timer.toFixed(1)).toFixed(1)
-  }
+    document.getElementById("countdown").innerHTML = (
+      3 - timer.toFixed(1)
+    ).toFixed(1);
+  };
 
   const endCountdown = () => {
     clearInterval(punchCountdown);
-    document.getElementById("countdown").style.visibility = "hidden"
-  }
+    document.getElementById("countdown").style.visibility = "hidden";
+  };
 
   const handleJump = (e) => {
     player.playerInput.jump();
@@ -142,48 +156,67 @@ let punchCountdown, stopCountdown, timer;
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-    window.addEventListener("resize", onWindowResize, false);
+  window.addEventListener("resize", onWindowResize, false);
 
-  function test(){
-      console.log(entitySystem)
+  function test() {
+    console.log(entitySystem);
   }
 
   useEffect(() => {
     init();
     step();
-    waterManager.populatePowerups();
-    waterManager.populateWater();
+
     // Entities
-    new MapEntity({ scene: scene, physicsHandler: physicsHandler, entitySystem:entitySystem });
+    new MapEntity({
+      scene: scene,
+      physicsHandler: physicsHandler,
+      entitySystem: entitySystem,
+    });
     player = new PlayerEntity({
       camera: controls,
-        scene: scene,
-        entitySystem: entitySystem,
-        clock: clock, physicsHandler: physicsHandler, radius: 2, height: 1, segments: 32, type: 'sphere', position: (new th.Vector3(20, 20, 0))
+      scene: scene,
+      entitySystem: entitySystem,
+      clock: clock,
+      physicsHandler: physicsHandler,
+      radius: 2,
+      height: 1,
+      segments: 32,
+      type: "sphere",
+      position: new th.Vector3(20, 20, 0),
     });
     entitySystem.Add(player);
-  }, []);
-  return <div>
-  <div id="controls">
-    <div className="leftJoystick">
-      <Joystick
-        move={(e)=>{handleMove(e)}}
-        stop={(e)=>{handleMove(e)}}
-        stickColor={"#fcba03"}
-        baseColor={"#ad7f00"}
-      ></Joystick>
-    </div>
 
-    <div className="jumpButton">
-      <button onClick={handleJump}>Jump</button>
+    waterManager.populatePowerups();
+    waterManager.populateWater();
+  }, []);
+  return (
+    <div>
+      <div id="controls">
+        <div className="leftJoystick">
+          <Joystick
+            move={(e) => {
+              handleMove(e);
+            }}
+            stop={(e) => {
+              handleMove(e);
+            }}
+            stickColor={"#fcba03"}
+            baseColor={"#ad7f00"}
+          ></Joystick>
+        </div>
+
+        <div className="jumpButton">
+          <button onClick={handleJump}>Jump</button>
+        </div>
+        <div className="punchButton">
+          <div className="countDownOverlay" id="countdown">
+            {timer}
+          </div>
+          <button onClick={punch}>Punch</button>
+        </div>
+      </div>
     </div>
-    <div className="punchButton">
-      <div className="countDownOverlay" id="countdown">{timer}</div>
-        <button onClick={punch}>Punch</button>
-      
-    </div>
-  </div>
-</div>;
+  );
 };
 
 export default GameScene;

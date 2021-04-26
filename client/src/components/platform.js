@@ -14,6 +14,7 @@ export class PlatformColumn extends Component {
             const texture = new three.TextureLoader().load(stoneImg);
             const platformMat = new three.MeshPhongMaterial({map: texture});
             this.mesh = new three.Mesh(platformGeo, platformMat);
+            this.mesh.name = "column"
             params.scene.add(this.mesh);
             params.type = 'cylinder';
             params.physicsHandler.addHitbox({_id: this._id, mesh: this.mesh, mass: 0, ...params})
@@ -31,6 +32,7 @@ export class PlatformFloating extends Component {
             const texture = new three.TextureLoader().load(woodImg);
             const platformMat = new three.MeshPhongMaterial({map: texture});
             this.mesh = new three.Mesh(platformGeo, platformMat);
+            this.mesh.name = "floating"
             params.scene.add(this.mesh);
             params.type = 'cube';
             params.physicsHandler.addHitbox({_id: this._id, mesh: this.mesh, mass: 500000, ...params})
