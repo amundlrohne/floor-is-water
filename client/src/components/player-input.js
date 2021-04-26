@@ -4,7 +4,7 @@ import * as th from "three";
 import { Vector3 } from "three";
 
 export class PlayerInput extends Component {
-    constructor(params) {
+    constructor(physicsHandler,camera) {
         super();
         this.run = [0, 0];
         this.keysPressed = {
@@ -15,11 +15,12 @@ export class PlayerInput extends Component {
             Space: false,
         };
         this.jumpReady = true;
-        this.Init();
+        this.physicsHandler = physicsHandler;
+        this.camera = camera;
 
     }
 
-    Init() {
+    InitEntity() {
         this.addMovement();
     }
     addMovement() {
@@ -27,7 +28,7 @@ export class PlayerInput extends Component {
         //
         document.addEventListener("keydown", (event) => {
             if(event.key === 'k') {
-                this.Parent.params.physicsHandler.addTracking(this.Parent.params.camera, 'player')
+                this.physicsHandler.addTracking(this.camera, 'player')
             }if(event.keyCode === 32) {
                 this.jump();
             }if(event.key === 'd') {
@@ -64,7 +65,7 @@ export class PlayerInput extends Component {
     };
 
     jump() {
-        this.Parent.params.physicsHandler.playerJump(
+        this.physicsHandler.playerJump(
             "player",
         );
     }
@@ -80,13 +81,13 @@ export class PlayerInput extends Component {
         } else {
             this.run[1] = Math.min(this.run[1], 1)
         }
-        this.Parent.params.physicsHandler.accelerate(this.run[0]*35, 35*this.run[1]);
+        this.physicsHandler.accelerate(this.run[0]*35, 35*this.run[1]);
     }
 
     handleMove(e) {
         let x = e.x ? (e.x/50)*35 : 0;
         let y = e.y ? (e.y/50)*35 : 0;
-        this.Parent.params.physicsHandler.accelerate(x, y);
-        this.Parent.params.entitySystem.Get("player").BCC.ChangeState("Running");
+        this.physicsHandler.accelerate(x, y);
+        this.FindEntity("player").GetComponent("BasicCharacterController").ChangeState("Running");
     }
 }
