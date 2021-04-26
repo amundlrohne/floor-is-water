@@ -60,6 +60,7 @@ export class Entity {
     }
 
     InitEntity() {
+        console.log(this._components);
       for (let k in this._components) {
         this._components[k].InitEntity();
       }

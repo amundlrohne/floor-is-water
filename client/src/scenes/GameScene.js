@@ -1,223 +1,252 @@
 import * as th from "three";
-import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../entities/entity";
-//import { FBXLoader } from "three-fbx-loader";
 import React, { useEffect, useState } from "react";
 import { Entity } from "../entities/entity";
 import Map from "../components/map";
 import MapEntity from "../entities/map";
-import { PlayerEntity } from "../entities/player";
+import { BasicCharacterController } from "../components/basic-character-controller";
+import { PlayerInput } from "../components/player-input";
 import { PhysicsHandler } from "../systems/physics";
 import EntitySystem from "../systems/entity-system";
 import { LoadController } from "../components/load-controller";
-import { PlayerInput } from "../components/player-input";
 import WaterPowerupManager from "../systems/entity-manager";
+import robotGLB from "../assets/RobotExpressive.glb";
 
 import { Joystick } from "react-joystick-component";
 import "./gamescene.css";
+import { NetworkPlayerComponent } from "../components/network-player-component";
+import { NetworkComponent } from "../components/network-component";
+import { NetworkEntityComponent } from "../components/network-entity-component";
 
 //import './entities/player';
 
 let camera,
-  scene,
-  renderer,
-  physicsHandler,
-  entitySystem,
-  clock,
-  controls,
-  waterManager,
-  baseWaterY,
-  player;
+    scene,
+    renderer,
+    physicsHandler,
+    entitySystem,
+    clock,
+    controls,
+    waterManager,
+    baseWaterY,
+    player;
 
-const GameScene = () => {
-  function init() {
-    // Init scene
-    clock = new th.Clock();
-    scene = new th.Scene();
-    physicsHandler = new PhysicsHandler();
-    entitySystem = new EntitySystem();
-    waterManager = new WaterPowerupManager({
-      scene: scene,
-      physicsHandler: physicsHandler,
-    });
-    baseWaterY = 0;
-    // Init modelloader
-    const l = new Entity();
-    l.AddComponent(new LoadController());
-    entitySystem.Add(l, "loader");
-    // Init camera (PerspectiveCamera)
-    camera = new th.PerspectiveCamera(
-      100,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+const GameScene = (props) => {
+    function init() {
+        // Init scene
+        clock = new th.Clock();
+        scene = new th.Scene();
+        entitySystem = new EntitySystem();
+        physicsHandler = new PhysicsHandler(entitySystem);
+        waterManager = new WaterPowerupManager({
+            scene: scene,
+            physicsHandler: physicsHandler,
+        });
+        baseWaterY = 0;
+        // Init modelloader
+        const l = new Entity();
+        l.AddComponent(new LoadController());
+        entitySystem.Add(l, "loader");
 
-    // Init renderer
-    renderer = new th.WebGLRenderer({ antialias: true });
-    const canvas = renderer.domElement;
-    controls = new OrbitControls(camera, canvas);
-    controls.target.set(0, 5, 0);
-    controls.update();
+        const network = new Entity();
+        network.AddComponent(new NetworkComponent(props.socket));
+        entitySystem.Add(network, "network");
 
-    // Set size (whole window)
-    renderer.setSize(window.innerWidth, window.innerHeight);
+        const map = new MapEntity({
+            scene: scene,
+            physicsHandler: physicsHandler,
+            entitySystem: entitySystem,
+        });
+        //entitySystem.Add(map);
 
-    // Render to canvas element
-    document.body.appendChild(canvas);
+        player = new Entity();
+        player.AddComponent(
+            new BasicCharacterController(new th.Vector3(20, 20, 0),physicsHandler,controls,scene)
+        );
+        player.AddComponent(new PlayerInput(physicsHandler, controls));
 
-    {
-      // Add sun
-      const color = 0xffffff;
-      const intensity = 1;
-      const light = new th.DirectionalLight(color, intensity);
-      light.position.set(-1, 2, 4);
-      scene.add(light);
-    }
-    {
-      // Add ambient
-      const color = 0xffffff;
-      const intensity = 0.5;
-      const light = new th.AmbientLight(color, intensity);
-      light.castShadow = true;
-      scene.add(light);
+        player.AddComponent(new NetworkPlayerComponent());
+        entitySystem.Add(player, "player");
+        console.log("KOMMER VI HIT");
+
+        const enemy1 = new Entity();
+        enemy1.AddComponent(new NetworkEntityComponent(physicsHandler));
+        enemy1.AddComponent(new BasicCharacterController(new th.Vector3(20, 20, 0),physicsHandler,controls,scene))
+        entitySystem.Add(enemy1, "enemy1");
+
+        /*
+        const enemy2 = new Entity();
+        enemy1.AddComponent(new NetworkEntityComponent());
+        entitySystem.Add(enemy2, "enemy2");
+
+        const enemy3 = new Entity();
+        enemy1.AddComponent(new NetworkEntityComponent());
+        entitySystem.Add(enemy3, "enemy3");*/
+
+        // Init camera (PerspectiveCamera)
+        camera = new th.PerspectiveCamera(
+            100,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+
+        // Init renderer
+        renderer = new th.WebGLRenderer({ antialias: true });
+        const canvas = renderer.domElement;
+        controls = new OrbitControls(camera, canvas);
+        controls.target.set(0, 5, 0);
+        controls.update();
+
+        // Set size (whole window)
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Render to canvas element
+        document.body.appendChild(canvas);
+
+        {
+            // Add sun
+            const color = 0xffffff;
+            const intensity = 1;
+            const light = new th.DirectionalLight(color, intensity);
+            light.position.set(-1, 2, 4);
+            scene.add(light);
+        }
+        {
+            // Add ambient
+            const color = 0xffffff;
+            const intensity = 0.5;
+            const light = new th.AmbientLight(color, intensity);
+            light.castShadow = true;
+            scene.add(light);
+        }
     }
 
     //_LoadAnimatedModel();
 
-    // Position camera
-    camera.position.set(0, 10, 20);
-  }
+    // Draw the scene every time the screen is refreshed
+    function step() {
+        let delta = clock.getDelta();
 
-  // Draw the scene every time the screen is refreshed
-  function step() {
-    requestAnimationFrame(step);
-    water();
-    let delta = clock.getDelta();
+        if (entitySystem.Get("player")) {
+            if (
+                entitySystem.Get("player")._components.BasicCharacterController
+                    .mixer
+            ) {
+                entitySystem
+                    .Get("player")
+                    ._components.BasicCharacterController.Update(delta);
+            }
+        }
+        requestAnimationFrame(step);
+        water();
 
-    entitySystem.Update(delta);
+        renderer.render(scene, camera);
 
-    physicsHandler.update();
+        entitySystem.Update(delta);
 
-    renderer.render(scene, camera);
-  }
-
-  function water() {
-    if (baseWaterY < 38) {
-      baseWaterY += 0.005;
-      if (physicsHandler.findObject("plane1")) {
-        physicsHandler.findObject("plane1").position.y = baseWaterY + 4.35;
-      }
+        physicsHandler.update();
     }
-    waterManager.updateEntities(clock, baseWaterY);
-  }
 
-  function handleMove(e) {
-    player.playerInput.handleMove(e);
-  }
+    function water() {
+        if (baseWaterY < 38) {
+            baseWaterY += 0.005;
+            if (physicsHandler.findObject("plane1")) {
+                physicsHandler.findObject("plane1").position.y =
+                    baseWaterY + 4.35;
+            }
+        }
+        waterManager.updateEntities(clock, baseWaterY);
+    }
 
-  let punchCountdown, stopCountdown, timer;
+    function handleMove(e) {
+        player.GetComponent("PlayerInput").handleMove(e);
+    }
 
-  function punch() {
-    timer = 0;
+    let punchCountdown, stopCountdown, timer;
 
-    punchCountdown = setInterval(() => {
-      updateCountdown();
-    }, 100);
-    stopCountdown = setTimeout(endCountdown, 3000);
-    document.getElementById("countdown").style.visibility = "visible";
+    function punch() {
+        timer = 0;
 
-    player.punch();
-  }
+        punchCountdown = setInterval(() => {
+            updateCountdown();
+        }, 100);
+        stopCountdown = setTimeout(endCountdown, 3000);
+        document.getElementById("countdown").style.visibility = "visible";
 
-  const updateCountdown = () => {
-    timer += 0.1;
-    document.getElementById("countdown").innerHTML = (
-      3 - timer.toFixed(1)
-    ).toFixed(1);
-  };
+        player.punch();
+    }
 
-  const endCountdown = () => {
-    clearInterval(punchCountdown);
-    document.getElementById("countdown").style.visibility = "hidden";
-  };
+    const updateCountdown = () => {
+        timer += 0.1;
+        document.getElementById("countdown").innerHTML = (
+            3 - timer.toFixed(1)
+        ).toFixed(1);
+    };
 
-  const handleJump = (e) => {
-    player.playerInput.jump();
-  };
+    const endCountdown = () => {
+        clearInterval(punchCountdown);
+        document.getElementById("countdown").style.visibility = "hidden";
+    };
 
-  function onWindowResize() {
-    // Camera frustum aspect ratio
-    camera.aspect = window.innerWidth / window.innerHeight;
-    // After making changes to aspect
-    camera.updateProjectionMatrix();
-    // Reset size
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  }
+    const handleJump = (e) => {
+        player.GetComponent("PlayerInput").jump();
+    };
+
+    function onWindowResize() {
+        // Camera frustum aspect ratio
+        camera.aspect = window.innerWidth / window.innerHeight;
+        // After making changes to aspect
+        camera.updateProjectionMatrix();
+        // Reset size
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
 
   window.addEventListener("resize", onWindowResize, false);
 
-  function test() {
-    console.log(entitySystem);
-  }
+    function test() {
+        console.log(entitySystem);
+    }
 
-  useEffect(() => {
-    init();
-    step();
+    useEffect(() => {
+        init();
+        step();
+        console.log("useeffect");
+        waterManager.populatePowerups();
+        waterManager.populateWater();
+        // Entities
+        console.log(entitySystem);
+    }, []);
 
-    // Entities
-    new MapEntity({
-      scene: scene,
-      physicsHandler: physicsHandler,
-      entitySystem: entitySystem,
-    });
-    player = new PlayerEntity({
-      camera: controls,
-      scene: scene,
-      entitySystem: entitySystem,
-      clock: clock,
-      physicsHandler: physicsHandler,
-      radius: 2,
-      height: 1,
-      segments: 32,
-      type: "sphere",
-      position: new th.Vector3(100, 20, 100),
-    });
-    entitySystem.Add(player);
+    return (
+        <div>
+            <div id="controls">
+                <div className="leftJoystick">
+                    <Joystick
+                        move={(e) => {
+                            handleMove(e);
+                        }}
+                        stop={(e) => {
+                            handleMove(e);
+                        }}
+                        stickColor={"#fcba03"}
+                        baseColor={"#ad7f00"}
+                    ></Joystick>
+                </div>
 
-    waterManager.populatePowerups();
-    waterManager.populateWater();
-  }, []);
-  return (
-    <div>
-      <div id="controls">
-        <div className="leftJoystick">
-          <Joystick
-            size={125}
-            move={(e) => {
-              handleMove(e);
-            }}
-            stop={(e) => {
-              handleMove(e);
-            }}
-            stickColor={"#fcba03"}
-            baseColor={"#ad7f00"}
-          ></Joystick>
+                <div className="jumpButton">
+                    <button onClick={handleJump}>Jump</button>
+                </div>
+                <div className="punchButton">
+                    <div className="countDownOverlay" id="countdown">
+                        {timer}
+                    </div>
+                    <button onClick={punch}>Punch</button>
+                </div>
+            </div>
         </div>
-
-        <div className="jumpButton">
-          <button onClick={handleJump}>Jump</button>
-        </div>
-        <div className="punchButton">
-          <div className="countDownOverlay" id="countdown">
-            {timer}
-          </div>
-          <button onClick={punch}>Punch</button>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default GameScene;

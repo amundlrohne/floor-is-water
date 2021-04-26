@@ -4,6 +4,7 @@ import express from "express";
 import { createServer } from "http";
 import cors from "cors";
 import { Server } from "socket.io";
+import { OPEN } from "./constants.js";
 
 const app = express();
 
@@ -38,8 +39,8 @@ io.on("connection", (socket) => {
 });
 
 const serveLobbies = (socket) => {
-    const activeLobbies = lobbies.filter((l) => l.active == true);
-    socket.emit("serve-lobbies", activeLobbies);
+    const openLobbies = lobbies.filter((l) => l.status === OPEN);
+    socket.emit("serve-lobbies", openLobbies);
 };
 
 const lobbies = [];
