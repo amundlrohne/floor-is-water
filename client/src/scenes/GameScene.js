@@ -18,7 +18,7 @@ import "./gamescene.css";
 
 //import './entities/player';
 
-let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY, player, mixer;
+let camera, scene, renderer, physicsHandler, entitySystem, clock, controls, waterManager, baseWaterY, player;
 
 const GameScene = () => {
   function init() {
@@ -82,9 +82,7 @@ const GameScene = () => {
   // Draw the scene every time the screen is refreshed
   function step() {
       let delta = clock.getDelta();
-      if(mixer){
-          mixer.update(delta);
-      }
+
       if(entitySystem.Get("player")){
           if(entitySystem.Get("player")._components.BasicCharacterController.mixer){
           entitySystem.Get("player")._components.BasicCharacterController.Update(delta);
