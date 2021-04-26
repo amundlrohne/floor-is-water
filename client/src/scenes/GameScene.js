@@ -194,6 +194,7 @@ const GameScene = () => {
       <div id="controls">
         <div className="leftJoystick">
           <Joystick
+            size={125}
             move={(e) => {
               handleMove(e);
             }}
