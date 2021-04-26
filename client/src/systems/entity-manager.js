@@ -8,7 +8,6 @@ export default class EntityManager extends EntitySystem {
   constructor(params) {
     super();
     this.params = params;
-    console.log(params.scene);
     this.entities = [];
   }
 
@@ -34,11 +33,9 @@ export default class EntityManager extends EntitySystem {
     platforms = platforms.filter((child) => {
       return child.name === "column";
     });
-    console.log(platforms);
     for (let i = 0; i < platforms.length; i++) {
       let tempPos = platforms[i].position;
       tempPos.y = platforms[i].geometry.parameters.height + 5;
-      console.log(platforms[i].geometry.parameters.height + 15);
       this.entities.push({
         type: "powerup",
         entity: new PowerupEntity({
