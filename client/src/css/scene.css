@@ -180,3 +180,14 @@
     margin: auto;
     margin-top: 10vh;
 }
+
+.resultWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.resultWrapper > * {
+    margin: auto;
+    text-align: center;
+}

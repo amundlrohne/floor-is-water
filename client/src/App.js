@@ -11,6 +11,7 @@ import CreditsScene from "./scenes/CreditsScene";
 import LobbyList from "./scenes/LobbyList.jsx";
 import LobbyDetail from "./scenes/LobbyDetail.jsx";
 import GameScene from "./scenes/GameScene";
+import { DisconnectedScene, GameResultScene } from "./scenes/DisconnectedScene";
 
 const App = () => {
     screen.orientation.lock("landscape");
@@ -33,6 +34,9 @@ const App = () => {
                 </Route>
                 <Route path="/lobby-detail/:lobbyID">
                     <LobbyDetail />
+                </Route>
+                <Route path="/disconnected">
+                    <DisconnectedScene />
                 </Route>
             </Switch>
         </div>
