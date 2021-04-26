@@ -45,7 +45,7 @@ export default class MapEntity extends Entity {
         radius: columnRadius,
         height: 15,
         segments: columnPoly,
-        type: "Column",
+        type: "Power-Column",
         position: new Vector3(75, 8, 75),
         entitySystem: params.entitySystem,
       });
@@ -78,7 +78,7 @@ export default class MapEntity extends Entity {
         radius: columnRadius,
         height: 22,
         segments: columnPoly,
-        type: "Column",
+        type: "Power-Column",
         position: new Vector3(0, 11, 60),
         entitySystem: params.entitySystem,
       });
@@ -100,7 +100,7 @@ export default class MapEntity extends Entity {
         radius: columnRadius,
         height: 22,
         segments: columnPoly,
-        type: "Column",
+        type: "Power-Column",
         position: new Vector3(60, 11, 0),
         entitySystem: params.entitySystem,
       });
@@ -134,7 +134,7 @@ export default class MapEntity extends Entity {
         radius: columnRadius,
         height: 15,
         segments: columnPoly,
-        type: "Column",
+        type: "Power-Column",
         position: new Vector3(-75, 8, 75),
         entitySystem: params.entitySystem,
       });
@@ -167,7 +167,7 @@ export default class MapEntity extends Entity {
         radius: columnRadius,
         height: 22,
         segments: columnPoly,
-        type: "Column",
+        type: "Power-Column",
         position: new Vector3(-60, 11, 0),
         entitySystem: params.entitySystem,
       });
@@ -201,7 +201,7 @@ export default class MapEntity extends Entity {
         radius: columnRadius,
         height: 15,
         segments: columnPoly,
-        type: "Column",
+        type: "Power-Column",
         position: new Vector3(-75, 8, -75),
         entitySystem: params.entitySystem,
       });
@@ -234,7 +234,7 @@ export default class MapEntity extends Entity {
         radius: columnRadius,
         height: 22,
         segments: columnPoly,
-        type: "Column",
+        type: "Power-Column",
         position: new Vector3(0, 11, -60),
         entitySystem: params.entitySystem,
       });
@@ -269,7 +269,7 @@ export default class MapEntity extends Entity {
         radius: columnRadius,
         height: 15,
         segments: columnPoly,
-        type: "Column",
+        type: "Power-Column",
         position: new Vector3(75, 8, -75),
         entitySystem: params.entitySystem,
       });

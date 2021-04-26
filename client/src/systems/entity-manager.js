@@ -8,6 +8,7 @@ export default class EntityManager extends EntitySystem {
   constructor(params) {
     super();
     this.params = params;
+    this.powerup_types = ["shield", "speed", "punch", "jump"]
     this.entities = [];
   }
 
@@ -31,16 +32,19 @@ export default class EntityManager extends EntitySystem {
     // let basex = 0;
     let platforms = this.params.scene.children;
     platforms = platforms.filter((child) => {
-      return child.name === "column";
+      return child.name === "powercolumn";
     });
+
+
     if (this.getPowerups().length < 5) {
       for (let i = 0; i < platforms.length; i++) {
         let tempPos = platforms[i].position;
         tempPos.y = platforms[i].geometry.parameters.height + 5;
+        const type = this.powerup_types[Math.floor(Math.random()*this.powerup_types.length)]
         this.entities.push({
           type: "powerup",
           entity: new PowerupEntity({
-            type: "shield",
+            type: type,
             scene: this.params.scene,
             position: tempPos,
           }),
