@@ -17,6 +17,7 @@ import { Joystick } from "react-joystick-component";
 import "./gamescene.css";
 import { NetworkPlayerComponent } from "../components/network-player-component";
 import { NetworkComponent } from "../components/network-component";
+import { NetworkEntityComponent } from "../components/network-entity-component";
 
 //import './entities/player';
 
@@ -67,10 +68,23 @@ const GameScene = (props) => {
             height: 1,
             segments: 32,
             type: "sphere",
-            position: new th.Vector3(50, 10, 50),
+            position: new th.Vector3(20, 20, 0),
         });
         player.AddComponent(new NetworkPlayerComponent());
         entitySystem.Add(player, "player");
+
+        const enemy1 = new Entity();
+        enemy1.AddComponent(new NetworkEntityComponent());
+        entitySystem.Add(enemy1, "enemy1");
+
+        /*
+        const enemy2 = new Entity();
+        enemy1.AddComponent(new NetworkEntityComponent());
+        entitySystem.Add(enemy2, "enemy2");
+
+        const enemy3 = new Entity();
+        enemy1.AddComponent(new NetworkEntityComponent());
+        entitySystem.Add(enemy3, "enemy3");*/
 
         // Init camera (PerspectiveCamera)
         camera = new th.PerspectiveCamera(
@@ -130,25 +144,45 @@ const GameScene = (props) => {
     }
 
     function water() {
-        if (baseWaterY < 35) {
+        if (baseWaterY < 38) {
             baseWaterY += 0.005;
-            waterManager.updateEntities(clock, baseWaterY);
             if (physicsHandler.findObject("plane1")) {
                 physicsHandler.findObject("plane1").position.y =
                     baseWaterY + 4.35;
             }
         }
+        waterManager.updateEntities(clock, baseWaterY);
     }
 
     function handleMove(e) {
         player.playerInput.handleMove(e);
     }
 
-    const handleMoveStop = (e) => {};
+    let punchCountdown, stopCountdown, timer;
 
-    const handleDirection = (e) => {};
+    function punch() {
+        timer = 0;
 
-    const handleRelease = (e) => {};
+        punchCountdown = setInterval(() => {
+            updateCountdown();
+        }, 100);
+        stopCountdown = setTimeout(endCountdown, 3000);
+        document.getElementById("countdown").style.visibility = "visible";
+
+        player.punch();
+    }
+
+    const updateCountdown = () => {
+        timer += 0.1;
+        document.getElementById("countdown").innerHTML = (
+            3 - timer.toFixed(1)
+        ).toFixed(1);
+    };
+
+    const endCountdown = () => {
+        clearInterval(punchCountdown);
+        document.getElementById("countdown").style.visibility = "hidden";
+    };
 
     const handleJump = (e) => {
         player.playerInput.jump();
@@ -178,6 +212,7 @@ const GameScene = (props) => {
         // Entities
         console.log(entitySystem);
     }, []);
+
     return (
         <div>
             <div id="controls">
@@ -193,17 +228,15 @@ const GameScene = (props) => {
                         baseColor={"#ad7f00"}
                     ></Joystick>
                 </div>
-                <div className="rightJoystick">
-                    <Joystick
-                        move={handleDirection}
-                        stop={handleRelease}
-                        stickColor={"#fcba03"}
-                        baseColor={"#ad7f00"}
-                    ></Joystick>
-                </div>
 
                 <div className="jumpButton">
                     <button onClick={handleJump}>Jump</button>
+                </div>
+                <div className="punchButton">
+                    <div className="countDownOverlay" id="countdown">
+                        {timer}
+                    </div>
+                    <button onClick={punch}>Punch</button>
                 </div>
             </div>
         </div>

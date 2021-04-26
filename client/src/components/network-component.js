@@ -10,12 +10,6 @@ export class NetworkComponent extends Component {
     }
 
     setupSocket() {
-        /*this.socket_ = io("ws://localhost:3000", {
-            reconnection: false,
-            transports: ["websocket"],
-            timeout: 10000,
-        });*/
-
         this.socket.on("connect", () => {
             console.log(this.socket.id);
 
@@ -31,14 +25,20 @@ export class NetworkComponent extends Component {
 
         this.socket.on("update-lobby", (lobby) => {
             console.log(lobby);
-            const clients = lobby.clients;
+            const clients = lobby.clients.filter((c) => c.id != this.socket.id);
 
+            this.FindEntity("enemy1").Broadcast({
+                topic: "network.update",
+                transform: clients[0].transform,
+            });
+
+            /*
             for (let c of clients) {
                 if (c.id != this.socket.id) {
                     console.log(c.id);
                     // Implement update enemies
                 }
-            }
+            }*/
         });
 
         this.socket.on("start-lobby", (lobby) => {

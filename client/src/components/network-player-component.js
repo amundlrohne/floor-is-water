@@ -59,7 +59,6 @@ export class NetworkPlayerComponent extends Component {
         if (this.updateTimer_ <= 0.0 && this.loaded_) {
             this.updateTimer_ = 0.1;
 
-            console.log("MORN");
             this.net_.SendTransformUpdate(this.CreateTransformPacket());
         }
     }

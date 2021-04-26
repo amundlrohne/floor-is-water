@@ -1,12 +1,13 @@
-import { Component } from "./component";
+import Component from "./component";
+import * as THREE from "three";
 
-class NetworkEntityComponent extends Component {
+export class NetworkEntityComponent extends Component {
     constructor() {
         super();
-        this.transformUpdates = [];
-        this.targetFrame = null;
-        this.lastFrame = null;
-        this.lastUpdate = 0.0;
+        this.transformUpdates_ = [];
+        this.targetFrame_ = null;
+        this.lastFrame_ = null;
+        this.lastUpdate_ = 0.0;
     }
 
     InitComponent() {
@@ -15,7 +16,7 @@ class NetworkEntityComponent extends Component {
         });
     }
 
-    SetTransform(transform) {
+    SetTransform_(transform) {
         this.parent_.SetPosition(new THREE.Vector3(...transform[1]));
         this.parent_.SetQuaternion(new THREE.Quaternion(...transform[2]));
         this.targetFrame_ = { time: 0.1, transform: transform };
@@ -23,6 +24,7 @@ class NetworkEntityComponent extends Component {
 
     OnNetworkUpdate_(msg) {
         if ("transform" in msg) {
+            console.log(msg.transform);
             this.lastUpdate_ = 0.0;
             this.transformUpdates_.push({
                 time: 0.1,
@@ -86,8 +88,8 @@ class NetworkEntityComponent extends Component {
 
             this.parent_.SetPosition(pf);
             this.parent_.SetQuaternion(qf);
-            const controller = this.GetComponent("NPCController");
-            controller.SetState(this.lastFrame_.transform[0]);
+            //const controller = this.GetComponent("NPCController");
+            //controller.SetState(this.lastFrame_.transform[0]);
         }
     }
 }

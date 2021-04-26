@@ -7,6 +7,9 @@ import Component from "../components/component";
 import { finite_state_machine } from "../components/finite-state-machine.js";
 import { player_state } from "../components/player-state.js";
 import robotf from "../assets/Robot.fbx";
+import { CHARACTER_MODELS } from "../assets/models.mjs";
+import { AnimationMixer, Scene, Vector3, Clock } from "three";
+import { useEffect } from "react";
 import Punch from "../components/punch";
 import { PlayerInput } from "../components/player-input";
 
@@ -17,13 +20,23 @@ export class PlayerEntity extends Entity {
         this.params = params;
         this.BCC = new BasicCharacterController(this.params);
         this.playerInput = new PlayerInput(this.params);
+        this.clock = new Clock();
+        this.lastPunch = this.clock.getElapsedTime();
         this._Init();
         // window.onkeydown(this.punch.bind(this))
     }
 
-    punch(event) {
-        if (event.keyCode === 32) {
-            new Punch({ radius: 5, speed: 50, mesh: this.BCC.target });
+    punch() {
+        if (this.clock.getElapsedTime() - this.lastPunch > 3) {
+            this.AddComponent(
+                new Punch({
+                    ...this.params,
+                    radius: 5,
+                    speed: 50,
+                    mesh: this.BCC.target,
+                })
+            );
+            this.lastPunch = this.clock.getElapsedTime();
         }
     }
 
@@ -32,9 +45,6 @@ export class PlayerEntity extends Entity {
         this.AddComponent(this.playerInput);
         //this.InitEntity();
         //this.params.entitySystem.Add(this, "player");
-    }
-    setMixer(as) {
-        this.params.setMixer(as);
     }
 }
 
@@ -115,6 +125,10 @@ export class BasicCharacterController extends Component {
             fixedRotation: true,
             position: this.params_.position,
         });
+        this.params_.physicsHandler.addTracking(
+            this.Parent.params.camera,
+            "player"
+        );
     }
 
     LoadModels() {
@@ -122,7 +136,6 @@ export class BasicCharacterController extends Component {
         loader.LoadFBX(undefined, robotf, (result) => {
             console.log(result);
             result.scale.multiplyScalar(0.01);
-            result.position.y = -1000000;
             let mixer = new th.AnimationMixer(result);
             let animationAction = mixer.clipAction(
                 result.animations.find(
