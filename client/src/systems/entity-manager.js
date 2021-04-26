@@ -33,17 +33,19 @@ export default class EntityManager extends EntitySystem {
     platforms = platforms.filter((child) => {
       return child.name === "column";
     });
-    for (let i = 0; i < platforms.length; i++) {
-      let tempPos = platforms[i].position;
-      tempPos.y = platforms[i].geometry.parameters.height + 5;
-      this.entities.push({
-        type: "powerup",
-        entity: new PowerupEntity({
-          type: "shield",
-          scene: this.params.scene,
-          position: tempPos,
-        }),
-      });
+    if (this.getPowerups().length < 5) {
+      for (let i = 0; i < platforms.length; i++) {
+        let tempPos = platforms[i].position;
+        tempPos.y = platforms[i].geometry.parameters.height + 5;
+        this.entities.push({
+          type: "powerup",
+          entity: new PowerupEntity({
+            type: "shield",
+            scene: this.params.scene,
+            position: tempPos,
+          }),
+        });
+      }
     }
   }
 
