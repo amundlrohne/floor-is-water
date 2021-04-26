@@ -30,7 +30,7 @@ export class PlayerEntity extends Entity {
     _Init() {
         this.AddComponent(this.BCC);
         this.AddComponent(this.playerInput);
-        this.InitEntity();
+        //this.InitEntity();
         //this.params.entitySystem.Add(this, "player");
     }
     setMixer(as) {
@@ -71,7 +71,7 @@ export class BasicCharacterController extends Component {
         this.params_ = params;
     }
 
-    Init() {
+    InitEntity() {
         this.activeState = "RobotArmature|Robot_Running";
         this.group_ = new th.Group();
         this.animations_ = [];
@@ -83,7 +83,7 @@ export class BasicCharacterController extends Component {
     }
 
     InitComponent() {
-        this.Init();
+        //this.Init();
         this._RegisterHandler("health.death", (m) => {
             this.OnDeath(m);
         });
@@ -118,7 +118,7 @@ export class BasicCharacterController extends Component {
     }
 
     LoadModels() {
-        const loader = this.Parent.Get("loader").GetComponent("LoadController");
+        const loader = this.FindEntity("loader").GetComponent("LoadController");
         loader.LoadFBX(undefined, robotf, (result) => {
             console.log(result);
             result.scale.multiplyScalar(0.01);

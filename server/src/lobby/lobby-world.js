@@ -1,50 +1,5 @@
-import { Player, STARTING_TRANSFORMS } from "./player.js";
-
-class SocketWrapper {
-    constructor(socket) {
-        this.socket = socket;
-        this.onMessage = null;
-        this.dead = false;
-        this.SetupSocket();
-    }
-
-    get ID() {
-        return this.socket.id;
-    }
-
-    get IsAlive() {
-        return !this.dead;
-    }
-
-    SetupSocket() {
-        this.socket.on("user-connected", () => {
-            console.log("socket.id: " + this.socket.id);
-        });
-        this.socket.on("disconnect", () => {
-            console.log(socket.id + " disconnected");
-            this.dead = true;
-        });
-        this.socket.onAny((e, d) => {
-            try {
-                if (!this.onMessage(e, d)) {
-                    console.log("Unkown command: " + e + ", disconnected.");
-                    this.Disconnect();
-                }
-            } catch (err) {
-                console.error(err);
-                this.Disconnect();
-            }
-        });
-    }
-
-    Disconnect() {
-        this.socket.disconnect(true);
-    }
-
-    Send(msg, data) {
-        this.socket.emit(msg, data);
-    }
-}
+import { Player } from "./player.js";
+import { OPEN, CLOSED, IN_PROGRESS } from "../constants.js";
 
 export default class Lobby {
     constructor(name, id, io) {
@@ -53,7 +8,8 @@ export default class Lobby {
         this.ownerID;
         this.addNamespace(io);
         this.clients = [];
-        this.active = true;
+        this.status = OPEN;
+        this.inProgress = false;
 
         console.log(`[LOBBY ${this.id}] Created lobby.`);
     }
@@ -88,7 +44,7 @@ export default class Lobby {
         // Delete lobby if disconnection results in 0 players.
         if (this.clients == 0) {
             console.log(`[LOBBY ${this.id}] Terminated.`);
-            this.active = false;
+            this.status = CLOSED;
             return;
         }
 
@@ -102,7 +58,7 @@ export default class Lobby {
         if (c == null) {
             return;
         }
-
+        console.log(transform);
         c.transform = transform;
     };
 
@@ -114,16 +70,18 @@ export default class Lobby {
             }
         }
 
-        console.log(`[LOBBY ${this.id}] ${$socket.id} does not exist`);
+        console.log(`[LOBBY ${this.id}] ${socket.id} does not exist in lobby`);
         return null;
     };
 
     gameLoop = (namespace) => {
         namespace.emit("update-lobby", this);
 
+        if (this.status === CLOSED) return;
+
         setTimeout(() => {
-            this.gameLoop();
-        }, 100);
+            this.gameLoop(namespace);
+        }, 1000);
     };
 
     /*
@@ -155,8 +113,9 @@ export default class Lobby {
 
             socket.on("request-start-lobby", () => {
                 // Add verification for socket.id = owner
+                this.status = IN_PROGRESS;
                 this.clients.map((c, index) => c.setStartingTransform(index));
-                namespace.emit("start-lobby", this);
+                namespace.emit("update-lobby", this); // Broadcast lobby update
                 this.gameLoop(namespace);
             });
         });

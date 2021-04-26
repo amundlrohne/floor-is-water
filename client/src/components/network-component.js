@@ -1,4 +1,4 @@
-import { Component } from "./component";
+import Component from "./component";
 
 export class NetworkComponent extends Component {
     constructor(socket) {
@@ -33,7 +33,7 @@ export class NetworkComponent extends Component {
             console.log(lobby);
             const clients = lobby.clients;
 
-            for (c of clients) {
+            for (let c of clients) {
                 if (c.id != this.socket.id) {
                     console.log(c.id);
                     // Implement update enemies
@@ -66,7 +66,7 @@ export class NetworkComponent extends Component {
         }
     }
 
-    spawnPlayers = (lobby, socketID) => {
+    spawnPlayers(lobby, socketID) {
         const clients = lobby.clients;
         const playerTransform = clients.filter((c) => c.id == socketID)
             .transform[0];
@@ -79,7 +79,7 @@ export class NetworkComponent extends Component {
             topic: "network.update",
             transform: playerTransform,
         });
-    };
+    }
 
     OnMessage_(e, d) {
         if (e == "world.player") {

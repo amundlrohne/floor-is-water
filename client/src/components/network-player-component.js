@@ -1,10 +1,10 @@
-import { Component } from "./component";
+import Component from "./component";
 
-export class NetworkEntityController extends Component {
+export class NetworkPlayerComponent extends Component {
     constructor() {
         super();
         this.updateTimer_ = 0.0;
-        this.loaded_ = false;
+        this.loaded_ = true;
     }
 
     InitComponent() {
@@ -59,6 +59,7 @@ export class NetworkEntityController extends Component {
         if (this.updateTimer_ <= 0.0 && this.loaded_) {
             this.updateTimer_ = 0.1;
 
+            console.log("MORN");
             this.net_.SendTransformUpdate(this.CreateTransformPacket());
         }
     }

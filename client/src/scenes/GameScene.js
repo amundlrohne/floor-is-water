@@ -11,11 +11,12 @@ import { BasicCharacterController, PlayerEntity } from "../entities/player";
 import { PhysicsHandler } from "../systems/physics";
 import EntitySystem from "../systems/entity-system";
 import { LoadController } from "../components/load-controller";
-import { PlayerInput } from "../components/player-input";
 import WaterPowerupManager from "../systems/entity-manager";
 
 import { Joystick } from "react-joystick-component";
 import "./gamescene.css";
+import { NetworkPlayerComponent } from "../components/network-player-component";
+import { NetworkComponent } from "../components/network-component";
 
 //import './entities/player';
 
@@ -30,13 +31,13 @@ let camera,
     baseWaterY,
     player;
 
-const GameScene = () => {
+const GameScene = (props) => {
     function init() {
         // Init scene
         clock = new th.Clock();
         scene = new th.Scene();
-        physicsHandler = new PhysicsHandler();
         entitySystem = new EntitySystem();
+        physicsHandler = new PhysicsHandler(entitySystem);
         waterManager = new WaterPowerupManager({
             scene: scene,
             physicsHandler: physicsHandler,
@@ -46,6 +47,31 @@ const GameScene = () => {
         const l = new Entity();
         l.AddComponent(new LoadController());
         entitySystem.Add(l, "loader");
+
+        const network = new Entity();
+        network.AddComponent(new NetworkComponent(props.socket));
+        entitySystem.Add(network, "network");
+
+        const map = new MapEntity({
+            scene: scene,
+            physicsHandler: physicsHandler,
+            entitySystem: entitySystem,
+        });
+        //entitySystem.Add(map);
+
+        player = new PlayerEntity({
+            camera: controls,
+            scene: scene,
+            physicsHandler: physicsHandler,
+            radius: 2,
+            height: 1,
+            segments: 32,
+            type: "sphere",
+            position: new th.Vector3(50, 10, 50),
+        });
+        player.AddComponent(new NetworkPlayerComponent());
+        entitySystem.Add(player, "player");
+
         // Init camera (PerspectiveCamera)
         camera = new th.PerspectiveCamera(
             100,
@@ -151,24 +177,6 @@ const GameScene = () => {
         waterManager.populateWater();
         // Entities
         console.log(entitySystem);
-        map = new MapEntity({
-            scene: scene,
-            physicsHandler: physicsHandler,
-            entitySystem: entitySystem,
-        });
-        entitySystem.Add(map);
-
-        player = new PlayerEntity({
-            camera: controls,
-            scene: scene,
-            physicsHandler: physicsHandler,
-            radius: 2,
-            height: 1,
-            segments: 32,
-            type: "sphere",
-            position: new th.Vector3(50, 10, 50),
-        });
-        entitySystem.Add(player);
     }, []);
     return (
         <div>
