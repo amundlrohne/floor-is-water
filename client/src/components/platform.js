@@ -8,6 +8,7 @@ export class PlatformColumn extends Component {
     constructor(params) {
         super();
         this.params = params;
+        // console.log(params)
         if (params) {
             const platformGeo = new three.CylinderGeometry(
                 params.radius,
@@ -18,6 +19,7 @@ export class PlatformColumn extends Component {
             const texture = new three.TextureLoader().load(stoneImg);
             const platformMat = new three.MeshPhongMaterial({ map: texture });
             this.mesh = new three.Mesh(platformGeo, platformMat);
+            this.mesh.name = params.name;
             params.scene.add(this.mesh);
             params.type = "cylinder";
             params.physicsHandler.addHitbox({
@@ -45,6 +47,7 @@ export class PlatformFloating extends Component {
             const texture = new three.TextureLoader().load(woodImg);
             const platformMat = new three.MeshPhongMaterial({ map: texture });
             this.mesh = new three.Mesh(platformGeo, platformMat);
+            this.mesh.name = params.name;
             params.scene.add(this.mesh);
             params.type = "cube";
             params.physicsHandler.addHitbox({

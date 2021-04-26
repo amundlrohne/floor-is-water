@@ -203,7 +203,7 @@ const GameScene = (props) => {
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    window.addEventListener("resize", onWindowResize, false);
+  window.addEventListener("resize", onWindowResize, false);
 
     function test() {
         console.log(entitySystem);

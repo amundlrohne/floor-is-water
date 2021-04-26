@@ -10,7 +10,7 @@ div[class="leftJoystick"] > div {
   box-shadow: 0px 0px 20px 9px rgba(0, 0, 0, 0.6);
 }
 
-div[class="rightJoystick"] {
+/* div[class="rightJoystick"] {
   position: absolute;
   right: 15%;
   bottom: 5%;
@@ -18,13 +18,13 @@ div[class="rightJoystick"] {
 
 div[class="rightJoystick"] > div {
   box-shadow: 0px 0px 20px 9px rgba(0, 0, 0, 0.6);
-}
+} */
 
 div[class="jumpButton"] > button {
   border: 4px solid;
   border-radius: 50%;
-  height: 10vh;
-  width: 10vh;
+  height: 18vh;
+  width: 18vh;
 
   position: absolute;
   right: 5%;
@@ -45,12 +45,14 @@ div[class="jumpButton"] > button {
 div[class="jumpButton"] > button:active {
   background-color: white;
   box-shadow: 0px 0px 20px 15px rgba(0, 0, 0, 0.6);
+  outline: none;
+  user-select: none;
 }
-div[class="punchButton"] >  button {
+div[class="punchButton"] > button {
   border: 4px solid;
   border-radius: 50%;
-  height: 10vh;
-  width: 10vh;
+  height: 18vh;
+  width: 18vh;
 
   position: absolute;
   right: 15%;
@@ -68,15 +70,15 @@ div[class="punchButton"] >  button {
   transition-duration: 0.25s;
 }
 
-div[class="punchButton"] >  button:active {
+div[class="punchButton"] > button:active {
   background-color: white;
   box-shadow: 0px 0px 20px 15px rgba(0, 0, 0, 0.6);
 }
 
 div[class="punchButton"] > div {
   border-radius: 50%;
-  height: 10vh;
-  width: 10vh;
+  height: 18vh;
+  width: 18vh;
 
   position: absolute;
   right: 15%;
@@ -85,9 +87,12 @@ div[class="punchButton"] > div {
   z-index: 10;
   background-color: rgba(110, 110, 110, 0.7);
   visibility: hidden;
-  
+
   text-align: center;
-  line-height: 10vh;
+  line-height: 18vh;
 
   font-size: larger;
+
+  outline: none;
+  user-select: none;
 }
