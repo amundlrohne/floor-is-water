@@ -75,7 +75,6 @@ export class BasicCharacterController extends Component {
     }
 
     ChangeState(newState) {
-        console.log(this.animations);
         if (this.activeState != newState) {
             this.mixer
                 .clipAction(this.animations.find((e) => e.name == this.activeState))
