@@ -1,9 +1,11 @@
 import * as three from "three";
+import { Clock, Vector3 } from "three";
 import Component from "./component";
 import waterImg from "../assets/water.png";
 export default class Water extends Component {
   constructor(params) {
     super();
+    this.clock = new Clock();
     this.InitComponent(params);
     this.params = params;
     if (params) {
@@ -39,6 +41,14 @@ export default class Water extends Component {
       this.mesh = new three.Mesh(geometry, this.material);
       this.mesh.geometry.needsUpdate = true;
       params.scene.add(this.mesh);
+      params.physicsHandler.addHitbox({
+        _id: "plane1",
+        mesh: this.mesh,
+        mass: 0,
+        position: new Vector3(0, 0, 0),
+        type: "plane",
+        entitySystem: params.entitySystem,
+      });
     }
   }
 
@@ -52,15 +62,19 @@ export default class Water extends Component {
     );
   }
 
-  update(clock, baseY) {
-    const delta = clock.getDelta();
-    const time = clock.getElapsedTime() * 10;
+  Update(timeElapsed) {
+    const time = this.clock.getElapsedTime() * 10;
     const position = this.mesh.geometry.attributes.position;
 
     for (let i = 0; i < position.count; i++) {
-      const y = (3 * Math.sin(i / 5 + (time + i) / 7)) / 5 + baseY;
+      const y =
+        (3 * Math.sin(i / 5 + (time + i) / 7)) / 5 + this.Parent.Position.y;
       position.setY(i, y);
     }
+
+    this.params.physicsHandler
+      .findObject("plane1")
+      .position.copy(this.Parent.Position);
 
     position.needsUpdate = true;
   }

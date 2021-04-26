@@ -12,7 +12,7 @@ export default class WaterEntity extends Entity {
     }
   }
 
-  update(clock, baseY) {
-    this._components.Water.update(clock, baseY);
-  }
+  // update(clock, baseY) {
+  //   this._components.Water.update(clock, baseY);
+  // }
 }

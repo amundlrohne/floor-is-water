@@ -8,7 +8,7 @@ export default class EntityManager extends EntitySystem {
   constructor(params) {
     super();
     this.params = params;
-    this.powerup_types = ["shield", "speed", "punch", "jump"]
+    this.powerup_types = ["shield", "speed", "punch", "jump"];
     this.entities = [];
   }
 
@@ -22,11 +22,11 @@ export default class EntityManager extends EntitySystem {
     });
   }
 
-  getWater() {
-    return this.entities.filter((entity) => {
-      return entity.type === "water";
-    });
-  }
+  // getWater() {
+  //   return this.entities.filter((entity) => {
+  //     return entity.type === "water";
+  //   });
+  // }
 
   populatePowerups() {
     // let basex = 0;
@@ -35,12 +35,13 @@ export default class EntityManager extends EntitySystem {
       return child.name === "powercolumn";
     });
 
-
     if (this.getPowerups().length < 5) {
       for (let i = 0; i < platforms.length; i++) {
         let tempPos = platforms[i].position;
         tempPos.y = platforms[i].geometry.parameters.height + 5;
-        const type = this.powerup_types[Math.floor(Math.random()*this.powerup_types.length)]
+        const type = this.powerup_types[
+          Math.floor(Math.random() * this.powerup_types.length)
+        ];
         this.entities.push({
           type: "powerup",
           entity: new PowerupEntity({
@@ -53,12 +54,12 @@ export default class EntityManager extends EntitySystem {
     }
   }
 
-  populateWater() {
-    this.entities.push({
-      type: "water",
-      entity: new WaterEntity({ scene: this.params.scene, height: 5 }),
-    });
-  }
+  // populateWater() {
+  //   this.entities.push({
+  //     type: "water",
+  //     entity: new WaterEntity({ scene: this.params.scene, height: 5 }),
+  //   });
+  // }
 
   spawnPowerup(type, position) {
     this.entities.push({
@@ -89,9 +90,9 @@ export default class EntityManager extends EntitySystem {
   updateEntities(clock, baseY) {
     for (let i = 0; i < this.entities.length; i++) {
       switch (this.entities[i].type) {
-        case "water":
-          this.entities[i].entity.update(clock, baseY);
-          break;
+        // case "water":
+        //   this.entities[i].entity.update(clock, baseY);
+        //   break;
         case "powerup":
           this.entities[i].entity.update(clock);
           break;
