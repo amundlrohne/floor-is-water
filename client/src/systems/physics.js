@@ -158,7 +158,7 @@ export class PhysicsHandler {
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion); // make it face up
                 body.addEventListener("collide", (e) => {
-                    //this.drown(e, params);
+                this.drown(e, params);
                 });
                 this.world.addBody(body);
                 if (params.meshControlled) {
@@ -179,12 +179,10 @@ export class PhysicsHandler {
 
     drown(e) {
         if (e.body.shapes[0] instanceof cannon.Cylinder && e.body.mass != 0) {
-            e.body.mass = 0;
-            e.body.position.copy(0, 10000, 0);
             e.body.velocity.setZero();
-            const camera = this.trackers["player"];
-            console.log(this.trackers);
+            this.entitySystem.Get("player").GetComponent("BasicCharacterController").ChangeState("Death");
             this.trackers["player"] = undefined;
+            const camera = this.trackers["player"];
             this.addTracking(camera, "plane1");
         }
     }
@@ -241,7 +239,6 @@ export class PhysicsHandler {
     }
 
     setPosition(id, position) {
-        console.log(position);
         this.findObject(id).position.copy(position);
         this.stopVelocity(id);
     }

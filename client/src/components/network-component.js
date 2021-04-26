@@ -24,7 +24,6 @@ export class NetworkComponent extends Component {
         });
 
         this.socket.on("update-lobby", (lobby) => {
-            console.log(lobby);
             const clients = lobby.clients.filter((c) => c.id != this.socket.id);
             this.FindEntity("enemy1").Broadcast({
                 topic: "network.update",

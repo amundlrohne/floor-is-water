@@ -69,21 +69,30 @@ export class BasicCharacterController extends Component {
         });
         document.addEventListener("keydown", (e) => {
             if (e.key == "p") {
-                this.ChangeState("Running");
+                this.ChangeState("Dance");
             }
         });
     }
 
     ChangeState(newState) {
+        console.log(this.animations);
         if (this.activeState != newState) {
-            this.activeState = newState;
             this.mixer
-                .clipAction(this.animations.find((e) => e.name == newState))
+                .clipAction(this.animations.find((e) => e.name == this.activeState))
+                .fadeOut(0.5);
+            this.activeState = newState;
+
+            let anim = this.mixer
+                .clipAction(this.animations.find((e) => e.name == newState));
+                newState=="Death"? anim.clampWhenFinished = true:anim.clampWhenFinished = false;
+                newState=="Death"? anim.loop = th.LoopOnce:anim.loop=th.LoopRepeat;
+                anim
                 .reset()
-                .setEffectiveTimeScale(1)
+                .setEffectiveTimeScale(0.5)
                 .setEffectiveWeight(1)
                 .fadeIn(0.5)
                 .play();
+
         }
     }
 
