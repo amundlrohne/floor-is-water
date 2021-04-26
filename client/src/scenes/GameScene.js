@@ -48,6 +48,20 @@ const GameScene = (props) => {
         const l = new Entity();
         l.AddComponent(new LoadController());
         entitySystem.Add(l, "loader");
+        // Init camera (PerspectiveCamera)
+        camera = new th.PerspectiveCamera(
+            100,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+
+        // Init renderer
+        renderer = new th.WebGLRenderer({ antialias: true });
+        const canvas = renderer.domElement;
+        controls = new OrbitControls(camera, canvas);
+        controls.target.set(0, 5, 0);
+        controls.update();
 
         const network = new Entity();
         network.AddComponent(new NetworkComponent(props.socket));
@@ -83,20 +97,6 @@ const GameScene = (props) => {
         enemy1.AddComponent(new NetworkEntityComponent());
         entitySystem.Add(enemy3, "enemy3");*/
 
-        // Init camera (PerspectiveCamera)
-        camera = new th.PerspectiveCamera(
-            100,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-        );
-
-        // Init renderer
-        renderer = new th.WebGLRenderer({ antialias: true });
-        const canvas = renderer.domElement;
-        controls = new OrbitControls(camera, canvas);
-        controls.target.set(0, 5, 0);
-        controls.update();
 
         // Set size (whole window)
         renderer.setSize(window.innerWidth, window.innerHeight);

@@ -178,12 +178,12 @@ export class PhysicsHandler {
     }
 
     drown(e) {
-        if (e.body.shapes[0] instanceof cannon.Cylinder && e.body.mass != 0) {
+        if (e.body.shapes[0] instanceof cannon.Cylinder &&this.entitySystem.Get("player").GetComponent("BasicCharacterController").activeState != "Death") {
             e.body.velocity.setZero();
             this.entitySystem.Get("player").GetComponent("BasicCharacterController").ChangeState("Death");
+            /* const camera = this.trackers["player"];
             this.trackers["player"] = undefined;
-            const camera = this.trackers["player"];
-            this.addTracking(camera, "plane1");
+            this.addTracking(camera, "plane1"); */
         }
     }
     readyJump(e) {
@@ -191,9 +191,9 @@ export class PhysicsHandler {
     }
 
     addTracking(mesh, id) {
-        if (this.trackers[id]) {
+        /* if (this.trackers[id]) {
             this.trackers[id] = undefined;
-        } else {
+        } else { */
             mesh.minDistance = 50;
             mesh.maxDistance = 50;
             mesh.minPolarAngle = 0.7;
@@ -204,7 +204,7 @@ export class PhysicsHandler {
             mesh.enableZoom = false;
 
             this.trackers[id] = mesh;
-        }
+        //}
     }
 
     findObject(id) {
