@@ -185,8 +185,10 @@ const GameScene = () => {
       position: new th.Vector3(100, 20, 100),
     });
     entitySystem.Add(player);
+    setTimeout(() => {
+      waterManager.populatePowerups();
+    }, 2000);
 
-    waterManager.populatePowerups();
     waterManager.populateWater();
   }, []);
   return (

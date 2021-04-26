@@ -19,7 +19,7 @@ export default class Powerup extends Component {
     if (params) {
       const loader = new FBXLoader();
 
-      switch (params.type) {
+      switch (params.power_type) {
         case "speed":
           loader.load(gem1, (result) => {
             this.loadModel(result);
@@ -37,8 +37,8 @@ export default class Powerup extends Component {
           break;
         case "jump":
           loader.load(gem5, (result) => {
-            this.loadModel(result)
-          })
+            this.loadModel(result);
+          });
       }
     }
   }
@@ -61,8 +61,15 @@ export default class Powerup extends Component {
     });
 
     this.mesh.position.copy(this.params.position);
-
     this.params.scene.add(this.mesh);
+
+    this.params.type = "powerup";
+    this.params.physicsHandler.addHitbox({
+      _id: this._id,
+      mesh: this.mesh,
+      mass: 0,
+      ...this.params,
+    });
   }
 
   update(clock) {

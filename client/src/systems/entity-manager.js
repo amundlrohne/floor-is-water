@@ -8,7 +8,8 @@ export default class EntityManager extends EntitySystem {
   constructor(params) {
     super();
     this.params = params;
-    this.powerup_types = ["shield", "speed", "punch", "jump"]
+    this.powerup_types = ["shield", "speed", "punch", "jump"];
+    // this.powerup_types = ["speed"];
     this.entities = [];
   }
 
@@ -34,22 +35,23 @@ export default class EntityManager extends EntitySystem {
     platforms = platforms.filter((child) => {
       return child.name === "powercolumn";
     });
+    for (let i = 0; i < platforms.length; i++) {
+      let tempPos = new Vector3(0, 0, 0);
+      tempPos.copy(platforms[i].position);
+      tempPos.setY(platforms[i].geometry.parameters.height + 10);
 
-
-    if (this.getPowerups().length < 5) {
-      for (let i = 0; i < platforms.length; i++) {
-        let tempPos = platforms[i].position;
-        tempPos.y = platforms[i].geometry.parameters.height + 5;
-        const type = this.powerup_types[Math.floor(Math.random()*this.powerup_types.length)]
-        this.entities.push({
-          type: "powerup",
-          entity: new PowerupEntity({
-            type: type,
-            scene: this.params.scene,
-            position: tempPos,
-          }),
-        });
-      }
+      const type = this.powerup_types[
+        Math.floor(Math.random() * this.powerup_types.length)
+      ];
+      this.entities.push({
+        type: "powerup",
+        entity: new PowerupEntity({
+          power_type: type,
+          scene: this.params.scene,
+          position: tempPos,
+          physicsHandler: this.params.physicsHandler,
+        }),
+      });
     }
   }
 
