@@ -182,7 +182,7 @@ const GameScene = () => {
       height: 1,
       segments: 32,
       type: "sphere",
-      position: new th.Vector3(20, 20, 0),
+      position: new th.Vector3(100, 20, 100),
     });
     entitySystem.Add(player);
 
