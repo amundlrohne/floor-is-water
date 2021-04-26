@@ -23,6 +23,10 @@ export const CreditsScene = () => {
                         </a>
                     </li>
                     <li>
+                      Column models by{" "}
+                      <a href="https://korveen.itch.io/lowpoly-ruins-pack">kOrveen</a>
+                    </li>
+                    <li>
                         Background music by Karl Casey from{" "}
                         <a href="https://www.youtube.com/watch?v=sSuHdn2dY9M">
                         White Bat Audio
