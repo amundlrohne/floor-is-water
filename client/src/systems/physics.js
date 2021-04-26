@@ -145,9 +145,9 @@ export class PhysicsHandler {
         });
         body.position.copy(params.position);
         body.quaternion.copy(params.mesh.quaternion); // make it face up
-        // body.addEventListener("collide", (e) => {
-        //   this.drown(e, params);
-        // });
+        body.addEventListener("collide", (e) => {
+          this.drown(e, params);
+        });
         this.world.addBody(body);
         if (params.meshControlled) {
           this.meshControlled[params._id] = { body: body, mesh: params.mesh };
