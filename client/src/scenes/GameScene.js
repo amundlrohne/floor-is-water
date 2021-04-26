@@ -49,9 +49,9 @@ const GameScene = (props) => {
         l.AddComponent(new LoadController());
         entitySystem.Add(l, "loader");
 
-        /* const network = new Entity();
+        const network = new Entity();
         network.AddComponent(new NetworkComponent(props.socket));
-        entitySystem.Add(network, "network"); */
+        entitySystem.Add(network, "network");
 
         const map = new MapEntity({
             scene: scene,
@@ -66,13 +66,13 @@ const GameScene = (props) => {
         );
         player.AddComponent(new PlayerInput(physicsHandler, controls));
 
-        //player.AddComponent(new NetworkPlayerComponent());
+        player.AddComponent(new NetworkPlayerComponent());
         entitySystem.Add(player, "player");
 
-        /* const enemy1 = new Entity();
+        const enemy1 = new Entity();
         enemy1.AddComponent(new NetworkEntityComponent(physicsHandler));
-        enemy1.AddComponent(new BasicCharacterController(new th.Vector3(20, 20, 0),physicsHandler,controls,scene))
-        entitySystem.Add(enemy1, "enemy1"); */
+        enemy1.AddComponent(new BasicCharacterController(new th.Vector3(100, 30, 100),physicsHandler,controls,scene))
+        entitySystem.Add(enemy1, "enemy1");
 
         /*
         const enemy2 = new Entity();
