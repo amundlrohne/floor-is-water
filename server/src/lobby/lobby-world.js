@@ -80,7 +80,7 @@ export default class Lobby {
 
         setTimeout(() => {
             this.gameLoop(namespace);
-        }, 300);
+        }, 30);
     };
 
     /*
