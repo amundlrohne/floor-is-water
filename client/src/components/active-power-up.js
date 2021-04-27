@@ -6,7 +6,7 @@ import * as three from "three";
 import gem4 from "../assets/gem4.fbx";
 import gem1 from "../assets/gem1.fbx";
 import gem7 from "../assets/gem7.fbx";
-import { Euler } from "three";
+import gem5 from "../assets/gem5.fbx";
 
 export default class Powerup extends Component {
   constructor(params) {
@@ -35,6 +35,10 @@ export default class Powerup extends Component {
             this.loadModel(result);
           });
           break;
+        case "jump":
+          loader.load(gem5, (result) => {
+            this.loadModel(result)
+          })
       }
     }
   }
