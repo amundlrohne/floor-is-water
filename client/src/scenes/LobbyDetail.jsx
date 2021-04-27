@@ -28,7 +28,6 @@ const LobbyDetail = () => {
     // Rerender on socket update
     useEffect(() => {
         socket.on("connect", () => {
-            console.log(socket.id);
             socket.emit("join-lobby", localStorage.getItem("username"));
         });
 

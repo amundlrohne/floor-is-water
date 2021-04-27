@@ -62,6 +62,7 @@ const GameScene = (props) => {
         const l = new Entity();
         l.AddComponent(new LoadController());
         entitySystem.Add(l, "loader");
+        // Init camera (PerspectiveCamera)
 
         const network = new Entity();
         network.AddComponent(new NetworkComponent(props.socket));
@@ -87,13 +88,12 @@ const GameScene = (props) => {
 
         player.AddComponent(new NetworkPlayerComponent());
         entitySystem.Add(player, "player");
-        console.log("KOMMER VI HIT");
 
         const enemy1 = new Entity();
         enemy1.AddComponent(new NetworkEntityComponent(physicsHandler));
         enemy1.AddComponent(
             new BasicCharacterController(
-                new th.Vector3(20, 20, 0),
+                new th.Vector3(100, 30, 100),
                 physicsHandler,
                 controls,
                 scene
@@ -109,8 +109,6 @@ const GameScene = (props) => {
         const enemy3 = new Entity();
         enemy1.AddComponent(new NetworkEntityComponent());
         entitySystem.Add(enemy3, "enemy3");*/
-
-        // Init camera (PerspectiveCamera)
 
         // Set size (whole window)
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -223,6 +221,9 @@ const GameScene = (props) => {
     }
 
     useEffect(() => {
+        document.addEventListener("touchstart", () => {
+            console.log("TOUCH");
+        });
         init();
         step();
         console.log("useeffect");

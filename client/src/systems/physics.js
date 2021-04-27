@@ -182,11 +182,12 @@ export class PhysicsHandler {
             e.body.shapes[0] instanceof cannon.Cylinder &&
             e.body.mass != 0.0001
         ) {
-            e.body.mass = 0;
-            e.body.position.copy(0, 10000, 0);
             e.body.velocity.setZero();
+            this.entitySystem
+                .Get("player")
+                .GetComponent("BasicCharacterController")
+                .ChangeState("Death");
             const camera = this.trackers["player"];
-            console.log(this.trackers);
             this.trackers["player"] = undefined;
             this.addTracking(camera, "plane1");
         }

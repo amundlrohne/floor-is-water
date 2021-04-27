@@ -32,7 +32,6 @@ export class NetworkEntityComponent extends Component {
 
     OnNetworkUpdate_(msg) {
         if ("transform" in msg) {
-            console.log(msg.transform);
             this.lastUpdate_ = 0.0;
             this.transformUpdates_.push({
                 time: 0.1,
@@ -90,7 +89,6 @@ export class NetworkEntityComponent extends Component {
             const p2 = new THREE.Vector3(...this.targetFrame_.transform[1]);
             const q1 = new THREE.Quaternion(...this.lastFrame_.transform[2]);
             const q2 = new THREE.Quaternion(...this.targetFrame_.transform[2]);
-            console.log(p1);
             const pf = new THREE.Vector3();
             const qf = new THREE.Quaternion();
             pf.copy(p1);
