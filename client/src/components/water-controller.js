@@ -2,12 +2,13 @@ import * as three from "three";
 import Component from "./component";
 import water from "../assets/water.jpg";
 import { Vector3 } from "three";
-export default class Map extends Component {
+export default class WaterController extends Component {
     constructor(params) {
         super();
         this.InitComponent(params);
         if (params) {
-            {//Add a plane
+            {
+                //Add a plane
                 const planeGeo = new three.PlaneGeometry(1000, 1000);
                 const texture = new three.TextureLoader().load(water);
                 const planeMat = new three.MeshPhongMaterial({
@@ -23,7 +24,7 @@ export default class Map extends Component {
                     mass: 0,
                     position: new Vector3(0, 0, 0),
                     type: "plane",
-                    entitySystem: params.entitySystem
+                    entitySystem: params.entitySystem,
                 });
             }
         }

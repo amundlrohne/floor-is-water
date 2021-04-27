@@ -158,7 +158,7 @@ export class PhysicsHandler {
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion); // make it face up
                 body.addEventListener("collide", (e) => {
-                    //this.drown(e, params);
+                    this.drown(e, params);
                 });
                 this.world.addBody(body);
                 if (params.meshControlled) {
@@ -178,7 +178,10 @@ export class PhysicsHandler {
     }
 
     drown(e) {
-        if (e.body.shapes[0] instanceof cannon.Cylinder && e.body.mass != 0) {
+        if (
+            e.body.shapes[0] instanceof cannon.Cylinder &&
+            e.body.mass != 0.0001
+        ) {
             e.body.mass = 0;
             e.body.position.copy(0, 10000, 0);
             e.body.velocity.setZero();
