@@ -1,27 +1,27 @@
 ## Folder Structure
 
-* src
-  * assets
+### src
+  * **assets**
   
     Includes all the models, images, fonts and audio files used in the project  
-  * components
+  * **components**
   
     All component files used in the ECS
-  * css
+  * **css**
   
     CSS files used in the project
-  * entities
+  * **entities**
   
     All entity files used in the ECS
-  * scenes
+  * **scenes**
   
     Includes all the different scenes shown in the application
-  * service
+  * **service**
   
     Connection to the backend
-  * systems
+  * **systems**
   
     All system fies used in the ECS
-* www
+### www
   * includes the index.html cordova uses for building the application 
 
