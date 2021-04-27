@@ -8,16 +8,7 @@ export class NetworkPlayerComponent extends Component {
     }
 
     InitComponent() {
-        this._RegisterHandler("load.character", (m) => {
-            this.OnLoaded_(m);
-        });
         this._RegisterHandler("network.update", (m) => {
-            this.OnUpdate_(m);
-        });
-        this._RegisterHandler("action.attack", (m) => {
-            this.OnActionAttack_(m);
-        });
-        this._RegisterHandler("network.spawn", (m) => {
             this.OnUpdate_(m);
         });
     }

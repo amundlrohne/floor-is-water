@@ -3,7 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../entities/entity";
 import React, { useEffect, useState } from "react";
 import { Entity } from "../entities/entity";
-import Map from "../components/map";
+import Map from "../components/water-controller";
 import MapEntity from "../entities/map";
 import { BasicCharacterController } from "../components/basic-character-controller";
 import { PlayerInput } from "../components/player-input";
@@ -43,12 +43,7 @@ const GameScene = (props) => {
             scene: scene,
             physicsHandler: physicsHandler,
         });
-        baseWaterY = 0;
-        // Init modelloader
-        const l = new Entity();
-        l.AddComponent(new LoadController());
-        entitySystem.Add(l, "loader");
-        // Init camera (PerspectiveCamera)
+
         camera = new th.PerspectiveCamera(
             100,
             window.innerWidth / window.innerHeight,
@@ -62,6 +57,12 @@ const GameScene = (props) => {
         controls = new OrbitControls(camera, canvas);
         controls.target.set(0, 5, 0);
         controls.update();
+        baseWaterY = 0;
+        // Init modelloader
+        const l = new Entity();
+        l.AddComponent(new LoadController());
+        entitySystem.Add(l, "loader");
+        // Init camera (PerspectiveCamera)
 
         const network = new Entity();
         network.AddComponent(new NetworkComponent(props.socket));
@@ -76,7 +77,12 @@ const GameScene = (props) => {
 
         player = new Entity();
         player.AddComponent(
-            new BasicCharacterController(new th.Vector3(100, 30, 100),physicsHandler,controls,scene)
+            new BasicCharacterController(
+                new th.Vector3(100, 30, 100),
+                physicsHandler,
+                controls,
+                scene
+            )
         );
         player.AddComponent(new PlayerInput(physicsHandler, controls));
 
@@ -85,7 +91,14 @@ const GameScene = (props) => {
 
         const enemy1 = new Entity();
         enemy1.AddComponent(new NetworkEntityComponent(physicsHandler));
-        enemy1.AddComponent(new BasicCharacterController(new th.Vector3(100, 30, 100),physicsHandler,controls,scene))
+        enemy1.AddComponent(
+            new BasicCharacterController(
+                new th.Vector3(100, 30, 100),
+                physicsHandler,
+                controls,
+                scene
+            )
+        );
         entitySystem.Add(enemy1, "enemy1");
 
         /*
@@ -96,7 +109,6 @@ const GameScene = (props) => {
         const enemy3 = new Entity();
         enemy1.AddComponent(new NetworkEntityComponent());
         entitySystem.Add(enemy3, "enemy3");*/
-
 
         // Set size (whole window)
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -202,14 +214,16 @@ const GameScene = (props) => {
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-  window.addEventListener("resize", onWindowResize, false);
+    window.addEventListener("resize", onWindowResize, false);
 
     function test() {
         console.log(entitySystem);
     }
 
     useEffect(() => {
-        document.addEventListener("touchstart", ()=>{console.log("TOUCH")})
+        document.addEventListener("touchstart", () => {
+            console.log("TOUCH");
+        });
         init();
         step();
         console.log("useeffect");

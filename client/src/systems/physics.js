@@ -158,7 +158,7 @@ export class PhysicsHandler {
                 body.position.copy(params.position);
                 body.quaternion.copy(params.mesh.quaternion); // make it face up
                 body.addEventListener("collide", (e) => {
-                this.drown(e, params);
+                    this.drown(e, params);
                 });
                 this.world.addBody(body);
                 if (params.meshControlled) {
@@ -178,12 +178,18 @@ export class PhysicsHandler {
     }
 
     drown(e) {
-        if (e.body.shapes[0] instanceof cannon.Cylinder &&this.entitySystem.Get("player").GetComponent("BasicCharacterController").activeState != "Death") {
+        if (
+            e.body.shapes[0] instanceof cannon.Cylinder &&
+            e.body.mass != 0.0001
+        ) {
             e.body.velocity.setZero();
-            this.entitySystem.Get("player").GetComponent("BasicCharacterController").ChangeState("Death");
-            /* const camera = this.trackers["player"];
+            this.entitySystem
+                .Get("player")
+                .GetComponent("BasicCharacterController")
+                .ChangeState("Death");
+            const camera = this.trackers["player"];
             this.trackers["player"] = undefined;
-            this.addTracking(camera, "plane1"); */
+            this.addTracking(camera, "plane1");
         }
     }
     readyJump(e) {
@@ -191,9 +197,9 @@ export class PhysicsHandler {
     }
 
     addTracking(mesh, id) {
-        /* if (this.trackers[id]) {
+        if (this.trackers[id]) {
             this.trackers[id] = undefined;
-        } else { */
+        } else {
             mesh.minDistance = 50;
             mesh.maxDistance = 50;
             mesh.minPolarAngle = 0.7;
@@ -204,7 +210,7 @@ export class PhysicsHandler {
             mesh.enableZoom = false;
 
             this.trackers[id] = mesh;
-        //}
+        }
     }
 
     findObject(id) {
@@ -239,6 +245,7 @@ export class PhysicsHandler {
     }
 
     setPosition(id, position) {
+        console.log(position);
         this.findObject(id).position.copy(position);
         this.stopVelocity(id);
     }

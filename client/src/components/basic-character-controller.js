@@ -20,10 +20,7 @@ export class BasicCharacterController extends Component {
         this.mixer;
         this.target;
         this.LoadModels();
-
     }
-
-
 
     OnUpdatePosition(msg) {
         this.group_.position.copy(msg.value);
@@ -42,20 +39,18 @@ export class BasicCharacterController extends Component {
         this.physicsHandler.addHitbox({
             _id: this.Parent.Name,
             mesh: this.target,
-            type: this.Parent.Name=="player"?"player":"enemy",
+            type: this.Parent.Name == "player" ? "player" : "enemy",
             fixedRotation: true,
             position: this.position,
         });
-        if(this.Parent.Name=="player"){
-        this.physicsHandler.addTracking(
-            this.camera,
-            "player"
-        );}
+        if (this.Parent.Name == "player") {
+            this.physicsHandler.addTracking(this.camera, "player");
+        }
+        this.ChangeState("Idle");
     }
 
     LoadModels() {
-        const loader = this.FindEntity("loader")
-            .GetComponent("LoadController");
+        const loader = this.FindEntity("loader").GetComponent("LoadController");
         loader.LoadGLTF(undefined, robotGLB, (result) => {
             console.log("LOADER");
             this.animations = result.animations;

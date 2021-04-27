@@ -19,8 +19,14 @@ export class NetworkEntityComponent extends Component {
     }
 
     SetTransform_(transform) {
-        this.physicsHandler.setPosition(this.Parent.Name,new THREE.Vector3(...transform[1]));
-        this.physicsHandler.setQuaternion(this.Parent.Name,new THREE.Quaternion(...transform[2]));
+        this.physicsHandler.setPosition(
+            this.Parent.Name,
+            new THREE.Vector3(...transform[1])
+        );
+        this.physicsHandler.setQuaternion(
+            this.Parent.Name,
+            new THREE.Quaternion(...transform[2])
+        );
         this.targetFrame_ = { time: 0.1, transform: transform };
     }
 
@@ -42,7 +48,9 @@ export class NetworkEntityComponent extends Component {
     }
 
     Update(timeElapsed) {
-        this.GetComponent("BasicCharacterController").ChangeState(this.activeState);
+        this.GetComponent("BasicCharacterController").ChangeState(
+            this.activeState
+        );
         this.lastUpdate_ += timeElapsed;
         if (this.lastUpdate_ >= 10.0) {
             this.parent_.SetDead();
@@ -63,8 +71,12 @@ export class NetworkEntityComponent extends Component {
             this.lastFrame_ = {
                 transform: [
                     this.targetFrame_.transform[0],
-                    this.physicsHandler.findObject(this.Parent.Name).position.toArray(),
-                    this.physicsHandler.findObject(this.Parent.Name).quaternion.toArray(),
+                    this.physicsHandler
+                        .findObject(this.Parent.Name)
+                        .position.toArray(),
+                    this.physicsHandler
+                        .findObject(this.Parent.Name)
+                        .quaternion.toArray(),
                 ],
             };
             this.targetFrame_ = this.transformUpdates_.shift();
@@ -89,10 +101,8 @@ export class NetworkEntityComponent extends Component {
             pf.lerp(p2, t);
             qf.slerp(q2, t);
 
-            this.physicsHandler.setPosition(this.Parent.Name,pf);
-            this.physicsHandler.setQuaternion(this.Parent.Name,qf);
-            //const controller = this.GetComponent("NPCController");
-            //controller.SetState(this.lastFrame_.transform[0]);
+            this.physicsHandler.setPosition(this.Parent.Name, pf);
+            this.physicsHandler.setQuaternion(this.Parent.Name, qf);
         }
     }
 }
