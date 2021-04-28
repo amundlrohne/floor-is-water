@@ -27,7 +27,6 @@ let camera,
     entitySystem,
     clock,
     controls,
-    waterManager,
     baseWaterY,
     player;
 
@@ -162,7 +161,7 @@ const GameScene = (props) => {
                     baseWaterY + 4.35;
             }
         }
-        waterManager.updateEntities(clock, baseWaterY);
+        entitySystem.updateEntities(clock, baseWaterY);
     }
 
     function handleMove(e) {
@@ -221,8 +220,8 @@ const GameScene = (props) => {
         init();
         step();
         console.log("useeffect");
-        waterManager.populatePowerups();
-        waterManager.populateWater();
+        entitySystem.populatePowerups();
+        entitySystem.populateWater();
         // Entities
         console.log(entitySystem);
     }, []);
