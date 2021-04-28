@@ -10,7 +10,6 @@ import { PlayerInput } from "../components/player-input";
 import { PhysicsHandler } from "../systems/physics";
 import EntitySystem from "../systems/entity-system";
 import { LoadController } from "../components/load-controller";
-import WaterPowerupManager from "../systems/entity-manager";
 import robotGLB from "../assets/RobotExpressive.glb";
 
 import { Joystick } from "react-joystick-component";
@@ -37,13 +36,8 @@ const GameScene = (props) => {
         // Init scene
         clock = new th.Clock();
         scene = new th.Scene();
-        entitySystem = new EntitySystem();
+        entitySystem = new EntitySystem({scene: scene, physicsHandler: physicsHandler,});
         physicsHandler = new PhysicsHandler(entitySystem);
-        waterManager = new WaterPowerupManager({
-            scene: scene,
-            physicsHandler: physicsHandler,
-        });
-
         camera = new th.PerspectiveCamera(
             100,
             window.innerWidth / window.innerHeight,
